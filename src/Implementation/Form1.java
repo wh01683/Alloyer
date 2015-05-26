@@ -18,12 +18,24 @@ public class Form1
     private JRadioButton subsetRadioButton;
     private JCheckBox abstractCheckBox;
     private JButton createSigButton;
+    private JComboBox comboBox1;
 
 
     public Form1()
     {
 
 
+        ActionListener listener = new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                e
+            }
+        };
+        subsetRadioButton.addActionListener(listener);
+        subsetRadioButton.setActionCommand()
+        primaryRadioButton.addActionListener(listener);
     }
 }
 
