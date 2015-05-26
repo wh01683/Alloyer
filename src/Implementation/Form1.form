@@ -3,7 +3,7 @@
   <grid id="27dc6" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
     <margin top="0" left="0" bottom="0" right="0"/>
     <constraints>
-      <xy x="20" y="20" width="542" height="230"/>
+      <xy x="20" y="20" width="542" height="264"/>
     </constraints>
     <properties/>
     <border type="none"/>
@@ -27,6 +27,8 @@
             <rowspec value="center:21px:noGrow"/>
             <rowspec value="top:4dlu:noGrow"/>
             <rowspec value="center:25px:noGrow"/>
+            <rowspec value="top:4dlu:noGrow"/>
+            <rowspec value="center:max(d;4px):noGrow"/>
             <rowspec value="top:4dlu:noGrow"/>
             <rowspec value="center:max(d;4px):noGrow"/>
             <rowspec value="top:4dlu:noGrow"/>
@@ -67,20 +69,11 @@
               </component>
               <component id="ef39e" class="javax.swing.JLabel">
                 <constraints>
-                  <grid row="6" column="0" row-span="1" col-span="7" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                  <grid row="8" column="0" row-span="1" col-span="7" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                   <forms/>
                 </constraints>
                 <properties>
                   <text value="Attributes:"/>
-                </properties>
-              </component>
-              <component id="69b0d" class="javax.swing.JCheckBox" binding="abstractCheckBox" default-binding="true">
-                <constraints>
-                  <grid row="8" column="0" row-span="1" col-span="7" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                  <forms/>
-                </constraints>
-                <properties>
-                  <text value="Abstract"/>
                 </properties>
               </component>
               <component id="70ebd" class="javax.swing.JRadioButton" binding="subsetRadioButton" default-binding="true">
@@ -99,6 +92,52 @@
                 </constraints>
                 <properties>
                   <text value="Primary"/>
+                </properties>
+              </component>
+              <grid id="d5740" layout-manager="FormLayout">
+                <rowspec value="center:d:grow"/>
+                <rowspec value="top:4dlu:noGrow"/>
+                <rowspec value="center:max(d;4px):noGrow"/>
+                <colspec value="fill:d:grow"/>
+                <constraints>
+                  <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                  <forms/>
+                </constraints>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="6c437" class="javax.swing.JLabel">
+                    <constraints>
+                      <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                      <forms/>
+                    </constraints>
+                    <properties>
+                      <text value="Multiplicity"/>
+                    </properties>
+                  </component>
+                </children>
+              </grid>
+              <component id="73133" class="javax.swing.JComboBox" binding="comboBox1" default-binding="true">
+                <constraints>
+                  <grid row="6" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+                  <forms/>
+                </constraints>
+                <properties>
+                  <model>
+                    <item value="One"/>
+                    <item value="Lone"/>
+                    <item value="Some"/>
+                    <item value="Set"/>
+                  </model>
+                </properties>
+              </component>
+              <component id="69b0d" class="javax.swing.JCheckBox" binding="abstractCheckBox" default-binding="true">
+                <constraints>
+                  <grid row="10" column="0" row-span="1" col-span="7" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                  <forms/>
+                </constraints>
+                <properties>
+                  <text value="Abstract"/>
                 </properties>
               </component>
             </children>

@@ -427,7 +427,7 @@ abstract class FOL2BoolTranslator implements ReturnVisitor<BooleanMatrix, Boolea
 		final BooleanFactory factory = interpreter.factory();
 
 		if (currentDecl==decls.size()) {
-		    //TODO: what about this and overflow???
+		    //TODO: what about this and overflow???????
 			matrix.set(partialIndex, factory.and(declConstraints, formula.accept(this)));
 			return;
 		}
