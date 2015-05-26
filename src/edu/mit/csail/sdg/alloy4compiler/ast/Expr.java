@@ -15,22 +15,13 @@
 
 package edu.mit.csail.sdg.alloy4compiler.ast;
 
+import edu.mit.csail.sdg.alloy4.*;
+import edu.mit.csail.sdg.alloy4compiler.ast.Sig.PrimSig;
+
+import java.util.*;
+
 import static edu.mit.csail.sdg.alloy4compiler.ast.ExprUnary.Op.NOOP;
 import static edu.mit.csail.sdg.alloy4compiler.ast.Type.EMPTY;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.LinkedHashSet;
-import java.util.List;
-
-import edu.mit.csail.sdg.alloy4.Err;
-import edu.mit.csail.sdg.alloy4.ErrorType;
-import edu.mit.csail.sdg.alloy4.ErrorWarning;
-import edu.mit.csail.sdg.alloy4.JoinableList;
-import edu.mit.csail.sdg.alloy4.Pos;
-import edu.mit.csail.sdg.alloy4.Util;
-import edu.mit.csail.sdg.alloy4compiler.ast.Sig.PrimSig;
 
 /** Immutable; represents a formula or expression.
  *
@@ -65,7 +56,7 @@ public abstract class Expr extends Browsable {
     *
     * <br> If it's 1, that means it is a multiplicity constraint of the form (? X)
     *
-    * <br> If it's 0, that means it does not have either form.
+    * <br> If it's 0, hat means it does not have either form.
     */
    public final int mult;
 

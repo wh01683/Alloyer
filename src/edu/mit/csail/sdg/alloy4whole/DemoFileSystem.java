@@ -15,22 +15,18 @@
 
 package edu.mit.csail.sdg.alloy4whole;
 
-import static edu.mit.csail.sdg.alloy4.A4Reporter.NOP;
-import java.util.LinkedHashSet;
-import java.util.Set;
 import edu.mit.csail.sdg.alloy4.Err;
-import edu.mit.csail.sdg.alloy4compiler.ast.Attr;
-import edu.mit.csail.sdg.alloy4compiler.ast.Command;
-import edu.mit.csail.sdg.alloy4compiler.ast.Decl;
-import edu.mit.csail.sdg.alloy4compiler.ast.Expr;
-import edu.mit.csail.sdg.alloy4compiler.ast.ExprConstant;
-import edu.mit.csail.sdg.alloy4compiler.ast.ExprHasName;
-import edu.mit.csail.sdg.alloy4compiler.ast.Sig;
+import edu.mit.csail.sdg.alloy4compiler.ast.*;
 import edu.mit.csail.sdg.alloy4compiler.ast.Sig.Field;
 import edu.mit.csail.sdg.alloy4compiler.ast.Sig.PrimSig;
 import edu.mit.csail.sdg.alloy4compiler.translator.A4Options;
 import edu.mit.csail.sdg.alloy4compiler.translator.A4Solution;
 import edu.mit.csail.sdg.alloy4compiler.translator.TranslateAlloyToKodkod;
+
+import java.util.LinkedHashSet;
+import java.util.Set;
+
+import static edu.mit.csail.sdg.alloy4.A4Reporter.NOP;
 
 /** This class demonstrates how to access Alloy4 via the API, by modeling a simple file system. */
 
@@ -93,11 +89,16 @@ public class DemoFileSystem {
         root = makeSig(dir, "Root", false, true);
         parent = obj.addField("parent", dir.loneOf());
         contains = dir.addField("contains", obj.setOf());
+
         // fact { all x:Obj-Root | one x.parent }
         Decl x = obj.minus(root).oneOf("x");
         fact = x.get().join(parent).one().forAll(x).and(fact);
+
+
         // fact { contains = ~ parent }
         fact = contains.equal(parent.transpose()).and(fact);
+
+
         // fact { acyclic[contains] }
         fact = acyclic(contains).and(fact);
     }
@@ -148,6 +149,8 @@ public class DemoFileSystem {
         x.makeDomain();
         x.makeInstance1();
         x.runFor3(x.file.some()); // run { some file }
+
+        System.out.printf("\n===================Testing======================\n");
 
         x = new DemoFileSystem();
         x.makeDomain();
