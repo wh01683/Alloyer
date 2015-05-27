@@ -4,16 +4,10 @@ import edu.mit.csail.sdg.alloy4compiler.ast.Expr;
 import edu.mit.csail.sdg.alloy4compiler.ast.Sig;
 import edu.mit.csail.sdg.alloy4compiler.translator.A4Solution;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
-
 /**
  * Created by robert on 5/27/15.
  */
-public class Instance implements Domain {
-
-    private Set<Sig> sigs = new LinkedHashSet<Sig>();
-
+public class MasterDomain implements Domain {
     @Override
     public Sig.PrimSig addPrimSig() {
         return null;

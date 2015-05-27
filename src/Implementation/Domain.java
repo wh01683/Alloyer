@@ -12,8 +12,14 @@ import java.io.Serializable;
 public interface Domain extends Serializable {
 
     Sig.PrimSig addPrimSig();
+    Sig.PrimSig addChildSig();
+    void addPredicate();
+    void addFunction();
+    void addAssertion();
+    void addCommand();
     Sig.SubsetSig addSubsetSig();
     Sig.Field addField();
+
     boolean addFact();
 
     A4Solution run(Expr e);
