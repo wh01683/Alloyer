@@ -148,13 +148,16 @@ public class DemoFileSystem {
         x = new DemoFileSystem();
         x.makeDomain();
         x.makeInstance1();
+
         x.runFor3(x.file.some()); // run { some file }
 
         System.out.printf("\n===================Testing======================\n");
 
+
         x = new DemoFileSystem();
         x.makeDomain();
         x.makeInstance1();
+
         x.runFor3(acyclic(x.contains).not()); // run { !acyclic[contains] }
     }
 }
