@@ -14,29 +14,24 @@ import java.awt.event.ActionListener;
 public class Form1
 {
     private JPanel panel1;
-    private JButton createSignatureButton;
     private JTextField txtSigName;
     private JRadioButton primaryRadioButton;
     private JRadioButton subsetRadioButton;
     private JCheckBox abstractCheckBox;
-    private JButton createSigButton;
     private JComboBox cmbMultiplicity;
     private JButton btnCreateSig;
+    private JList lstSigs;
 
 
     public Form1()
     {
-        createSigButton.addActionListener(new ActionListener() {
+        btnCreateSig.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 createSig();
             }
         });
-
-
-
     }
-
 
     private Sig createSig(){
 
