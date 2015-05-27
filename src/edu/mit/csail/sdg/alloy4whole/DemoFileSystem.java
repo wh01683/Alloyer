@@ -147,7 +147,9 @@ public class DemoFileSystem {
 
         x = new DemoFileSystem();
         x.makeDomain();
+        x.makeInstance2();
         x.makeInstance1();
+
 
         x.runFor3(x.file.some()); // run { some file }
 
