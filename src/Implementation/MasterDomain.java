@@ -49,31 +49,6 @@ public class MasterDomain implements Domain {
     }
 
     @Override
-    public Func addPredicate() {
-
-
-
-    }
-
-    @Override
-    public void addFunction() {
-
-    }
-
-    @Override
-    public void addAssertion() {
-
-    }
-
-    /**
-     *
-     */
-    @Override
-    public void addCommand() {
-
-    }
-
-    @Override
     public Sig.Field addField() {
         return null;
     }

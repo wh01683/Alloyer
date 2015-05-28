@@ -20,10 +20,6 @@ public interface Domain extends Serializable{
 
     Sig.SubsetSig addSubsetSig(String name, Collection<Sig> parents, Attr multiplicity) throws Err;
 
-    Func addPredicate();
-    void addFunction();
-    void addAssertion();
-    void addCommand();
     Sig.Field addField();
 
     boolean addFact();
