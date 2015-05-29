@@ -2,25 +2,16 @@ package Implementation;
 
 import edu.mit.csail.sdg.alloy4.Err;
 import edu.mit.csail.sdg.alloy4compiler.ast.Attr;
-import edu.mit.csail.sdg.alloy4compiler.ast.Sig;
-import javafx.scene.input.KeyCodeCombination;
 
 import javax.swing.*;
-import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumn;
-import javax.swing.table.TableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.HashSet;
-import java.util.Hashtable;
-import java.util.LinkedHashSet;
-import java.util.Set;
 
 /**
  * Created by Lindsey on 5/26/2015.
  */
-public class Form1
+public class Form1 extends JFrame
 {
     private JPanel panel1;
     private JButton createSignatureButton;
@@ -41,7 +32,7 @@ public class Form1
 
     public Form1()
     {
-
+        setContentPane(mainPanel);
         //Create Sig Button
         createSigButton.addActionListener(new ActionListener()
         {
@@ -101,7 +92,7 @@ public class Form1
                 else
                 {
                     type = "Subset";
-                    domain.addSubsetSig();
+
                 }
             }
         });

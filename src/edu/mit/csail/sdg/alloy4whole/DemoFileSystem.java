@@ -123,6 +123,8 @@ public class DemoFileSystem {
         fact = file3.join(parent).equal(dir2).and(fact);
         fact = dir2.join(parent).equal(dir1).and(fact);
         fact = dir1.join(parent).equal(root).and(fact);
+
+
     }
 
     /* Here is instance number 2. */
@@ -135,6 +137,14 @@ public class DemoFileSystem {
         PrimSig dir2 = makeSig(dir, "D2", false, true);
         fact = dir2.join(parent).equal(dir1).and(fact);
         fact = dir1.join(parent).equal(dir2).and(fact);
+
+
+        for(Expr f : dir1.getFacts()){
+            System.out.printf(f.toString());
+
+        }
+
+
     }
 
     private DemoFileSystem() { }
