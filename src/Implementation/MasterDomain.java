@@ -7,10 +7,7 @@ import edu.mit.csail.sdg.alloy4compiler.ast.Expr;
 import edu.mit.csail.sdg.alloy4compiler.ast.Sig;
 import edu.mit.csail.sdg.alloy4compiler.translator.A4Solution;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by robert on 5/27/15.
@@ -18,6 +15,7 @@ import java.util.Set;
 public class MasterDomain implements Domain {
 
     Set<Sig> sigs = new LinkedHashSet<Sig>();
+    Hashtable<Integer, Sig> sigHashtable = new Hashtable<>(5);
 
     @Override
     public Sig.PrimSig addPrimSig(String name, boolean sigAbstract, Attr multiplicity) throws Err {
@@ -25,6 +23,7 @@ public class MasterDomain implements Domain {
         Sig.PrimSig sig = new Sig.PrimSig(name, (sigAbstract? Attr.ABSTRACT : null), multiplicity, Attr.SUBSIG);
 
         sigs.add(sig);
+        sigHashtable.put(sig.hashCode(), sig);
 
         return sig;
     }
@@ -35,7 +34,7 @@ public class MasterDomain implements Domain {
         Sig.PrimSig sig = new Sig.PrimSig(name, parent, (sigAbstract? Attr.ABSTRACT : null), multiplicity, Attr.SUBSIG);
 
         sigs.add(sig);
-
+        sigHashtable.put(sig.hashCode(), sig);
         return sig;
     }
 
@@ -45,7 +44,7 @@ public class MasterDomain implements Domain {
         Sig.SubsetSig sig = new Sig.SubsetSig(name, parents, multiplicity, Attr.SUBSET);
 
         parents.add(sig);
-
+        sigHashtable.put(sig.hashCode(), sig);
         return sig;
     }
 
@@ -113,6 +112,16 @@ public class MasterDomain implements Domain {
         }
 
         return new String[] {s.label , attributes, fields, fieldDecls, facts, children};
+
+    }
+
+    public Sig getSigFromHash(Integer hashCode){
+
+        if(sigHashtable.contains(hashCode)){
+            return sigHashtable.get(hashCode);
+        }else{
+            return null;
+        }
 
     }
 
