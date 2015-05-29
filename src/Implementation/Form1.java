@@ -34,8 +34,9 @@ public class Form1
     private JTable table1;
     private JList lstChildren;
     private JTextArea lblChooseParent;
+    private JPanel mainPanel;
     MasterDomain domain = new MasterDomain();
-    Object[] sigData;
+    String[] sigData;
 
 
     public Form1()
@@ -114,6 +115,13 @@ public class Form1
             for (String s : ColumnHeaders)
             {
                 model.addColumn(s);
+            }
+
+            sigData = domain.getTableEntries().toArray();
+
+            for(String s : sigData)
+            {
+
             }
         }
     }
