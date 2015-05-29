@@ -15,18 +15,19 @@ import java.util.ArrayList;
 public class Form1
 {
     private JPanel panel1;
-    private JButton createSignatureButton;
     private JTextField txtSigName;
     private JRadioButton primaryRadioButton;
     private JRadioButton subsetRadioButton;
     private JCheckBox abstractCheckBox;
-    private JButton createSigButton;
     private JComboBox cmbMultiplicity;
     private JButton btnCreateSig;
-    private JTable table1;
+    private JTable tblSignatures;
     private JList lstChildren;
     private JTextArea lblChooseParent;
     private JPanel mainPanel;
+    private JPanel creatorPanel;
+    private JPanel allSigsPanel;
+    private JPanel childrenPanel;
     MasterDomain domain = new MasterDomain();
     ArrayList<String[]> sigData;
 
@@ -35,18 +36,22 @@ public class Form1
     {
         JFrame frame = new JFrame("testing");
         mainPanel = new JPanel();
-        mainPanel.add(panel1);
+        mainPanel.add(creatorPanel);
+        mainPanel.add(allSigsPanel);
+        mainPanel.add(childrenPanel);
         mainPanel.setVisible(true);
+        updateTable();
+        allSigsPanel.updateUI();
+
         frame.add(mainPanel);
         frame.setContentPane(mainPanel);
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
-        createSigButton = new JButton("Create Sig");
 
 
         //Create Sig Button
-        createSigButton.addActionListener(new ActionListener()
+        btnCreateSig.addActionListener(new ActionListener()
         {
             @Override
             public void actionPerformed(ActionEvent actionEvent)
@@ -67,8 +72,7 @@ public class Form1
                 if (abstractCheckBox.isSelected())
                 {
                     abstr = true;
-                }
-                else
+                } else
                 {
                     abstr = false;
                 }
@@ -77,12 +81,10 @@ public class Form1
                 if (multiplicity.equals("One"))
                 {
                     multiplicityAttr = Attr.ONE;
-                }
-                else if (multiplicity.equals("Lone"))
+                } else if (multiplicity.equals("Lone"))
                 {
                     multiplicityAttr = Attr.LONE;
-                }
-                else if (multiplicity.equals("Some"))
+                } else if (multiplicity.equals("Some"))
                 {
                     multiplicityAttr = Attr.SOME;
                 }
@@ -95,13 +97,11 @@ public class Form1
                     try
                     {
                         domain.addPrimSig(sigName, abstr, multiplicityAttr);
-                    }
-                    catch (Err err)
+                    } catch (Err err)
                     {
                         err.printStackTrace();
                     }
-                }
-                else
+                } else
                 {
                     type = "Subset";
 
@@ -110,23 +110,40 @@ public class Form1
         });
     }
 
-        public void updateTable()
+    public void updateTable()
+    {
+        DefaultTableModel model = (DefaultTableModel) tblSignatures.getModel();
+        String[] ColumnHeaders = {"NAME", "TYPE", "MULTIPLICITY", "#CHILDREN"};
+        for (String s : ColumnHeaders)
         {
-            DefaultTableModel model = (DefaultTableModel) table1.getModel();
-            String[] ColumnHeaders = {"NAME", "TYPE", "MULTIPLICITY", "#PARENTS", "#CHILDREN"};
-            for (String s : ColumnHeaders)
-            {
                 model.addColumn(s);
-            }
-
-            sigData = domain.getTableEntries();
-
-            for(String[] s : sigData)
-            {
-                model.addRow(s);
-            }
         }
+
+        sigData = domain.getTableEntries();
+
+        for(String[] s : sigData)
+        {
+            model.addRow(s);
+        }
+        tblSignatures.updateUI();
     }
+
+    public void updateChildList(int parentHash)
+    {
+        DefaultListModel model = (DefaultListModel) lstChildren.getModel();
+        String s = domain.getChildren(domain.getSigFromHash(parentHash));
+        String[] children = s.split(" ");
+        for(String child : children)
+        {
+            model.addElement(child);
+        }
+
+        lstChildren.updateUI();
+    }
+
+
+
+}
 
 
 

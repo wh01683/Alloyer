@@ -115,6 +115,11 @@ public class MasterDomain implements Domain {
 
     }
 
+    public String getChildren(Sig s) {
+        String children = detailedTableEntryBuilder(s)[5];
+        return children;
+    }
+
     public Sig getSigFromHash(Integer hashCode){
 
         if(sigHashtable.contains(hashCode)){
