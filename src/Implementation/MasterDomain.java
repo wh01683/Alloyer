@@ -125,5 +125,9 @@ public class MasterDomain implements Domain {
 
     }
 
+    public Integer getHashFromSig(Sig s){
+        return s.hashCode();
+    }
+
 
 }
