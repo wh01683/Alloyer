@@ -3,10 +3,10 @@ package Implementation;
 import edu.mit.csail.sdg.alloy4.Err;
 import edu.mit.csail.sdg.alloy4compiler.ast.Attr;
 import edu.mit.csail.sdg.alloy4compiler.ast.Expr;
-import edu.mit.csail.sdg.alloy4compiler.ast.Func;
 import edu.mit.csail.sdg.alloy4compiler.ast.Sig;
 import edu.mit.csail.sdg.alloy4compiler.translator.A4Solution;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -16,7 +16,7 @@ import java.util.Set;
  */
 public class MasterDomain implements Domain {
 
-    public Set<Sig> sigs = new LinkedHashSet<Sig>();
+    Set<Sig> sigs = new LinkedHashSet<Sig>();
 
     @Override
     public Sig.PrimSig addPrimSig(String name, boolean sigAbstract, Attr multiplicity) throws Err {
@@ -38,7 +38,6 @@ public class MasterDomain implements Domain {
         return sig;
     }
 
-    //this will only be used when sig has multiple parents
     @Override
     public Sig.SubsetSig addSubsetSig(String name, Collection<Sig> parents, Attr multiplicity) throws Err {
 
@@ -63,5 +62,32 @@ public class MasterDomain implements Domain {
     public A4Solution run(Expr e) {
         return null;
     }
+
+    public ArrayList<String[]> getTableEntries(){
+
+        ArrayList<String[]> entries = new ArrayList<>(sigs.size());
+
+        for (Sig s: sigs){
+            entries.add(tableEntryBuilder(s));
+        }
+
+        return entries;
+    }
+
+    private String[] tableEntryBuilder(Sig s){
+
+        String attributes = "";
+
+        for (Attr a : s.attributes){
+            attributes += a.toString()+" ";
+        }
+
+
+        String[] entry = new String[] {s.label, s.type().toString(), attributes, s.getSubnodes().size() + ""};
+
+        return entry;
+
+    }
+
 
 }
