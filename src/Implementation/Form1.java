@@ -7,6 +7,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 /**
  * Created by Lindsey on 5/26/2015.
@@ -27,7 +28,7 @@ public class Form1 extends JFrame
     private JTextArea lblChooseParent;
     private JPanel mainPanel;
     MasterDomain domain = new MasterDomain();
-    String[] sigData;
+    ArrayList<String[]> sigData;
 
 
     public Form1()
@@ -98,7 +99,6 @@ public class Form1 extends JFrame
         });
     }
 
-
         public void updateTable()
         {
             DefaultTableModel model = (DefaultTableModel) table1.getModel();
@@ -108,11 +108,11 @@ public class Form1 extends JFrame
                 model.addColumn(s);
             }
 
-            sigData = domain.getTableEntries().toArray();
+            sigData = domain.getTableEntries();
 
-            for(String s : sigData)
+            for(String[] s : sigData)
             {
-
+                model.addRow(s);
             }
         }
     }
