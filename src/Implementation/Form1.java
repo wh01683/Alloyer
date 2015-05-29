@@ -90,7 +90,7 @@ public class Form1 {
                 else
                 {
                     type = "Subset";
-                    domain.addSubsetSig(sigName,, multiplicityAttr);
+                    domain.addSubsetSig();
                 }
 
 
