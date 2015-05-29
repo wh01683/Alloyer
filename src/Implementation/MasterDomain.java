@@ -2,6 +2,7 @@ package Implementation;
 
 import edu.mit.csail.sdg.alloy4.Err;
 import edu.mit.csail.sdg.alloy4compiler.ast.Attr;
+import edu.mit.csail.sdg.alloy4compiler.ast.Decl;
 import edu.mit.csail.sdg.alloy4compiler.ast.Expr;
 import edu.mit.csail.sdg.alloy4compiler.ast.Sig;
 import edu.mit.csail.sdg.alloy4compiler.translator.A4Solution;
@@ -82,10 +83,36 @@ public class MasterDomain implements Domain {
             attributes += a.toString()+" ";
         }
 
-
         String[] entry = new String[] {s.label, s.type().toString(), attributes, s.getSubnodes().size() + ""};
 
         return entry;
+
+    }
+
+    private String[] detailedTableEntryBuilder(Sig s){
+
+        String fields = "\nFIELDS\n", fieldDecls = "\nFIELD DECLARATIONS\n", children = "\nCHILDREN\n", facts = "\nFACTS\n", attributes = "\nATTRIBUTES\n";
+
+        for (Attr a : s.attributes){
+            attributes += a.toString() + " ";
+        }
+
+        for(Expr e : s.getFacts()){
+            facts += e.toString() + " ";
+        }
+
+        for (Sig.Field f : s.getFields()){
+            fields += f.toString() + " ";
+        }
+
+        for (Decl d : s.getFieldDecls()){
+            fieldDecls += d.toString() + " ";
+        }
+        for (Object o : s.getSubnodes()){
+            children += o.toString() + " ";
+        }
+
+        return new String[] {s.label , attributes, fields, fieldDecls, facts, children};
 
     }
 
