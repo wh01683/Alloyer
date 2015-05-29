@@ -16,7 +16,7 @@ import java.util.Set;
  */
 public class MasterDomain implements Domain {
 
-    Set<Sig> sigs = new LinkedHashSet<Sig>();
+    public Set<Sig> sigs = new LinkedHashSet<Sig>();
 
     @Override
     public Sig.PrimSig addPrimSig(String name, boolean sigAbstract, Attr multiplicity) throws Err {
@@ -38,6 +38,7 @@ public class MasterDomain implements Domain {
         return sig;
     }
 
+    //this will only be used when sig has multiple parents
     @Override
     public Sig.SubsetSig addSubsetSig(String name, Collection<Sig> parents, Attr multiplicity) throws Err {
 
@@ -62,4 +63,5 @@ public class MasterDomain implements Domain {
     public A4Solution run(Expr e) {
         return null;
     }
+
 }
