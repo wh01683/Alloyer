@@ -20,7 +20,8 @@ import java.util.Set;
 /**
  * Created by Lindsey on 5/26/2015.
  */
-public class Form1 {
+public class Form1
+{
     private JPanel panel1;
     private JButton createSignatureButton;
     private JTextField txtSigName;
@@ -31,17 +32,21 @@ public class Form1 {
     private JComboBox cmbMultiplicity;
     private JButton btnCreateSig;
     private JTable table1;
-    private JList list1;
+    private JList lstChildren;
+    private JTextArea lblChooseParent;
     MasterDomain domain = new MasterDomain();
     Object[] sigData;
 
 
-    public Form1() {
+    public Form1()
+    {
 
-    //Create Sig Button
-        createSigButton.addActionListener(new ActionListener() {
+        //Create Sig Button
+        createSigButton.addActionListener(new ActionListener()
+        {
             @Override
-            public void actionPerformed(ActionEvent actionEvent) {
+            public void actionPerformed(ActionEvent actionEvent)
+            {
                 String sigName = txtSigName.getText();
                 String type;
 
@@ -65,25 +70,30 @@ public class Form1 {
                 }
 
                 //handles the multiplicity ComboBox
-                if(multiplicity .equals("One"))
+                if (multiplicity.equals("One"))
                 {
                     multiplicityAttr = Attr.ONE;
                 }
-                else if(multiplicity.equals("Lone"))
+                else if (multiplicity.equals("Lone"))
                 {
                     multiplicityAttr = Attr.LONE;
                 }
-                else if(multiplicity.equals("Some"))
+                else if (multiplicity.equals("Some"))
                 {
                     multiplicityAttr = Attr.SOME;
                 }
 
-                if(primaryRadioButton.isSelected()) {
+                //handles the primary/subset radio buttons
+                if (primaryRadioButton.isSelected())
+                {
 
-                    type ="Primary";
-                    try {
-                        domain.addPrimSig(sigName,abstr, multiplicityAttr);
-                    } catch (Err err) {
+                    type = "Primary";
+                    try
+                    {
+                        domain.addPrimSig(sigName, abstr, multiplicityAttr);
+                    }
+                    catch (Err err)
+                    {
                         err.printStackTrace();
                     }
                 }
@@ -92,24 +102,21 @@ public class Form1 {
                     type = "Subset";
                     domain.addSubsetSig();
                 }
-
-
             }
         });
-
-
-        DefaultTableModel model = (DefaultTableModel) table1.getModel();
-        String[] ColumnHeaders = {"NAME", "TYPE", "MULTIPLICITY", "#PARENTS", "#CHILDREN"};
-        for (String s : ColumnHeaders)
-        {
-            model.addColumn(s);
-        }
-
-
-
-
     }
 
-}
+
+        public void updateTable()
+        {
+            DefaultTableModel model = (DefaultTableModel) table1.getModel();
+            String[] ColumnHeaders = {"NAME", "TYPE", "MULTIPLICITY", "#PARENTS", "#CHILDREN"};
+            for (String s : ColumnHeaders)
+            {
+                model.addColumn(s);
+            }
+        }
+    }
+
 
 
