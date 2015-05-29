@@ -12,7 +12,7 @@ import java.util.ArrayList;
 /**
  * Created by Lindsey on 5/26/2015.
  */
-public class Form1 extends JFrame
+public class Form1
 {
     private JPanel panel1;
     private JButton createSignatureButton;
@@ -33,7 +33,18 @@ public class Form1 extends JFrame
 
     public Form1()
     {
-        setContentPane(mainPanel);
+        JFrame frame = new JFrame("testing");
+        mainPanel = new JPanel();
+        mainPanel.add(panel1);
+        mainPanel.setVisible(true);
+        frame.add(mainPanel);
+        frame.setContentPane(mainPanel);
+        frame.setVisible(true);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.pack();
+        createSigButton = new JButton("Create Sig");
+
+
         //Create Sig Button
         createSigButton.addActionListener(new ActionListener()
         {
