@@ -2,6 +2,8 @@ package Implementation;
 
 import edu.mit.csail.sdg.alloy4.Err;
 
+import javax.swing.*;
+
 /**
  * Created by robert on 5/29/15.
  */
@@ -9,11 +11,13 @@ public class ImpMain {
 
     public static void main(String[] args) throws Err {
 
-        Form1 form1 = new Form1();
+        MasterDomain domain = new MasterDomain();
+        Form1 form1 = new Form1(domain);
 
 
-        TestDomain x;
+       /* TestDomain x;
         x = new TestDomain();
+
 
         x.makeDomain();
         x.makeInstance1();
@@ -23,7 +27,7 @@ public class ImpMain {
         x = new TestDomain();
         x.makeDomain();
         x.makeInstance1();
-        x.runFor3(TestDomain.acyclic(x.contains).not());
+        x.runFor3(TestDomain.acyclic(x.contains).not());*/
 
     }
 

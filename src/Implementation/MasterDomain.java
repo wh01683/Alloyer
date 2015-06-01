@@ -82,7 +82,7 @@ public class MasterDomain implements Domain {
             attributes += a.toString()+" ";
         }
 
-        String[] entry = new String[] {s.label, s.type().toString(), attributes, s.getSubnodes().size() + ""};
+        String[] entry = new String[] {s.label, s.type().toString(), attributes, s.getSubnodes().size() + "", getHashFromSig(s).toString()};
 
         return entry;
 
@@ -120,6 +120,7 @@ public class MasterDomain implements Domain {
         return children;
     }
 
+    //Sig label is not unique so we used hashcodes to generate a unique id
     public Sig getSigFromHash(Integer hashCode){
 
         if(sigHashtable.contains(hashCode)){
@@ -133,6 +134,7 @@ public class MasterDomain implements Domain {
     public Integer getHashFromSig(Sig s){
         return s.hashCode();
     }
+
 
 
 }
