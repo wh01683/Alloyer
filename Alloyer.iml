@@ -10,5 +10,6 @@
     <orderEntry type="library" exported="" name="org.sat4j:org.sat4j.core:2.3.1" level="project" />
     <orderEntry type="library" exported="" name="org.sat4j:org.sat4j.sat:2.3.0" level="project" />
     <orderEntry type="library" name="JGoodies Forms" level="project" />
+    <orderEntry type="library" name="com.jgoodies:jgoodies-forms:1.7.2" level="project" />
   </component>
 </module>

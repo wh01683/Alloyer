@@ -368,7 +368,7 @@ public abstract class Sig extends Expr {
 
    //==============================================================================================================//
 
-   /** Mutable; reresents a subset signature. */
+   /** Mutable; represents a subset signature. */
 
    public static final class SubsetSig extends Sig {
 

@@ -79,10 +79,60 @@ public class MasterDomain implements Domain {
         String attributes = "";
 
         for (Attr a : s.attributes){
-            attributes += a.toString()+" ";
+            if(a != null)
+            {
+                attributes += a.toString() + " ";
+            }
+            else
+            {
+                attributes += "null ";
+            }
         }
 
-        String[] entry = new String[] {s.label, s.type().toString(), attributes, s.getSubnodes().size() + "", getHashFromSig(s).toString()};
+
+        String[] entry = new String[6];
+
+        String label = s.label;
+        String type = "Top Level Primary";//Toplevel prim by default
+        String abstr = "not abstract";
+        String mult = "one";
+        String numChildren = s.getSubnodes().size() + "";
+        String hashID =  getHashFromSig(s).toString();
+
+        //Type
+        if(attributes.contains("subsig"))
+        {
+            type = "Sub-level Primary";
+        }
+        else if(attributes.contains("subset"))
+        {
+            type = "Subset";
+        }
+
+
+        //Multiplicity
+        if(attributes.contains(" one "))
+        {
+            mult = "One";
+        }
+        else if(attributes.contains("some"))
+        {
+            mult = "Some";
+        }
+        else if(attributes.contains(" lone "))
+        {
+            mult = "Lone";
+        }
+
+
+
+        entry[0] = label;
+        entry[1] = type;
+        entry[2] = abstr;
+        entry[3] = mult;
+        entry[4] = numChildren;
+        entry[5] = hashID;
+
 
         return entry;
 
@@ -90,11 +140,16 @@ public class MasterDomain implements Domain {
 
     private String[] detailedTableEntryBuilder(Sig s){
 
-        String fields = "\nFIELDS\n", fieldDecls = "\nFIELD DECLARATIONS\n", children = "\nCHILDREN\n", facts = "\nFACTS\n", attributes = "\nATTRIBUTES\n";
+        String fields = "\nFIELDS\n";
+        String fieldDecls = "\nFIELD DECLARATIONS\n";
+        String children = "\nCHILDREN\n";
+        String facts = "\nFACTS\n";
+        String attributes = "\nATTRIBUTES\n";
 
         for (Attr a : s.attributes){
-            attributes += a.toString() + " ";
+                attributes += a.toString() + " ";
         }
+
 
         for(Expr e : s.getFacts()){
             facts += e.toString() + " ";
@@ -116,8 +171,15 @@ public class MasterDomain implements Domain {
     }
 
     public String getChildren(Sig s) {
-        String children = detailedTableEntryBuilder(s)[5];
-        return children;
+        if(s.getSubnodes() != null)
+        {
+            String children = detailedTableEntryBuilder(s)[5];
+            return children;
+        }
+        else
+        {
+            return "No Children";
+        }
     }
 
     //Sig label is not unique so we used hashcodes to generate a unique id

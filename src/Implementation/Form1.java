@@ -8,6 +8,7 @@ import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -33,6 +34,7 @@ public class Form1
     public JPanel childrenPanel;
 
     MasterDomain domain;
+    JFrame frame;
     DefaultTableModel tableModel;
     ArrayList<String[]> sigData;
     int[] selectedSigs;
@@ -43,7 +45,7 @@ public class Form1
     {
         domain = mdomain;
 
-        JFrame frame = new JFrame();
+        frame = new JFrame();
         mainPanel = new JPanel();
         mainPanel.setVisible(true);
         frame.add(mainPanel);
@@ -57,23 +59,53 @@ public class Form1
 
         tableModel = (DefaultTableModel)tblSignatures.getModel();
 
-        //CreateSig Button
+        //Adds columns
+        String[] ColumnHeaders = {"NAME", "TYPE", "ABSTRACT", "MULTIPLICITY", "#CHILDREN", "ID"};
+        for (String s : ColumnHeaders)
+        {
+            tableModel.addColumn(s);//adds the columns to the table
+        }
+
+        tblSignatures.getTableHeader().setReorderingAllowed(false);//disables the ability for user to reorder columns
+
+
+        //Primary RadioButton Changed
+        primaryRadioButton.addActionListener(new ActionListener()
+        {
+            public void actionPerformed(ActionEvent actionEvent)
+            {
+                if(primaryRadioButton.isSelected())
+                {
+                    abstractCheckBox.setEnabled(true);
+                }
+
+            }
+        });
+
+        //Subset RadioButton Changed
+        subsetRadioButton.addActionListener(new ActionListener()
+        {
+            public void actionPerformed(ActionEvent actionEvent)
+            {
+                if(subsetRadioButton.isSelected())
+                {
+                    abstractCheckBox.setSelected(false);
+                    abstractCheckBox.setEnabled(false);
+                }
+
+            }
+        });
+
+        //CreateSig Button Pressed
         btnCreateSig.addActionListener(new ActionListener()
         {
             @Override
             public void actionPerformed(ActionEvent actionEvent)
             {
-                String sigName = txtSigName.getText();
-                String type;
-
+                String sigLabel = txtSigName.getText();
                 boolean abstr;
-
                 String multiplicity = cmbMultiplicity.getSelectedItem().toString();
                 Attr multiplicityAttr = Attr.ONE;//multiplicity is one by default
-
-                int numParents = 0;
-
-                int numChildren = 0;
 
                 //handles the abstract checkbox
                 if (abstractCheckBox.isSelected())
@@ -96,22 +128,23 @@ public class Form1
                     multiplicityAttr = Attr.SOME;
                 }
 
-                //PRIMARY RADIOBUTTON---
+                //PRIMARY RADIOBUTTON//
                 if (primaryRadioButton.isSelected())
                 {
-                    type = "Primary";
+
                     try
                     {
                         //if no parents are selected, a top level primary sig is created
                         if(selectedSigs == null)
                         {
-                            domain.addPrimSig(sigName, abstr, multiplicityAttr);
+                            domain.addPrimSig(sigLabel, abstr, multiplicityAttr);
+
                         }
-                        //if one parent is selected, a child primary sig is created
+                        //if one parent is selected, a subsig(prim sig that is child of another primsig) is created
                         else if(selectedSigs.length == 1)
                         {
-                            Integer parentID = (Integer) tableModel.getValueAt(selectedSigs[0], 5);//gets the "ID" aka hashcode of the parent sig
-                            domain.addChildSig(sigName, (Sig.PrimSig)domain.getSigFromHash(parentID), abstr, multiplicityAttr);
+                            Integer parentID = Integer.parseInt((String)tableModel.getValueAt(selectedSigs[0],4));//gets the "ID" aka hashcode of the parent sig
+                            domain.addChildSig(sigLabel, (Sig.PrimSig)domain.getSigFromHash(parentID), abstr, multiplicityAttr);
                         }
                         //if more than one parent is selected, an error message is shown
                         else
@@ -125,13 +158,15 @@ public class Form1
                     }
                 }
 
-                //SUBSET RADIOBUTTON---
+                //SUBSET RADIOBUTTON//
                 else if (subsetRadioButton.isSelected())
                 {
+                    //Subset cant be abstract
+                    abstractCheckBox.setSelected(false);
+                    abstractCheckBox.setEnabled(false);
+
                     try
                     {
-                        type = "Subset";
-
                         //if no parents are selected, an error message is shown.
                         if (selectedSigs == null)
                         {
@@ -146,15 +181,15 @@ public class Form1
                             //creates array of parent IDs from table
                             for (int i : selectedSigs)
                             {
-                                parentIDs[i] = (Integer) tableModel.getValueAt(i, 5);
-                            }
+                                parentIDs[i] = Integer.parseInt((String)tableModel.getValueAt(i, 4));
+                        }
                             //creates arraylist of parent sigs from the IDs
                             for (Integer j : parentIDs)
                             {
                                 parentSigs.add(j, domain.getSigFromHash(parentIDs[j]));
                             }
 
-                            domain.addSubsetSig(sigName, parentSigs, multiplicityAttr);
+                            domain.addSubsetSig(sigLabel, parentSigs, multiplicityAttr);
                         }
                     }
                     catch(Err err)
@@ -180,7 +215,7 @@ public class Form1
 
                     if(selectedSigs.length == 1)
                     {
-                        Integer parentID = (Integer)tableModel.getValueAt(selectedSigs[0],5);
+                        Integer parentID = Integer.parseInt((String) tableModel.getValueAt(selectedSigs[0], 4));
                         updateChildList(parentID);
                     }
                 }
@@ -194,20 +229,20 @@ public class Form1
         tblSignatures.selectAll();
         tblSignatures.clearSelection();
 
-        //Adds columns
-        String[] ColumnHeaders = {"NAME", "TYPE", "MULTIPLICITY", "#CHILDREN", "ID"};
-        for (String s : ColumnHeaders)
-        {
-                tableModel.addColumn(s);//adds the columns to the table
-        }
-
         sigData = domain.getTableEntries();
 
-        for(String[] s : sigData)
+        if(sigData != null)
         {
-            tableModel.addRow(s);//adds the signatures to the table model
+            for (String[] s : sigData)
+            {
+                tableModel.addRow(s);//adds the signatures to the table model
+            }
+            tblSignatures.updateUI();//updates the table being displayed
         }
-        tblSignatures.updateUI();//updates the table being displayed
+        else
+        {
+            JOptionPane.showMessageDialog(frame, "null sigdata");
+        }
     }
 
     public void updateChildList(int parentHash)
@@ -215,13 +250,17 @@ public class Form1
         DefaultListModel listModel = (DefaultListModel) lstChildren.getModel();
 
         listModel.clear();//clears elements of the list model
+
         String s = domain.getChildren(domain.getSigFromHash(parentHash));//gets the children of the selected parent
-        String[] children = s.split(" ");
-        for(String child : children)
+        if (s != "")
         {
-            listModel.addElement(child);//adds child elements to the list model
+            String[] children = s.split(" ");
+            for (String child : children)
+            {
+                listModel.addElement(child);//adds child elements to the list model
+            }
+            lstChildren.updateUI();//updates the table being displayed
         }
-        lstChildren.updateUI();//updates the table being displayed
     }
 
 
