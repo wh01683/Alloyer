@@ -60,7 +60,7 @@ public class Form1
         tableModel = (DefaultTableModel)tblSignatures.getModel();
 
         //Adds columns
-        String[] ColumnHeaders = {"NAME", "TYPE", "ABSTRACT", "MULTIPLICITY", "#CHILDREN", "ID"};
+        String[] ColumnHeaders = {"NAME", "TYPE", "ABSTRACT", "MULTIPLICITY", "PARENTS", "ID"};
         for (String s : ColumnHeaders)
         {
             tableModel.addColumn(s);//adds the columns to the table
@@ -143,7 +143,7 @@ public class Form1
                         //if one parent is selected, a subsig(prim sig that is child of another primsig) is created
                         else if(selectedSigs.length == 1)
                         {
-                            Integer parentID = Integer.parseInt((String)tableModel.getValueAt(selectedSigs[0],4));//gets the "ID" aka hashcode of the parent sig
+                            Integer parentID = Integer.parseInt((String)tableModel.getValueAt(selectedSigs[0],5));//gets the "ID" aka hashcode of the parent sig
                             domain.addChildSig(sigLabel, (Sig.PrimSig)domain.getSigFromHash(parentID), abstr, multiplicityAttr);
                         }
                         //if more than one parent is selected, an error message is shown
@@ -181,12 +181,15 @@ public class Form1
                             //creates array of parent IDs from table
                             for (int i : selectedSigs)
                             {
-                                parentIDs[i] = Integer.parseInt((String)tableModel.getValueAt(i, 4));
-                        }
+                                parentIDs[i] = Integer.parseInt((String)tableModel.getValueAt(i, 5));
+                            }
+
                             //creates arraylist of parent sigs from the IDs
+                            int i = 0;
                             for (Integer j : parentIDs)
                             {
-                                parentSigs.add(j, domain.getSigFromHash(parentIDs[j]));
+                                parentSigs.add(i, domain.getSigFromHash(j));
+                                i++;
                             }
 
                             domain.addSubsetSig(sigLabel, parentSigs, multiplicityAttr);
@@ -215,7 +218,7 @@ public class Form1
 
                     if(selectedSigs.length == 1)
                     {
-                        Integer parentID = Integer.parseInt((String) tableModel.getValueAt(selectedSigs[0], 4));
+                        Integer parentID = Integer.parseInt(tableModel.getValueAt(selectedSigs[0], 5).toString());
                         updateChildList(parentID);
                     }
                 }
@@ -226,8 +229,7 @@ public class Form1
     public void updateTable()
     {
         //Clears table
-        tblSignatures.selectAll();
-        tblSignatures.clearSelection();
+        tableModel.setRowCount(0);
 
         sigData = domain.getTableEntries();
 

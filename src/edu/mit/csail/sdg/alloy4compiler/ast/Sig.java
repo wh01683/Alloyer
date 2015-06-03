@@ -150,6 +150,11 @@ public abstract class Sig extends Expr {
       return (this!=NONE) && (this instanceof PrimSig) && (this==UNIV || ((PrimSig)this).parent==UNIV);
    }
 
+    public PrimSig getPrimParent()
+    {
+        return ((PrimSig)this).parent;
+    }
+
    /** Constructs a new builtin PrimSig. */
    private Sig(String label) {
       super(Pos.UNKNOWN, null);
@@ -330,6 +335,7 @@ public abstract class Sig extends Expr {
        */
       public PrimSig(String label, Attr... attributes) throws Err { this(label, null, attributes); }
 
+
       /** {@inheritDoc} */
       @Override public boolean isSameOrDescendentOf(Sig that) {
          if (this==NONE || this==that || that==UNIV) return true;
@@ -388,6 +394,10 @@ public abstract class Sig extends Expr {
          return (ans!=null) ? ans : (UNIV.type);
       }
 
+       public ConstList<Sig> getSubParents()
+       {
+           return this.parents;
+       }
       /** Constructs a subset sig.
        *
        * @param label - the name of this sig (it does not need to be unique)
@@ -428,6 +438,7 @@ public abstract class Sig extends Expr {
          for(Sig p:parents) if (p.isSameOrDescendentOf(that)) return true;
          return false;
       }
+
    }
 
    //==============================================================================================================//

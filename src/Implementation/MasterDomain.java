@@ -93,20 +93,31 @@ public class MasterDomain implements Domain {
         String[] entry = new String[6];
 
         String label = s.label;
-        String type = "Top Level Primary";//Toplevel prim by default
+        String type = "";
         String abstr = "not abstract";
         String mult = "one";
-        String numChildren = s.getSubnodes().size() + "";
+        String parents = "";
         String hashID =  getHashFromSig(s).toString();
 
+
         //Type
-        if(attributes.contains("subsig"))
+        if(s.isTopLevel() == true)
+        {
+            type = "Top-level Primary";
+            parents = "none";
+        }
+        else if(attributes.contains("subsig"))
         {
             type = "Sub-level Primary";
+            parents = s.getPrimParent().label;
         }
         else if(attributes.contains("subset"))
         {
             type = "Subset";
+            for(Sig p : ((Sig.SubsetSig) s).getSubParents())
+            {
+                parents += p.label + " ";
+            }
         }
 
 
@@ -126,11 +137,12 @@ public class MasterDomain implements Domain {
 
 
 
+
         entry[0] = label;
         entry[1] = type;
         entry[2] = abstr;
         entry[3] = mult;
-        entry[4] = numChildren;
+        entry[4] = parents;
         entry[5] = hashID;
 
 
@@ -146,9 +158,19 @@ public class MasterDomain implements Domain {
         String facts = "\nFACTS\n";
         String attributes = "\nATTRIBUTES\n";
 
+        //String attributes = "";
+
         for (Attr a : s.attributes){
+            if(a != null)
+            {
                 attributes += a.toString() + " ";
+            }
+            else
+            {
+                attributes += "null ";
+            }
         }
+
 
 
         for(Expr e : s.getFacts()){
@@ -185,7 +207,7 @@ public class MasterDomain implements Domain {
     //Sig label is not unique so we used hashcodes to generate a unique id
     public Sig getSigFromHash(Integer hashCode){
 
-        if(sigHashtable.contains(hashCode)){
+        if(sigHashtable.containsKey(hashCode)){
             return sigHashtable.get(hashCode);
         }else{
             return null;
