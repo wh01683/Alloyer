@@ -74,7 +74,7 @@ public class MasterDomain implements Domain {
         return entries;
     }
 
-    private String[] tableEntryBuilder(Sig s){
+    public String[] tableEntryBuilder(Sig s){
 
         String attributes = "";
 
@@ -99,7 +99,6 @@ public class MasterDomain implements Domain {
         String parents = "";
         String hashID =  getHashFromSig(s).toString();
 
-
         //Type
         if(s.isTopLevel() == true)
         {
@@ -120,7 +119,6 @@ public class MasterDomain implements Domain {
             }
         }
 
-
         //Multiplicity
         if(attributes.contains(" one "))
         {
@@ -135,9 +133,6 @@ public class MasterDomain implements Domain {
             mult = "Lone";
         }
 
-
-
-
         entry[0] = label;
         entry[1] = type;
         entry[2] = abstr;
@@ -145,9 +140,7 @@ public class MasterDomain implements Domain {
         entry[4] = parents;
         entry[5] = hashID;
 
-
         return entry;
-
     }
 
     private String[] detailedTableEntryBuilder(Sig s){
