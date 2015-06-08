@@ -97,7 +97,7 @@ public class MasterDomain implements Domain {
 
         String label = s.label;
         String type = "";
-        String abstr = "not abstract";
+        String abstr = "Not Abstract";
         String mult = "one";
         String parents = "";
         String hashID =  getHashFromSig(s).toString();
@@ -134,6 +134,12 @@ public class MasterDomain implements Domain {
         else if(attributes.contains(" lone "))
         {
             mult = "Lone";
+        }
+
+        //Abstract
+        if(attributes.contains("abstract"))
+        {
+            abstr = "Abstract";
         }
 
         entry[0] = label;
@@ -193,6 +199,7 @@ public class MasterDomain implements Domain {
         {
             String children = detailedTableEntryBuilder(s)[5];
             return children;
+
         }
         else
         {
