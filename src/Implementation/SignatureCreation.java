@@ -30,6 +30,7 @@ public class SignatureCreation
     public JPanel allSigsPanel;
     public JPanel childrenPanel;
     private JButton btnShowChildren;
+    private JTextArea textArea1;
 
     MasterDomain domain;
     JFrame frame;
