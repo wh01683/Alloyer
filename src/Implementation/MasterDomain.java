@@ -10,7 +10,7 @@ import java.util.*;
 /**
  * Created by robert on 5/27/15.
  */
-public class MasterDomain implements Domain {
+public class MasterDomain implements Domain, Serializable {
 
     static final String FILE_NAME = System.getProperty("user.dir") + "\\domain";
     Set<Sig> sigs = new LinkedHashSet<Sig>();
