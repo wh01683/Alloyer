@@ -4,6 +4,7 @@ import edu.mit.csail.sdg.alloy4.Err;
 import edu.mit.csail.sdg.alloy4compiler.ast.*;
 import edu.mit.csail.sdg.alloy4compiler.translator.A4Solution;
 
+import java.io.*;
 import java.util.*;
 
 /**
@@ -11,7 +12,7 @@ import java.util.*;
  */
 public class MasterDomain implements Domain {
 
-    final String fileName = System.getProperty("user.dir") + "\\domain";
+    final String FILE_NAME = System.getProperty("user.dir") + "\\domain";
     Set<Sig> sigs = new LinkedHashSet<Sig>();
     Hashtable<Integer, Sig> sigHashtable = new Hashtable<>(5);
 
@@ -212,11 +213,42 @@ public class MasterDomain implements Domain {
         return s.hashCode();
     }
 
-    public void saveDomain(){
+    public void saveDomain() {
+        try{
+
+            FileOutputStream fileOutputStream = new FileOutputStream(FILE_NAME);
+            ObjectOutputStream outputStream = new ObjectOutputStream(fileOutputStream);
+
+            outputStream.writeObject(this);
+
+            fileOutputStream.close();
+            outputStream.close();
 
 
+        }catch (IOException i){
+            System.out.printf("File not found.");
+        }
     }
 
+    public MasterDomain loadDomain(String fileName) {
+        try {
+
+            String file = ((fileName != null) ? fileName : FILE_NAME);
+
+            FileInputStream fileInputStream = new FileInputStream(file);
+            ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+
+            while (objectInputStream.available() > 0) {
+                return (MasterDomain) objectInputStream.readObject();
+            }
+
+        } catch (IOException i) {
+            System.out.printf("File does not exist.");
+        } catch (ClassNotFoundException c) {
+            System.out.printf("Object in the file does not match current MasterDomain class.\nPerhaps the class was changed recently and you need to save a new version to file.");
+        }
+        return null;
+    }
 
 
 }
