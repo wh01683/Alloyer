@@ -12,7 +12,8 @@ import java.util.*;
  */
 public class MasterDomain implements Domain, Serializable {
 
-    static final String FILE_NAME = System.getProperty("user.dir") + "\\domain";
+    static String saveAs = "domain";
+    static String fileName = System.getProperty("user.dir") + "\\"+saveAs+".dom";
     Set<Sig> sigs = new LinkedHashSet<Sig>();
     Hashtable<Integer, Sig> sigHashtable = new Hashtable<>(5);
 
@@ -226,10 +227,17 @@ public class MasterDomain implements Domain, Serializable {
         return s.hashCode();
     }
 
-    public void saveDomain() {
+    public static void setSaveAs(String newSaveAs){
+        saveAs = newSaveAs;
+    }
+    public void saveDomain(String newFileName) {
         try{
 
-            FileOutputStream fileOutputStream = new FileOutputStream(FILE_NAME);
+            if(newFileName != null){
+                setSaveAs(newFileName);
+            }
+
+            FileOutputStream fileOutputStream = new FileOutputStream(fileName);
             ObjectOutputStream outputStream = new ObjectOutputStream(fileOutputStream);
 
             outputStream.writeObject(this);
@@ -243,12 +251,13 @@ public class MasterDomain implements Domain, Serializable {
         }
     }
 
-    public static MasterDomain loadDomain(String fileName) {
+    public static MasterDomain loadDomain(String newFileName) {
         try {
+            if(newFileName != null){
+                setSaveAs(newFileName);
+            }
 
-            String file = ((fileName != null) ? fileName : FILE_NAME);
-
-            FileInputStream fileInputStream = new FileInputStream(file);
+            FileInputStream fileInputStream = new FileInputStream(fileName);
             ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
 
             while (objectInputStream.available() > 0) {
