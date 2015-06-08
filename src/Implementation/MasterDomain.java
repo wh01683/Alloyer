@@ -7,6 +7,8 @@ import edu.mit.csail.sdg.alloy4compiler.ast.Expr;
 import edu.mit.csail.sdg.alloy4compiler.ast.Sig;
 import edu.mit.csail.sdg.alloy4compiler.translator.A4Solution;
 
+
+
 import java.util.*;
 
 /**
@@ -14,6 +16,7 @@ import java.util.*;
  */
 public class MasterDomain implements Domain {
 
+    final String fileName = System.getProperty("user.dir") + "\\domain";
     Set<Sig> sigs = new LinkedHashSet<Sig>();
     Hashtable<Integer, Sig> sigHashtable = new Hashtable<>(5);
 
@@ -210,6 +213,11 @@ public class MasterDomain implements Domain {
 
     public Integer getHashFromSig(Sig s){
         return s.hashCode();
+    }
+
+    public void saveDomain(){
+
+
     }
 
 

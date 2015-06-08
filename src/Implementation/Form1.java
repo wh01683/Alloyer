@@ -5,8 +5,6 @@ import edu.mit.csail.sdg.alloy4compiler.ast.Attr;
 import edu.mit.csail.sdg.alloy4compiler.ast.Sig;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -38,7 +36,7 @@ public class Form1
     DefaultTableModel tableModel;
     DefaultListModel listModel;
     //ArrayList<String[]> sigData;
-    int[] selectedSigs;
+    //int[] selectedSigs;
     Sig newSig;
 
 
@@ -158,16 +156,16 @@ public class Form1
                     try
                     {
                         //if no parents are selected, and no other top level primary is present, a top level primary sig is created
-                        if (selectedSigs == null && topLevelPresent == false)
+                        if (tblSignatures.getSelectedRowCount() == 0 && topLevelPresent == false)
                         {
                             newSig = domain.addPrimSig(sigLabel, abstr, multiplicityAttr);
 
                         }
                         //if one parent is selected, a subsig(primsig that is child of another primsig) is created
-                        else if (selectedSigs.length == 1)
+                        else if (tblSignatures.getSelectedRowCount() == 1)
                         {
-                            Integer parentID = Integer.parseInt((String) tableModel.getValueAt(selectedSigs[0], 5));//gets the "ID" aka hashcode of the parent sig
-                            newSig = domain.addChildSig(sigLabel, (Sig.PrimSig) domain.getSigFromHash(parentID), abstr, multiplicityAttr);
+                            Integer[] parentID = updateSelectedSigs();//gets the "ID" aka hashcode of the parent sig
+                            newSig = domain.addChildSig(sigLabel, (Sig.PrimSig) domain.getSigFromHash(parentID[0]), abstr, multiplicityAttr);
                         }
                         //if more than one parent is selected, an error message is shown
                         else
@@ -191,19 +189,20 @@ public class Form1
                     try
                     {
                         //if no parents are selected, an error message is shown.
-                        if (selectedSigs == null)
+                        if (tblSignatures.getSelectedRowCount() == 0)
                         {
                             JOptionPane.showMessageDialog(frame, "Please select one or more parents for a subset signature.");
                         } else
                         {
-                            Integer[] parentIDs = new Integer[selectedSigs.length];
+                            Integer[] parentIDs = updateSelectedSigs();
                             List<Sig> parentSigs = new ArrayList<Sig>();
 
+
                             //creates array of parent IDs from table
-                            for (int i : selectedSigs)
+                            /*for (Integer i : updateSelectedSigs())
                             {
-                                parentIDs[i] = Integer.parseInt((String) tableModel.getValueAt(i, 5));
-                            }
+                                parentIDs[0] = Integer.parseInt((String) tableModel.getValueAt(i, 5));
+                            }*/
 
                             //creates arraylist of parent sigs from the IDs
                             int i = 0;
@@ -236,23 +235,17 @@ public class Form1
             //occurs when btnShowChildren is pressed
             public void actionPerformed(ActionEvent actionEvent)
             {
-                //creates array of selected indices
-                if (tblSignatures.getSelectedRowCount() > 0)
-                {
-                    selectedSigs = tblSignatures.getSelectedRows();
-                }
-
-                if (selectedSigs.length == 0 || selectedSigs == null)
+                if (tblSignatures.getSelectedRowCount() == 0)
                 {
                     JOptionPane.showMessageDialog(frame, "Please select a signature from the table to view its children.");
                 }
-                else if (selectedSigs.length > 1)
+                else if (tblSignatures.getSelectedRowCount() != 1)
                 {
                     JOptionPane.showMessageDialog(frame, "Please select only one signature from the table to view its children.");
                 }
-                else if (selectedSigs.length == 1)
+                else if (tblSignatures.getSelectedRowCount() == 1)
                 {
-                    Integer parentID = Integer.parseInt(tableModel.getValueAt(selectedSigs[0], 5).toString());
+                    Integer parentID = updateSelectedSigs()[0];
                     updateChildList(parentID);
                 }
             }
@@ -284,6 +277,25 @@ public class Form1
             }
             lstChildren.updateUI();//updates the table being displayed
         }
+    }
+
+    public Integer[] updateSelectedSigs (){
+
+
+        if ((tblSignatures.getSelectedRowCount() > 0)){
+            int[] selectedRows = tblSignatures.getSelectedRows();
+            Integer[] ids = new Integer[selectedRows.length];
+            for (int i = 0; i < ids.length; i++){
+                ids[i] = Integer.parseInt(tableModel.getValueAt(selectedRows[i], 5).toString());
+            }
+            return ids;
+        }
+        else {
+            return null; //do something if ids has stuff in it
+
+        }
+
+
     }
 
 }
