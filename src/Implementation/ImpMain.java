@@ -11,7 +11,7 @@ public class ImpMain {
 
         MasterDomain domain = (MasterDomain.loadDomain(null) == null)? new MasterDomain() : MasterDomain.loadDomain(null);
 
-        Form1 form1 = new Form1(domain);
+        SignatureCreation signatureCreation = new SignatureCreation(domain);
 
 
        /* TestDomain x;

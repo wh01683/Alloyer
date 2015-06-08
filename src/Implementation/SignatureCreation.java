@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * Created by Lindsey on 5/26/2015.
  */
-public class Form1
+public class SignatureCreation
 {
     private JTextField txtSigName;
     private JRadioButton primaryRadioButton;
@@ -41,7 +41,7 @@ public class Form1
 
 
 
-    public Form1(MasterDomain mdomain)
+    public SignatureCreation(MasterDomain mdomain)
     {
         domain = mdomain;
 

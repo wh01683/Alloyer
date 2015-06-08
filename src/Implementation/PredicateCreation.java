@@ -5,7 +5,7 @@ import javax.swing.*;
 /**
  * Created by Lindsey on 6/8/2015.
  */
-public class Form2
+public class PredicateCreation
 {
     private JPanel mainPanel;
     private JTextField txtPredName;

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="Implementation.Form2">
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="Implementation.PredicateCreation">
   <grid id="27dc6" binding="mainPanel" layout-manager="FormLayout">
     <rowspec value="center:180px:noGrow"/>
     <rowspec value="top:8dlu:noGrow"/>
