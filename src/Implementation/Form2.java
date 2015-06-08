@@ -8,5 +8,8 @@ import javax.swing.*;
 public class Form2
 {
     private JPanel mainPanel;
-    private JTextField textField1;
+    private JTextField txtPredName;
+    private JLabel lblTitle;
+    private JLabel lblPredName;
+    private JComboBox comboBox1;
 }

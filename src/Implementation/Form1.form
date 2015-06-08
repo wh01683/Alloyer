@@ -18,7 +18,7 @@
     <colspec value="left:4dlu:noGrow"/>
     <colspec value="fill:d:grow"/>
     <constraints>
-      <xy x="20" y="20" width="1178" height="869"/>
+      <xy x="20" y="20" width="1058" height="478"/>
     </constraints>
     <properties/>
     <border type="none"/>
@@ -240,7 +240,7 @@
       <grid id="a9238" binding="childrenPanel" layout-manager="FormLayout">
         <rowspec value="center:d:noGrow"/>
         <rowspec value="top:4dlu:noGrow"/>
-        <rowspec value="center:d:grow"/>
+        <rowspec value="center:414px:grow"/>
         <colspec value="fill:d:noGrow"/>
         <constraints>
           <grid row="2" column="6" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="1" fill="0" indent="0" use-parent-layout="false"/>
