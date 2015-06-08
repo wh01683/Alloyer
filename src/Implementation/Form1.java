@@ -9,6 +9,7 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -159,13 +160,21 @@ public class Form1
                         if (tblSignatures.getSelectedRowCount() == 0 && topLevelPresent == false)
                         {
                             newSig = domain.addPrimSig(sigLabel, abstr, multiplicityAttr);
+                            addEntry();
+
 
                         }
                         //if one parent is selected, a subsig(primsig that is child of another primsig) is created
                         else if (tblSignatures.getSelectedRowCount() == 1)
                         {
                             Integer[] parentID = updateSelectedSigs();//gets the "ID" aka hashcode of the parent sig
-                            newSig = domain.addChildSig(sigLabel, (Sig.PrimSig) domain.getSigFromHash(parentID[0]), abstr, multiplicityAttr);
+                            if(domain.getSigFromHash(parentID[0]).isSubset == null){
+                                newSig = domain.addChildSig(sigLabel, (Sig.PrimSig) domain.getSigFromHash(parentID[0]), abstr, multiplicityAttr);
+                                addEntry();
+                            }else{
+                                JOptionPane.showMessageDialog(frame, "A Subset Signature may not be a parent");
+                            }
+
                         }
                         //if more than one parent is selected, an error message is shown
                         else
@@ -198,11 +207,6 @@ public class Form1
                             List<Sig> parentSigs = new ArrayList<Sig>();
 
 
-                            //creates array of parent IDs from table
-                            /*for (Integer i : updateSelectedSigs())
-                            {
-                                parentIDs[0] = Integer.parseInt((String) tableModel.getValueAt(i, 5));
-                            }*/
 
                             //creates arraylist of parent sigs from the IDs
                             int i = 0;
@@ -211,8 +215,16 @@ public class Form1
                                 parentSigs.add(i, domain.getSigFromHash(j));
                                 i++;
                             }
+                            if(!(containsSubsetSigs(parentSigs)))
+                            {
+                                newSig = domain.addSubsetSig(sigLabel, parentSigs, multiplicityAttr);
+                                addEntry();
 
-                            newSig = domain.addSubsetSig(sigLabel, parentSigs, multiplicityAttr);
+                            } else
+                            {
+                                JOptionPane.showMessageDialog(frame, "Parent signatures may not be subset signatures.");
+                            }
+
                         }
                     }
                     catch (Err err)
@@ -225,7 +237,6 @@ public class Form1
                     JOptionPane.showMessageDialog(frame, "Please select a signature type (Primary or Subset).");
                 }
                 //Add the entry to the table
-                addEntry();
             }
         });
 
@@ -294,8 +305,16 @@ public class Form1
             return null; //do something if ids has stuff in it
 
         }
+    }
 
+    public boolean containsSubsetSigs(Collection<Sig> sigs){
 
+        for (Sig s : sigs){
+            if (s.isSubset != null){
+                return true;
+            }
+        }
+        return false;
     }
 
 }
