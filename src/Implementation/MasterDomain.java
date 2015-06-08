@@ -22,7 +22,7 @@ public class MasterDomain implements Domain {
         Sig.PrimSig sig = new Sig.PrimSig(name, (sigAbstract? Attr.ABSTRACT : null), multiplicity, Attr.SUBSIG);
 
         sigs.add(sig);
-        sigHashtable.put(sig.hashCode(), sig);
+        sigHashtable.putIfAbsent(sig.hashCode(), sig);
 
         return sig;
     }
@@ -33,7 +33,7 @@ public class MasterDomain implements Domain {
         Sig.PrimSig sig = new Sig.PrimSig(name, parent, (sigAbstract? Attr.ABSTRACT : null), multiplicity, Attr.SUBSIG);
 
         sigs.add(sig);
-        sigHashtable.put(sig.hashCode(), sig);
+        sigHashtable.putIfAbsent(sig.hashCode(), sig);
         return sig;
     }
 
@@ -43,7 +43,7 @@ public class MasterDomain implements Domain {
         Sig.SubsetSig sig = new Sig.SubsetSig(name, parents, multiplicity, Attr.SUBSET);
 
         //parents.add(sig);
-        sigHashtable.put(sig.hashCode(), sig);
+        sigHashtable.putIfAbsent(sig.hashCode(), sig);
         return sig;
     }
 
@@ -140,6 +140,19 @@ public class MasterDomain implements Domain {
         entry[5] = hashID;
 
         return entry;
+    }
+
+    public String[] getSigList(){
+        String[] list = new String[sigHashtable.values().size()];
+        Enumeration e = sigHashtable.keys();
+
+        int i = 0;
+        while(e.hasMoreElements()){
+            list[i] = sigHashtable.get(e.nextElement()).toString();
+            i++;
+        }
+
+        return list;
     }
 
     private String[] detailedTableEntryBuilder(Sig s){
