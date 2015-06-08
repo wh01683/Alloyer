@@ -1,13 +1,8 @@
 package Implementation;
 
 import edu.mit.csail.sdg.alloy4.Err;
-import edu.mit.csail.sdg.alloy4compiler.ast.Attr;
-import edu.mit.csail.sdg.alloy4compiler.ast.Decl;
-import edu.mit.csail.sdg.alloy4compiler.ast.Expr;
-import edu.mit.csail.sdg.alloy4compiler.ast.Sig;
+import edu.mit.csail.sdg.alloy4compiler.ast.*;
 import edu.mit.csail.sdg.alloy4compiler.translator.A4Solution;
-
-
 
 import java.util.*;
 
@@ -46,7 +41,7 @@ public class MasterDomain implements Domain {
 
         Sig.SubsetSig sig = new Sig.SubsetSig(name, parents, multiplicity, Attr.SUBSET);
 
-        parents.add(sig);
+        //parents.add(sig);
         sigHashtable.put(sig.hashCode(), sig);
         return sig;
     }
@@ -180,7 +175,7 @@ public class MasterDomain implements Domain {
         for (Decl d : s.getFieldDecls()){
             fieldDecls += d.toString() + " ";
         }
-        for (Object o : s.getSubnodes()){
+        for (Browsable o : s.getSubnodes()){
             children += o.toString() + " ";
         }
 
@@ -188,16 +183,18 @@ public class MasterDomain implements Domain {
 
     }
 
-    public String getChildren(Sig s) {
-        if(s.getSubnodes() != null)
-        {
-            String children = detailedTableEntryBuilder(s)[5];
+    public ArrayList<Sig> getChildren(Sig.PrimSig s) {
+
+        try {
+            ArrayList<Sig> children = new ArrayList<Sig>(s.children().makeCopy());
+
             return children;
+
+        }catch (Err e){
+            e.printStackTrace();
+            return null;
         }
-        else
-        {
-            return "No Children";
-        }
+
     }
 
     //Sig label is not unique so we used hashcodes to generate a unique id
