@@ -6,6 +6,7 @@ import edu.mit.csail.sdg.alloy4compiler.ast.Sig;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -30,7 +31,7 @@ public class SignatureCreation
     public JPanel allSigsPanel;
     public JPanel childrenPanel;
     private JButton btnShowChildren;
-    private JTextArea textArea1;
+    private JTextArea txtFields;
 
     MasterDomain domain;
     JFrame frame;
@@ -39,6 +40,7 @@ public class SignatureCreation
     //ArrayList<String[]> sigData;
     //int[] selectedSigs;
     Sig newSig;
+
 
 
 
@@ -62,7 +64,7 @@ public class SignatureCreation
         //tableModel for tblSignatures
         tableModel = (DefaultTableModel) tblSignatures.getModel();
 
-        //listMolde for lstChildren
+        //listModel for lstChildren
         listModel = (DefaultListModel) lstChildren.getModel();
 
         //Adds columns to table
@@ -71,6 +73,8 @@ public class SignatureCreation
         {
             tableModel.addColumn(s);//adds the columns to the table
         }
+
+
 
         //disables reordering and cell selection; enables row selection
         tblSignatures.getTableHeader().setReorderingAllowed(false);
