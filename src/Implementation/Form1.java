@@ -159,6 +159,7 @@ public class Form1
                         //if no parents are selected, and no other top level primary is present, a top level primary sig is created
                         if (tblSignatures.getSelectedRowCount() == 0 && topLevelPresent == false)
                         {
+
                             newSig = domain.addPrimSig(sigLabel, abstr, multiplicityAttr);
                             addEntry();
 
@@ -169,6 +170,7 @@ public class Form1
                         {
                             Integer[] parentID = updateSelectedSigs();//gets the "ID" aka hashcode of the parent sig
                             if(domain.getSigFromHash(parentID[0]).isSubset == null){
+
                                 newSig = domain.addChildSig(sigLabel, (Sig.PrimSig) domain.getSigFromHash(parentID[0]), abstr, multiplicityAttr);
                                 addEntry();
                             }else{
@@ -278,14 +280,23 @@ public class Form1
         //clears elements of the list model
         listModel.clear();
 
-        String s = domain.getChildren(domain.getSigFromHash(parentHash));//gets the children of the selected parent
-        if (s != "")
-        {
-            String[] children = s.split(" ");
-            for (String child : children)
-            {
-                listModel.addElement(child);//adds child elements to the list model
+        String info = "";
+        if(domain.getSigFromHash(parentHash).isSubset != null){
+            listModel.addElement("Subset Signature - No Children");
+            lstChildren.updateUI();
+        }else {
+            List<Sig> children = domain.getChildren((Sig.PrimSig) domain.getSigFromHash(parentHash));
+
+            for (Sig c : children) {
+                info += "Label: " + c.toString() + "\n";
+                if (c.isSubset == null) {
+                    for (Sig sig : domain.getChildren((Sig.PrimSig) c)) {
+                        info += "\tChild: " + c.toString() + "\n";
+                    }
+                }
             }
+
+            listModel.addElement(children);//adds child elements to the list model
             lstChildren.updateUI();//updates the table being displayed
         }
     }
