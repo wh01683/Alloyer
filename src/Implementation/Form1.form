@@ -18,7 +18,7 @@
     <colspec value="left:4dlu:noGrow"/>
     <colspec value="fill:d:grow"/>
     <constraints>
-      <xy x="20" y="20" width="1058" height="478"/>
+      <xy x="20" y="20" width="1058" height="839"/>
     </constraints>
     <properties/>
     <border type="none"/>
@@ -47,8 +47,8 @@
         <rowspec value="center:max(d;4px):noGrow"/>
         <colspec value="fill:d:noGrow"/>
         <colspec value="left:4dlu:noGrow"/>
-        <colspec value="fill:89px:noGrow"/>
-        <colspec value="left:5dlu:noGrow"/>
+        <colspec value="fill:135px:noGrow"/>
+        <colspec value="left:10dlu:noGrow"/>
         <colspec value="fill:121px:grow"/>
         <constraints>
           <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
@@ -75,6 +75,7 @@
             </constraints>
             <properties>
               <text value="Primary"/>
+              <toolTipText value="A Primary may have 0 or 1 parents, and 0+ children."/>
             </properties>
           </component>
           <component id="69b0d" class="javax.swing.JCheckBox" binding="abstractCheckBox" default-binding="true">
@@ -84,6 +85,7 @@
             </constraints>
             <properties>
               <text value="Abstract"/>
+              <toolTipText value="An abstract signature may only be instantiated through its children."/>
             </properties>
           </component>
           <component id="70ebd" class="javax.swing.JRadioButton" binding="subsetRadioButton" default-binding="true">
@@ -93,22 +95,7 @@
             </constraints>
             <properties>
               <text value="Subset"/>
-            </properties>
-          </component>
-          <component id="9a2f7" class="javax.swing.JTextArea" binding="lblChooseParent">
-            <constraints>
-              <grid row="2" column="4" row-span="1" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
-                <preferred-size width="150" height="50"/>
-              </grid>
-              <forms defaultalign-horz="false" defaultalign-vert="false"/>
-            </constraints>
-            <properties>
-              <editable value="false"/>
-              <enabled value="true"/>
-              <font swing-font="Label.font"/>
-              <lineWrap value="true"/>
-              <text value="Choose parent(s) from table, if any"/>
-              <wrapStyleWord value="true"/>
+              <toolTipText value="A Subset Signature must extend at least one PrimSig"/>
             </properties>
           </component>
           <component id="a9531" class="javax.swing.JLabel">
@@ -122,12 +109,15 @@
           </component>
           <component id="a8a1a" class="javax.swing.JTextField" binding="txtSigName">
             <constraints>
-              <grid row="6" column="2" row-span="1" col-span="3" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+              <grid row="6" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false">
                 <preferred-size width="150" height="-1"/>
               </grid>
               <forms defaultalign-horz="false"/>
             </constraints>
-            <properties/>
+            <properties>
+              <text value=""/>
+              <toolTipText value="Label of the new signature. Does not need to be unique."/>
+            </properties>
           </component>
           <component id="fec16" class="javax.swing.JLabel">
             <constraints>
@@ -136,19 +126,6 @@
             </constraints>
             <properties>
               <text value="Multiplicity:"/>
-            </properties>
-          </component>
-          <component id="a43f7" class="javax.swing.JComboBox" binding="cmbMultiplicity">
-            <constraints>
-              <grid row="10" column="2" row-span="1" col-span="3" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
-              <forms/>
-            </constraints>
-            <properties>
-              <model>
-                <item value="One"/>
-                <item value="Lone"/>
-                <item value="Some"/>
-              </model>
             </properties>
           </component>
           <component id="ef39e" class="javax.swing.JLabel">
@@ -168,6 +145,7 @@
             </constraints>
             <properties>
               <text value="Create Signature"/>
+              <toolTipText value="Creates the signature with the specified attributes and parents."/>
             </properties>
           </component>
           <vspacer id="90fef">
@@ -194,6 +172,20 @@
               <forms defaultalign-vert="false"/>
             </constraints>
           </vspacer>
+          <component id="a43f7" class="javax.swing.JComboBox" binding="cmbMultiplicity">
+            <constraints>
+              <grid row="10" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+              <forms defaultalign-horz="false"/>
+            </constraints>
+            <properties>
+              <model>
+                <item value="One"/>
+                <item value="Lone"/>
+                <item value="Some"/>
+              </model>
+              <toolTipText value="One: exactly 1. Lone: 0 or 1. Some: 1+"/>
+            </properties>
+          </component>
         </children>
       </grid>
       <grid id="450df" binding="allSigsPanel" layout-manager="GridLayoutManager" row-count="3" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
@@ -233,6 +225,7 @@
             </constraints>
             <properties>
               <text value="Show Children"/>
+              <toolTipText value="Click this button to display the children signatures of the highlighted primary signature."/>
             </properties>
           </component>
         </children>

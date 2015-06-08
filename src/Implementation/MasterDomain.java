@@ -12,7 +12,7 @@ import java.util.*;
  */
 public class MasterDomain implements Domain {
 
-    final String FILE_NAME = System.getProperty("user.dir") + "\\domain";
+    static final String FILE_NAME = System.getProperty("user.dir") + "\\domain";
     Set<Sig> sigs = new LinkedHashSet<Sig>();
     Hashtable<Integer, Sig> sigHashtable = new Hashtable<>(5);
 
@@ -222,7 +222,7 @@ public class MasterDomain implements Domain {
 
     }
 
-    public Integer getHashFromSig(Sig s){
+    public static Integer getHashFromSig(Sig s){
         return s.hashCode();
     }
 
@@ -243,7 +243,7 @@ public class MasterDomain implements Domain {
         }
     }
 
-    public MasterDomain loadDomain(String fileName) {
+    public static MasterDomain loadDomain(String fileName) {
         try {
 
             String file = ((fileName != null) ? fileName : FILE_NAME);

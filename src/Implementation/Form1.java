@@ -25,7 +25,6 @@ public class Form1
     private JButton btnCreateSig;
     private JTable tblSignatures;
     private JList lstChildren;
-    private JTextArea lblChooseParent;
     public JPanel mainPanel;
     public JPanel creatorPanel;
     public JPanel allSigsPanel;
