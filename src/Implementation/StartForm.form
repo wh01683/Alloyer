@@ -21,7 +21,7 @@
           <forms defaultalign-horz="false"/>
         </constraints>
         <properties>
-          <font name="Century Gothic" size="36" style="0"/>
+          <font name="Georgia" size="36" style="0"/>
           <foreground color="-13869313"/>
           <opaque value="false"/>
           <text value="Alloyer"/>

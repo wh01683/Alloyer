@@ -16,4 +16,9 @@ public class PredicateCreation
     private JButton addButton;
     private JList list1;
     private JButton deleteButton;
+    private MasterDomain masterDomain;
+
+    public PredicateCreation (MasterDomain domain){
+        this.masterDomain = domain;
+    }
 }
