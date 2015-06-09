@@ -14,6 +14,7 @@ public class StartForm extends JFrame
     private JButton saveButton;
     private JButton signaturesButton;
     private JButton predicatesButton;
+    private JTextField textField1;
     private MasterDomain domain;
 
     public StartForm () {

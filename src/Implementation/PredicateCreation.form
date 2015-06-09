@@ -4,12 +4,14 @@
     <rowspec value="center:180px:noGrow"/>
     <rowspec value="top:8dlu:noGrow"/>
     <rowspec value="center:225px:noGrow"/>
-    <colspec value="left:444px:noGrow"/>
+    <colspec value="left:486px:noGrow"/>
     <colspec value="left:378px:noGrow"/>
     <constraints>
-      <xy x="26" y="16" width="831" height="418"/>
+      <xy x="26" y="16" width="864" height="418"/>
     </constraints>
-    <properties/>
+    <properties>
+      <font name="Century Gothic" size="18"/>
+    </properties>
     <border type="none"/>
     <children>
       <grid id="ae68b" layout-manager="FormLayout">
@@ -26,30 +28,23 @@
         <colspec value="left:4dlu:noGrow"/>
         <colspec value="fill:109px:noGrow"/>
         <colspec value="left:4dlu:noGrow"/>
-        <colspec value="fill:83px:noGrow"/>
+        <colspec value="fill:127px:noGrow"/>
         <constraints>
           <grid row="0" column="0" row-span="3" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
           <forms defaultalign-horz="false" defaultalign-vert="false"/>
         </constraints>
-        <properties/>
+        <properties>
+          <font name="Century Gothic" size="18"/>
+        </properties>
         <border type="etched"/>
         <children>
-          <component id="18c4e" class="javax.swing.JLabel" binding="lblTitle">
-            <constraints>
-              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
-              <forms defaultalign-horz="false"/>
-            </constraints>
-            <properties>
-              <font style="1"/>
-              <text value="PREDICATE CREATOR"/>
-            </properties>
-          </component>
           <component id="e076d" class="javax.swing.JLabel">
             <constraints>
               <grid row="2" column="6" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
               <forms/>
             </constraints>
             <properties>
+              <font name="Century Gothic" size="14"/>
               <text value="required"/>
             </properties>
           </component>
@@ -59,7 +54,8 @@
               <forms defaultalign-horz="false"/>
             </constraints>
             <properties>
-              <text value="Predicate Name"/>
+              <font name="Century Gothic" size="18"/>
+              <text value="Name:"/>
             </properties>
           </component>
           <component id="5ed35" class="javax.swing.JTextField" binding="txtPredName">
@@ -69,19 +65,25 @@
               </grid>
               <forms defaultalign-horz="false"/>
             </constraints>
-            <properties/>
+            <properties>
+              <font name="Century Gothic" size="14"/>
+            </properties>
           </component>
           <scrollpane id="6c56e">
             <constraints>
               <grid row="6" column="2" row-span="1" col-span="3" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
               <forms defaultalign-horz="false" defaultalign-vert="false"/>
             </constraints>
-            <properties/>
+            <properties>
+              <font name="Century Gothic" size="18"/>
+            </properties>
             <border type="none"/>
             <children>
               <component id="bf683" class="javax.swing.JList" binding="list1" default-binding="true">
                 <constraints/>
-                <properties/>
+                <properties>
+                  <font name="Century Gothic" size="18"/>
+                </properties>
               </component>
             </children>
           </scrollpane>
@@ -91,6 +93,7 @@
               <forms defaultalign-horz="false"/>
             </constraints>
             <properties>
+              <font name="Century Gothic" size="18"/>
               <text value="Parameter"/>
             </properties>
           </component>
@@ -101,14 +104,18 @@
               </grid>
               <forms defaultalign-horz="false"/>
             </constraints>
-            <properties/>
+            <properties>
+              <font name="Century Gothic" size="18"/>
+            </properties>
           </component>
           <component id="b9d5f" class="javax.swing.JComboBox" binding="comboBox1" default-binding="true">
             <constraints>
               <grid row="4" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
               <forms/>
             </constraints>
-            <properties/>
+            <properties>
+              <font name="Century Gothic" size="18"/>
+            </properties>
           </component>
           <component id="d597d" class="javax.swing.JButton" binding="addButton" default-binding="true">
             <constraints>
@@ -116,6 +123,7 @@
               <forms/>
             </constraints>
             <properties>
+              <font name="Century Gothic" size="18"/>
               <text value="Add"/>
             </properties>
           </component>
@@ -125,19 +133,18 @@
               <forms/>
             </constraints>
             <properties>
+              <font name="Century Gothic" size="18"/>
               <text value="Delete"/>
             </properties>
           </component>
-          <component id="da465" class="javax.swing.JTextArea">
+          <component id="18c4e" class="javax.swing.JLabel" binding="lblTitle">
             <constraints>
-              <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+              <grid row="0" column="0" row-span="1" col-span="5" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
               <forms defaultalign-horz="false"/>
             </constraints>
             <properties>
-              <font swing-font="Label.font"/>
-              <lineWrap value="true"/>
-              <text value="Add a parameter by naming it and selecting its domain. Delete a parameter by selecting it from the list and pressing delete."/>
-              <wrapStyleWord value="true"/>
+              <font name="Century Gothic" size="24"/>
+              <text value="PREDICATE CREATOR"/>
             </properties>
           </component>
         </children>
@@ -149,7 +156,9 @@
           <grid row="0" column="1" row-span="3" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
           <forms defaultalign-horz="false" defaultalign-vert="false"/>
         </constraints>
-        <properties/>
+        <properties>
+          <font name="Century Gothic" size="18"/>
+        </properties>
         <border type="etched"/>
         <children/>
       </grid>

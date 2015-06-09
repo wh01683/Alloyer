@@ -5,6 +5,7 @@ import edu.mit.csail.sdg.alloy4compiler.ast.Attr;
 import edu.mit.csail.sdg.alloy4compiler.ast.Sig;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -74,7 +75,8 @@ public class SignatureCreation
             tableModel.addColumn(s);//adds the columns to the table
         }
 
-
+        Border border = BorderFactory.createLineBorder(Color.GRAY);
+        txtFields.setBorder(border);
 
         //disables reordering and cell selection; enables row selection
         tblSignatures.getTableHeader().setReorderingAllowed(false);
