@@ -25,7 +25,7 @@ public class PredicateCreation extends JFrame
     private JLabel lblAllParams;
     private JButton btnSave;
     private JButton btnSignatureCreation;
-    private MasterDomain mdomain;
+    private static MasterDomain mdomain;
 
     public PredicateCreation (MasterDomain domain){
         this.mdomain = domain;

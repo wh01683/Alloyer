@@ -9,7 +9,7 @@ public class DataIO  {
 
     static MasterDomain domain;
     static String saveAs = "domain";
-    static String fileName = System.getProperty("user.dir") + "\\"+saveAs+".dom";
+    static String fileName = System.getProperty("user.dir") + "/"+saveAs+".dom";
     static File domainFile;
 
     public static void setSaveAs(String newSaveAs){
@@ -52,9 +52,13 @@ public class DataIO  {
             FileInputStream fileInputStream = new FileInputStream(fileName);
             ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
 
-            while (objectInputStream.available() > 0) {
-                return (MasterDomain) objectInputStream.readObject();
+            MasterDomain mast = new MasterDomain();
+            while(objectInputStream.available() > 0) {
+                mast = (MasterDomain) objectInputStream.readObject();
             }
+
+            return mast;
+
 
         } catch (IOException i) {
             System.out.printf("File does not exist.");

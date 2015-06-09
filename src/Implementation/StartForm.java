@@ -18,7 +18,7 @@ public class StartForm extends JFrame
     private JTextField txtFileName;
     private JLabel lblTitle;
     private JButton btnCreateNew;
-    private MasterDomain domain;
+    private static MasterDomain domain;
 
     public StartForm () {
 

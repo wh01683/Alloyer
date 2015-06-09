@@ -44,7 +44,7 @@ public class SignatureCreation extends JFrame
     private JButton btnSave;
     private JButton btnPredicateCreation;
 
-    MasterDomain domain;
+    static MasterDomain domain;
     JFrame frame;
     DefaultTableModel tableModel;
     DefaultListModel listModel;

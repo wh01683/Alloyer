@@ -242,7 +242,6 @@ public class MasterDomain implements Domain, Serializable {
     }
 
     public static void save(String newFileName){
-
         DataIO.saveDomain(newFileName);
     }
 
