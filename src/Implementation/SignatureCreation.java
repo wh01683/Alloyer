@@ -20,9 +20,9 @@ import java.util.List;
 public class SignatureCreation
 {
     private JTextField txtSigName;
-    private JRadioButton primaryRadioButton;
-    private JRadioButton subsetRadioButton;
-    private JCheckBox abstractCheckBox;
+    private JRadioButton rbPrimary;
+    private JRadioButton rbSubset;
+    private JCheckBox cbAbstract;
     private JComboBox cmbMultiplicity;
     private JButton btnCreateSig;
     private JTable tblSignatures;
@@ -33,6 +33,12 @@ public class SignatureCreation
     public JPanel childrenPanel;
     private JButton btnShowChildren;
     private JTextArea txtFields;
+    private JLabel lblSigTitle;
+    private JLabel lblName;
+    private JLabel lblMultiplicity;
+    private JLabel lblAllSigs;
+    private JLabel lblChildren;
+    private JButton btnSaveContinue;
 
     MasterDomain domain;
     JFrame frame;
@@ -84,31 +90,31 @@ public class SignatureCreation
         tblSignatures.setRowSelectionAllowed(true);
 
 
-////////Action Listener for primaryRadioButton
-        primaryRadioButton.addActionListener(new ActionListener()
+////////Action Listener for rbPrimary
+        rbPrimary.addActionListener(new ActionListener()
         {
-            //occurs when an action is performed on primaryRadioButton
+            //occurs when an action is performed on rbPrimary
             public void actionPerformed(ActionEvent actionEvent)
             {
-                //If primaryRadio button is selected, the abstractCheckBox is enabled
-                if (primaryRadioButton.isSelected())
+                //If primaryRadio button is selected, the cbAbstract is enabled
+                if (rbPrimary.isSelected())
                 {
-                    abstractCheckBox.setEnabled(true);
+                    cbAbstract.setEnabled(true);
                 }
             }
         });
 
-////////Action Listener for subsetRadioButton
-        subsetRadioButton.addActionListener(new ActionListener()
+////////Action Listener for rbSubset
+        rbSubset.addActionListener(new ActionListener()
         {
-            //occurs when an action is performed on subsetRadioButton
+            //occurs when an action is performed on rbSubset
             public void actionPerformed(ActionEvent actionEvent)
             {
-                //If the subsetRadioButton is selected, deselect and disable abstractCheckBox
-                if (subsetRadioButton.isSelected())
+                //If the rbSubset is selected, deselect and disable cbAbstract
+                if (rbSubset.isSelected())
                 {
-                    abstractCheckBox.setSelected(false);
-                    abstractCheckBox.setEnabled(false);
+                    cbAbstract.setSelected(false);
+                    cbAbstract.setEnabled(false);
                 }
             }
         });
@@ -125,8 +131,8 @@ public class SignatureCreation
                 String multiplicity = cmbMultiplicity.getSelectedItem().toString();
                 Attr multiplicityAttr = Attr.ONE;
 
-                //uses abstractCheckBox to determine whether sig is abstract
-                if (abstractCheckBox.isSelected())
+                //uses cbAbstract to determine whether sig is abstract
+                if (cbAbstract.isSelected())
                 {
                     abstr = true;
                 } else
@@ -147,7 +153,7 @@ public class SignatureCreation
                 }
 
                 ////////Sig is Primary
-                if (primaryRadioButton.isSelected())
+                if (rbPrimary.isSelected())
                 {
                     //Check to see if there is another top level primary present
                     boolean topLevelPresent = false;
@@ -197,11 +203,11 @@ public class SignatureCreation
                 }
 
                 ////////Sig is Subset
-                else if (subsetRadioButton.isSelected())
+                else if (rbSubset.isSelected())
                 {
                     //subset cant be abstract so deselect and disable checkbox
-                    abstractCheckBox.setSelected(false);
-                    abstractCheckBox.setEnabled(false);
+                    cbAbstract.setSelected(false);
+                    cbAbstract.setEnabled(false);
 
                     try
                     {

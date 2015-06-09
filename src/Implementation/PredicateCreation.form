@@ -1,13 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="Implementation.PredicateCreation">
   <grid id="27dc6" binding="mainPanel" layout-manager="FormLayout">
+    <rowspec value="center:max(d;4px):noGrow"/>
+    <rowspec value="top:4dlu:noGrow"/>
     <rowspec value="center:180px:noGrow"/>
     <rowspec value="top:8dlu:noGrow"/>
-    <rowspec value="center:225px:noGrow"/>
-    <colspec value="left:486px:noGrow"/>
+    <rowspec value="center:70px:noGrow"/>
+    <rowspec value="top:4dlu:noGrow"/>
+    <rowspec value="center:45px:noGrow"/>
+    <rowspec value="top:4dlu:noGrow"/>
+    <rowspec value="center:36px:noGrow"/>
+    <colspec value="fill:max(d;4px):noGrow"/>
+    <colspec value="left:4dlu:noGrow"/>
+    <colspec value="left:481px:noGrow"/>
+    <colspec value="fill:16px:noGrow"/>
     <colspec value="left:378px:noGrow"/>
+    <colspec value="left:4dlu:noGrow"/>
+    <colspec value="fill:max(d;4px):noGrow"/>
     <constraints>
-      <xy x="26" y="16" width="864" height="418"/>
+      <xy x="26" y="16" width="897" height="369"/>
     </constraints>
     <properties>
       <font name="Century Gothic" size="18"/>
@@ -21,30 +32,32 @@
         <rowspec value="top:4dlu:noGrow"/>
         <rowspec value="center:max(d;4px):noGrow"/>
         <rowspec value="top:4dlu:noGrow"/>
-        <rowspec value="center:102px:noGrow"/>
+        <rowspec value="center:144px:noGrow"/>
         <colspec value="fill:123px:noGrow"/>
         <colspec value="left:5dlu:noGrow"/>
         <colspec value="fill:101px:noGrow"/>
         <colspec value="left:4dlu:noGrow"/>
         <colspec value="fill:109px:noGrow"/>
         <colspec value="left:4dlu:noGrow"/>
-        <colspec value="fill:127px:noGrow"/>
+        <colspec value="fill:106px:noGrow"/>
+        <colspec value="left:9dlu:noGrow"/>
+        <colspec value="fill:max(d;4px):noGrow"/>
         <constraints>
-          <grid row="0" column="0" row-span="3" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <grid row="2" column="2" row-span="3" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
           <forms defaultalign-horz="false" defaultalign-vert="false"/>
         </constraints>
         <properties>
           <font name="Century Gothic" size="18"/>
         </properties>
-        <border type="etched"/>
+        <border type="none"/>
         <children>
-          <component id="e076d" class="javax.swing.JLabel">
+          <component id="e076d" class="javax.swing.JLabel" binding="lblRequired">
             <constraints>
               <grid row="2" column="6" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
               <forms/>
             </constraints>
             <properties>
-              <font name="Century Gothic" size="14"/>
+              <font name="Century Gothic" size="14" style="0"/>
               <text value="required"/>
             </properties>
           </component>
@@ -54,7 +67,7 @@
               <forms defaultalign-horz="false"/>
             </constraints>
             <properties>
-              <font name="Century Gothic" size="18"/>
+              <font name="Century Gothic" size="18" style="0"/>
               <text value="Name:"/>
             </properties>
           </component>
@@ -79,7 +92,7 @@
             </properties>
             <border type="none"/>
             <children>
-              <component id="bf683" class="javax.swing.JList" binding="list1" default-binding="true">
+              <component id="bf683" class="javax.swing.JList" binding="lstParams">
                 <constraints/>
                 <properties>
                   <font name="Century Gothic" size="14"/>
@@ -87,17 +100,17 @@
               </component>
             </children>
           </scrollpane>
-          <component id="68485" class="javax.swing.JLabel">
+          <component id="68485" class="javax.swing.JLabel" binding="lblParam">
             <constraints>
               <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
               <forms defaultalign-horz="false"/>
             </constraints>
             <properties>
-              <font name="Century Gothic" size="18"/>
-              <text value="Parameter"/>
+              <font name="Century Gothic" size="18" style="0"/>
+              <text value="Parameter:"/>
             </properties>
           </component>
-          <component id="e8446" class="javax.swing.JTextField" binding="textField1" default-binding="true">
+          <component id="e8446" class="javax.swing.JTextField" binding="txtParamName">
             <constraints>
               <grid row="4" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                 <preferred-size width="150" height="-1"/>
@@ -117,7 +130,7 @@
               <font name="Century Gothic" size="18"/>
             </properties>
           </component>
-          <component id="d597d" class="javax.swing.JButton" binding="addButton" default-binding="true">
+          <component id="d597d" class="javax.swing.JButton" binding="btnAdd">
             <constraints>
               <grid row="4" column="6" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
               <forms/>
@@ -127,7 +140,7 @@
               <text value="Add"/>
             </properties>
           </component>
-          <component id="26291" class="javax.swing.JButton" binding="deleteButton" default-binding="true">
+          <component id="26291" class="javax.swing.JButton" binding="btnDelete">
             <constraints>
               <grid row="6" column="6" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
               <forms/>
@@ -137,30 +150,62 @@
               <text value="Delete"/>
             </properties>
           </component>
-          <component id="18c4e" class="javax.swing.JLabel" binding="lblTitle">
+          <component id="18c4e" class="javax.swing.JLabel" binding="lblPredTitle">
             <constraints>
               <grid row="0" column="0" row-span="1" col-span="5" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
               <forms defaultalign-horz="false"/>
             </constraints>
             <properties>
-              <font name="Century Gothic" size="24"/>
+              <font name="Century Gothic" size="24" style="0"/>
+              <requestFocusEnabled value="false"/>
               <text value="PREDICATE CREATOR"/>
             </properties>
           </component>
         </children>
       </grid>
       <grid id="dce86" layout-manager="FormLayout">
-        <rowspec value="center:d:grow"/>
+        <rowspec value="center:252px:grow"/>
+        <rowspec value="top:10dlu:noGrow"/>
+        <rowspec value="center:46px:noGrow"/>
         <colspec value="fill:d:grow"/>
         <constraints>
-          <grid row="0" column="1" row-span="3" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <grid row="2" column="4" row-span="5" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
           <forms defaultalign-horz="false" defaultalign-vert="false"/>
         </constraints>
         <properties>
           <font name="Century Gothic" size="18"/>
         </properties>
-        <border type="etched"/>
-        <children/>
+        <border type="none"/>
+        <children>
+          <scrollpane id="e17f6">
+            <constraints>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+              <forms defaultalign-horz="false" defaultalign-vert="false"/>
+            </constraints>
+            <properties>
+              <font name="Century Gothic" size="14"/>
+            </properties>
+            <border type="none"/>
+            <children>
+              <component id="97de0" class="javax.swing.JTable" binding="tblPreds">
+                <constraints/>
+                <properties>
+                  <font name="Century Gothic" size="14"/>
+                </properties>
+              </component>
+            </children>
+          </scrollpane>
+          <component id="a5a78" class="javax.swing.JButton" binding="btnSaveContinue">
+            <constraints>
+              <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="4" fill="2" indent="0" use-parent-layout="false"/>
+              <forms defaultalign-horz="false" defaultalign-vert="false"/>
+            </constraints>
+            <properties>
+              <font name="Century Gothic" size="18" style="0"/>
+              <text value="Save and Continue"/>
+            </properties>
+          </component>
+        </children>
       </grid>
     </children>
   </grid>

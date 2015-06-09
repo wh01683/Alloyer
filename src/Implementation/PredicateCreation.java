@@ -9,13 +9,17 @@ public class PredicateCreation
 {
     private JPanel mainPanel;
     private JTextField txtPredName;
-    private JLabel lblTitle;
+    private JLabel lblPredTitle;
     private JLabel lblPredName;
-    private JTextField textField1;
+    private JTextField txtParamName;
     private JComboBox comboBox1;
-    private JButton addButton;
-    private JList list1;
-    private JButton deleteButton;
+    private JButton btnAdd;
+    private JList lstParams;
+    private JButton btnDelete;
+    private JLabel lblParam;
+    private JLabel lblRequired;
+    private JTable tblPreds;
+    private JButton btnSaveContinue;
     private MasterDomain masterDomain;
 
     public PredicateCreation (MasterDomain domain){
