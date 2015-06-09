@@ -147,22 +147,23 @@ public class SignatureCreation extends JFrame
         btnSaveContinue.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                mdomain.save(null);
-                PredicateCreation predicateCreation = new PredicateCreation(mdomain);
+                DataIO.setDomain(domain);
+                domain.save(null);
+                PredicateCreation predicateCreation = new PredicateCreation(domain);
             }
         });
 
         btnSave.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                mdomain.save(null);
+                domain.save(null);
             }
         });
 
         btnPredicateCreation.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                PredicateCreation predicateCreation = new PredicateCreation(mdomain);
+                PredicateCreation predicateCreation = new PredicateCreation(domain);
             }
         });
 ////////Action Listener for btnCreateSig

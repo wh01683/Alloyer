@@ -7,13 +7,21 @@ import java.io.*;
  */
 public class DataIO  {
 
-    static MasterDomain domain;
+    static MasterDomain domain = new MasterDomain();
     static String saveAs = "domain";
     static String fileName = System.getProperty("user.dir") + "/"+saveAs+".dom";
     static File domainFile;
 
+    public DataIO(MasterDomain newDomain){
+        domain = newDomain;
+    }
+
     public static void setSaveAs(String newSaveAs){
         saveAs = newSaveAs;
+    }
+
+    public static void setDomain(MasterDomain domain) {
+        DataIO.domain = domain;
     }
 
     public String getSaveAs (){return saveAs;}
@@ -26,6 +34,7 @@ public class DataIO  {
             }
 
             MasterDomain nonStaticDomain = domain;
+
             FileOutputStream fileOutputStream = new FileOutputStream(fileName);
             ObjectOutputStream outputStream = new ObjectOutputStream(fileOutputStream);
             outputStream.writeObject(nonStaticDomain);
@@ -47,17 +56,20 @@ public class DataIO  {
             if(newFileName != null){
                 setSaveAs(newFileName);
             }
-            //domainFile = new File(saveAs);
+
+            File newFile = new File(fileName);
+
+            if(newFile == null){
+                newFile.createNewFile();
+            }
 
             FileInputStream fileInputStream = new FileInputStream(fileName);
             ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
 
-            MasterDomain mast = new MasterDomain();
-            while(objectInputStream.available() > 0) {
-                mast = (MasterDomain) objectInputStream.readObject();
-            }
+            domain = (MasterDomain)objectInputStream.readObject();
 
-            return mast;
+
+            return domain;
 
 
         } catch (IOException i) {
