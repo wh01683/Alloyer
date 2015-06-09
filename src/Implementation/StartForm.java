@@ -32,9 +32,11 @@ public class StartForm extends JFrame
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    MasterDomain.loadDomain((txtLoadFileName.getText() == "")? null : txtLoadFileName.getText()) ;
+                    MasterDomain.loadDomain((txtLoadFileName.getText() == "") ? null : txtLoadFileName.getText());
+                    btnPredicates.setVisible(true);
+                    btnSignatures.setVisible(true);
                 } catch (FileNotFoundException f) {
-                    JOptionPane.showMessageDialog(panel1, "File now found. Please check your spelling.");
+                    JOptionPane.showMessageDialog(panel1, "File not found. Please check your spelling.");
                     txtLoadFileName.grabFocus();
                 }
             }
@@ -72,5 +74,13 @@ public class StartForm extends JFrame
                 PredicateCreation preds = new PredicateCreation(domain);
             }}
         });
+
+        btnCreateNew.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                SignatureCreation signatureCreation = new SignatureCreation(new MasterDomain());
+            }
+        });
+
     }
 }

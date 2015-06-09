@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * Created by Lindsey on 5/26/2015.
  */
-public class SignatureCreation
+public class SignatureCreation extends JFrame
 {
     private JTextField txtSigName;
     private JRadioButton primaryRadioButton;
