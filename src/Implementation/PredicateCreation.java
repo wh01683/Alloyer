@@ -20,6 +20,7 @@ public class PredicateCreation extends JFrame
     private JLabel lblRequired;
     private JTable tblPreds;
     private JButton btnSaveContinue;
+    private JLabel lblAllParams;
     private MasterDomain masterDomain;
 
     public PredicateCreation (MasterDomain domain){
