@@ -31,7 +31,7 @@ public class StartForm extends JFrame
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    MasterDomain.loadDomain((txtFileName.getText() == "") ? null : txtFileName.getText());
+                    domain = MasterDomain.load((txtFileName.getText() == "") ? null : txtFileName.getText());
                     btnPredicates.setVisible(true);
                     btnSignatures.setVisible(true);
                 } catch (FileNotFoundException f) {

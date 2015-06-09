@@ -33,7 +33,7 @@ public class PredicateCreation extends JFrame
         btnSave.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                mdomain.saveDomain(null);
+                mdomain.save(null);
             }
         });
 
@@ -47,7 +47,7 @@ public class PredicateCreation extends JFrame
         btnSaveContinue.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                mdomain.saveDomain(null);
+                mdomain.save(null);
 
             }
         });

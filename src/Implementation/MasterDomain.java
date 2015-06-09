@@ -12,11 +12,10 @@ import java.util.*;
  */
 public class MasterDomain implements Domain, Serializable {
 
-    static String saveAs = "domain";
-    static String fileName = System.getProperty("user.dir") + "\\"+saveAs+".dom";
-    static File domainFile;
+
     Set<Sig> sigs = new LinkedHashSet<Sig>();
     Hashtable<Integer, Sig> sigHashtable = new Hashtable<>(5);
+
 
     @Override
     public Sig.PrimSig addPrimSig(String name, boolean sigAbstract, Attr multiplicity) throws Err {
@@ -231,55 +230,6 @@ public class MasterDomain implements Domain, Serializable {
         return s.hashCode();
     }
 
-    public static void setSaveAs(String newSaveAs){
-        saveAs = newSaveAs;
-    }
-
-    public String getSaveAs (){return saveAs;}
-
-    public void saveDomain(String newFileName) {
-        try{
-
-            if(newFileName != null){
-                setSaveAs(newFileName);
-            }
-            domainFile = new File(saveAs);
-            FileOutputStream fileOutputStream = new FileOutputStream(domainFile);
-            ObjectOutputStream outputStream = new ObjectOutputStream(fileOutputStream);
-            outputStream.writeObject(this);
-
-
-            fileOutputStream.close();
-            outputStream.close();
-
-
-        }catch (IOException i){
-            System.out.printf("Something happened??");
-        }
-    }
-
-    public static MasterDomain loadDomain(String newFileName) throws FileNotFoundException{
-        try {
-            if(newFileName != null){
-                setSaveAs(newFileName);
-            }
-            domainFile = new File(saveAs);
-
-            FileInputStream fileInputStream = new FileInputStream(domainFile);
-            ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
-
-            while (objectInputStream.available() > 0) {
-                return (MasterDomain) objectInputStream.readObject();
-            }
-
-        } catch (IOException i) {
-            System.out.printf("File does not exist.");
-        } catch (ClassNotFoundException c) {
-            System.out.printf("Object in the file does not match current MasterDomain class.\nPerhaps the class was changed recently and you need to save a new version to file.");
-        }
-        return null;
-    }
-
     public boolean deleteSig(Integer sigToDeleteHash){
 
 
@@ -291,5 +241,12 @@ public class MasterDomain implements Domain, Serializable {
         }
     }
 
+    public static void save(String newFileName){
 
+        DataIO.saveDomain(newFileName);
+    }
+
+    public static MasterDomain load(String newFileName) throws FileNotFoundException{
+        return DataIO.loadDomain(newFileName);
+    }
 }
