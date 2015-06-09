@@ -18,7 +18,6 @@ public class StartForm extends JFrame
     private JTextField txtFileName;
     private JLabel lblTitle;
     private JButton btnCreateNew;
-    private JTextField txtLoadFileName;
     private MasterDomain domain;
 
     public StartForm () {
@@ -32,12 +31,12 @@ public class StartForm extends JFrame
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    MasterDomain.loadDomain((txtLoadFileName.getText() == "") ? null : txtLoadFileName.getText());
+                    MasterDomain.loadDomain((txtFileName.getText() == "") ? null : txtFileName.getText());
                     btnPredicates.setVisible(true);
                     btnSignatures.setVisible(true);
                 } catch (FileNotFoundException f) {
                     JOptionPane.showMessageDialog(panel1, "File not found. Please check your spelling.");
-                    txtLoadFileName.grabFocus();
+                    txtFileName.grabFocus();
                 }
             }
         });

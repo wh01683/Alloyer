@@ -10,6 +10,8 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -91,6 +93,27 @@ public class SignatureCreation extends JFrame
         tblSignatures.setCellSelectionEnabled(false);
         tblSignatures.setRowSelectionAllowed(true);
 
+
+
+        this.addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if(e.getKeyCode() == KeyEvent.VK_DELETE){ //if key is the delete button
+                    domain.deleteSig(Integer.parseInt(tableModel.getValueAt(tblSignatures.getSelectedRow(), 5).toString())); //delete sig
+                    tableModel.removeRow(tblSignatures.getSelectedRow()); //delete row
+                }
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+
+            }
+        });
 
 ////////Action Listener for rbPrimary
         rbPrimary.addActionListener(new ActionListener()
@@ -309,6 +332,8 @@ public class SignatureCreation extends JFrame
             String[] tableEntry = domain.tableEntryBuilder(newSig);
             tableModel.addRow(tableEntry);
             tblSignatures.updateUI();
+        } else{
+            JOptionPane.showMessageDialog(frame, "Cannot add a null Signature");
         }
     }
 

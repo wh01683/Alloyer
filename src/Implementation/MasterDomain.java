@@ -14,6 +14,7 @@ public class MasterDomain implements Domain, Serializable {
 
     static String saveAs = "domain";
     static String fileName = System.getProperty("user.dir") + "\\"+saveAs+".dom";
+    static File domainFile;
     Set<Sig> sigs = new LinkedHashSet<Sig>();
     Hashtable<Integer, Sig> sigHashtable = new Hashtable<>(5);
 
@@ -133,6 +134,9 @@ public class MasterDomain implements Domain, Serializable {
             mult = "Lone";
         }
 
+        //Abstract
+        abstr = (s.isAbstract == null)? "Not Abstract" : "Abstract";
+
         entry[0] = label;
         entry[1] = type;
         entry[2] = abstr;
@@ -239,18 +243,18 @@ public class MasterDomain implements Domain, Serializable {
             if(newFileName != null){
                 setSaveAs(newFileName);
             }
-
-            FileOutputStream fileOutputStream = new FileOutputStream(fileName);
+            domainFile = new File(saveAs);
+            FileOutputStream fileOutputStream = new FileOutputStream(domainFile);
             ObjectOutputStream outputStream = new ObjectOutputStream(fileOutputStream);
-
             outputStream.writeObject(this);
+
 
             fileOutputStream.close();
             outputStream.close();
 
 
         }catch (IOException i){
-            System.out.printf("File not found.");
+            System.out.printf("Something happened??");
         }
     }
 
@@ -259,8 +263,9 @@ public class MasterDomain implements Domain, Serializable {
             if(newFileName != null){
                 setSaveAs(newFileName);
             }
+            domainFile = new File(saveAs);
 
-            FileInputStream fileInputStream = new FileInputStream(fileName);
+            FileInputStream fileInputStream = new FileInputStream(domainFile);
             ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
 
             while (objectInputStream.available() > 0) {
@@ -273,6 +278,17 @@ public class MasterDomain implements Domain, Serializable {
             System.out.printf("Object in the file does not match current MasterDomain class.\nPerhaps the class was changed recently and you need to save a new version to file.");
         }
         return null;
+    }
+
+    public boolean deleteSig(Integer sigToDeleteHash){
+
+
+        if(this.sigHashtable.contains(sigToDeleteHash)){
+            sigHashtable.remove(sigToDeleteHash);
+            return true; //deleted successfully
+        }else{
+            return false; //not found, unable to delete
+        }
     }
 
 
