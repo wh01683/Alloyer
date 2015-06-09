@@ -15,7 +15,7 @@
       <xy x="42" y="20" width="478" height="261"/>
     </constraints>
     <properties>
-      <font name="Century Gothic"/>
+      <font name="Century Gothic" size="18"/>
     </properties>
     <border type="none"/>
     <children>
@@ -37,7 +37,7 @@
           <forms/>
         </constraints>
         <properties>
-          <font name="Century Gothic"/>
+          <font name="Century Gothic" size="18"/>
           <text value="Load"/>
         </properties>
       </component>
@@ -47,7 +47,7 @@
           <forms/>
         </constraints>
         <properties>
-          <font name="Century Gothic"/>
+          <font name="Century Gothic" size="18"/>
           <text value="Signatures"/>
           <visible value="false"/>
         </properties>
@@ -58,7 +58,7 @@
           <forms/>
         </constraints>
         <properties>
-          <font name="Century Gothic"/>
+          <font name="Century Gothic" size="18"/>
           <text value="Predicates"/>
           <visible value="false"/>
         </properties>
@@ -71,7 +71,7 @@
           <forms defaultalign-horz="false"/>
         </constraints>
         <properties>
-          <font name="Century Gothic"/>
+          <font name="Century Gothic" size="14"/>
           <visible value="false"/>
         </properties>
       </component>
@@ -81,7 +81,7 @@
           <forms/>
         </constraints>
         <properties>
-          <font name="Century Gothic"/>
+          <font name="Century Gothic" size="18"/>
           <text value="Create new"/>
         </properties>
       </component>
