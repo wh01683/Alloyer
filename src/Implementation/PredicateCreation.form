@@ -37,15 +37,15 @@
         <rowspec value="center:36px:noGrow"/>
         <colspec value="fill:12px:noGrow"/>
         <colspec value="left:4dlu:noGrow"/>
-        <colspec value="fill:123px:noGrow"/>
+        <colspec value="left:138px:noGrow"/>
         <colspec value="left:5dlu:noGrow"/>
         <colspec value="fill:101px:noGrow"/>
         <colspec value="left:4dlu:noGrow"/>
         <colspec value="fill:109px:noGrow"/>
         <colspec value="left:4dlu:noGrow"/>
-        <colspec value="fill:106px:noGrow"/>
-        <colspec value="left:5dlu:noGrow"/>
-        <colspec value="fill:11px:noGrow"/>
+        <colspec value="fill:101px:noGrow"/>
+        <colspec value="left:6dlu:noGrow"/>
+        <colspec value="fill:13px:noGrow"/>
         <constraints>
           <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
           <forms defaultalign-horz="false" defaultalign-vert="false"/>
@@ -161,7 +161,7 @@
             </constraints>
             <properties>
               <font name="Century Gothic" size="18" style="0"/>
-              <text value="All Parameters"/>
+              <text value="All Parameters:"/>
             </properties>
           </component>
           <component id="18c4e" class="javax.swing.JLabel" binding="lblPredTitle">

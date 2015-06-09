@@ -1,20 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="Implementation.StartForm">
   <grid id="27dc6" binding="panel1" default-binding="true" layout-manager="FormLayout">
+    <rowspec value="center:max(d;4px):noGrow"/>
+    <rowspec value="top:4dlu:noGrow"/>
     <rowspec value="center:103px:noGrow"/>
     <rowspec value="top:4dlu:noGrow"/>
     <rowspec value="center:max(d;4px):noGrow"/>
     <rowspec value="top:4dlu:noGrow"/>
-    <rowspec value="center:max(d;4px):noGrow"/>
+    <rowspec value="center:34px:noGrow"/>
     <rowspec value="top:4dlu:noGrow"/>
-    <rowspec value="center:33px:noGrow"/>
+    <rowspec value="center:47px:noGrow"/>
+    <rowspec value="top:4dlu:noGrow"/>
+    <rowspec value="center:max(d;4px):noGrow"/>
+    <colspec value="fill:max(d;4px):noGrow"/>
+    <colspec value="left:4dlu:noGrow"/>
     <colspec value="fill:250px:noGrow"/>
     <colspec value="left:4dlu:noGrow"/>
     <colspec value="fill:d:grow"/>
     <colspec value="left:4dlu:noGrow"/>
     <colspec value="fill:217px:noGrow"/>
+    <colspec value="left:4dlu:noGrow"/>
+    <colspec value="fill:max(d;4px):noGrow"/>
     <constraints>
-      <xy x="42" y="20" width="495" height="286"/>
+      <xy x="42" y="20" width="503" height="266"/>
     </constraints>
     <properties>
       <font name="Century Gothic" size="18"/>
@@ -23,68 +31,69 @@
     <children>
       <component id="2f4e9" class="javax.swing.JLabel" binding="lblTitle">
         <constraints>
-          <grid row="0" column="0" row-span="1" col-span="5" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="2" column="2" row-span="1" col-span="5" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
           <forms defaultalign-horz="false"/>
         </constraints>
         <properties>
-          <font name="Century Gothic" size="48"/>
-          <foreground color="-13869313"/>
+          <font name="Century Gothic" size="48" style="0"/>
+          <foreground color="-16777216"/>
           <opaque value="false"/>
           <text value="Alloyer"/>
         </properties>
       </component>
       <component id="3c2f7" class="javax.swing.JButton" binding="btnLoad">
         <constraints>
-          <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="4" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
           <forms/>
         </constraints>
         <properties>
-          <font name="Century Gothic" size="18"/>
+          <font name="Century Gothic" size="18" style="0"/>
           <text value="Load"/>
         </properties>
       </component>
       <component id="eafd9" class="javax.swing.JButton" binding="btnSignatures">
         <constraints>
-          <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="8" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
           <forms/>
         </constraints>
         <properties>
-          <font name="Century Gothic" size="18"/>
+          <font name="Century Gothic" size="18" style="0"/>
           <text value="Signatures"/>
           <visible value="false"/>
         </properties>
       </component>
       <component id="42282" class="javax.swing.JButton" binding="btnPredicates">
         <constraints>
-          <grid row="6" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="8" column="6" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
           <forms/>
         </constraints>
         <properties>
-          <font name="Century Gothic" size="18"/>
+          <font name="Century Gothic" size="18" style="0"/>
           <text value="Predicates"/>
           <visible value="false"/>
         </properties>
       </component>
       <component id="89a38" class="javax.swing.JButton" binding="btnCreateNew">
         <constraints>
-          <grid row="2" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="4" column="6" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
           <forms/>
         </constraints>
         <properties>
-          <font name="Century Gothic" size="18"/>
+          <font name="Century Gothic" size="18" style="0"/>
           <text value="Create new"/>
         </properties>
       </component>
       <component id="ecd91" class="javax.swing.JTextField" binding="txtFileName">
         <constraints>
-          <grid row="4" column="2" row-span="1" col-span="3" vsize-policy="0" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false">
+          <grid row="6" column="2" row-span="1" col-span="5" vsize-policy="0" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
             <preferred-size width="150" height="-1"/>
           </grid>
-          <forms defaultalign-horz="false"/>
+          <forms defaultalign-horz="false" defaultalign-vert="false"/>
         </constraints>
         <properties>
           <text value=""/>
           <toolTipText value="Enter the name of the file you wish to load."/>
+          <visible value="false"/>
         </properties>
       </component>
     </children>
