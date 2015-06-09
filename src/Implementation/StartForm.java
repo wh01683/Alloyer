@@ -3,6 +3,7 @@ package Implementation;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileNotFoundException;
 
 /**
  * Created by Lindsey on 6/8/2015.
@@ -17,6 +18,7 @@ public class StartForm extends JFrame
     private JTextField txtFileName;
     private JLabel lblTitle;
     private JButton btnCreateNew;
+    private JTextField txtLoadFileName;
     private MasterDomain domain;
 
     public StartForm () {
@@ -29,9 +31,12 @@ public class StartForm extends JFrame
         btnLoad.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //TODO: get file input from user
-
-
+                try {
+                    MasterDomain.loadDomain((txtLoadFileName.getText() == "")? null : txtLoadFileName.getText()) ;
+                } catch (FileNotFoundException f) {
+                    JOptionPane.showMessageDialog(panel1, "File now found. Please check your spelling.");
+                    txtLoadFileName.grabFocus();
+                }
             }
         });
 
@@ -41,7 +46,8 @@ public class StartForm extends JFrame
                 if (domain == null) {
                     JOptionPane.showMessageDialog(panel1, "The current domain is empty. You should create a new one or load one from file.");
                 } else {
-                    domain.saveDomain(null);
+                    String name = (domain.getSaveAs().equalsIgnoreCase("Domain")? null : txtFileName.getText());
+                    domain.saveDomain(name);
                 }
             }
         });
@@ -51,9 +57,10 @@ public class StartForm extends JFrame
             public void actionPerformed(ActionEvent e) {
                 if (domain == null) {
                     JOptionPane.showMessageDialog(panel1, "The current domain is empty. You should create a new one or load one from file.");
-                }else{
-                SignatureCreation sig = new SignatureCreation(domain);
-            }}
+                } else {
+                    SignatureCreation sig = new SignatureCreation(domain);
+                }
+            }
         });
 
         btnPredicates.addActionListener(new ActionListener() {
