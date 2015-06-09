@@ -9,10 +9,7 @@ public class ImpMain {
 
     public static void main(String[] args) throws Err {
 
-        MasterDomain domain = (MasterDomain.loadDomain(null) == null)? new MasterDomain() : MasterDomain.loadDomain(null);
-
-        SignatureCreation signatureCreation = new SignatureCreation(domain);
-
+        StartForm startForm = new StartForm();
 
        /* TestDomain x;
         x = new TestDomain();

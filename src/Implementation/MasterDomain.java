@@ -230,6 +230,9 @@ public class MasterDomain implements Domain, Serializable {
     public static void setSaveAs(String newSaveAs){
         saveAs = newSaveAs;
     }
+
+    public String getSaveAs (){return saveAs;}
+
     public void saveDomain(String newFileName) {
         try{
 
@@ -251,7 +254,7 @@ public class MasterDomain implements Domain, Serializable {
         }
     }
 
-    public static MasterDomain loadDomain(String newFileName) {
+    public static MasterDomain loadDomain(String newFileName) throws FileNotFoundException{
         try {
             if(newFileName != null){
                 setSaveAs(newFileName);
