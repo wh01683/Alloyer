@@ -27,6 +27,8 @@ public class StartForm extends JFrame
             @Override
             public void actionPerformed(ActionEvent e) {
                 //TODO: get file input from user
+
+
             }
         });
 
@@ -35,6 +37,8 @@ public class StartForm extends JFrame
             public void actionPerformed(ActionEvent e) {
                 if (domain == null) {
                     JOptionPane.showMessageDialog(panel1, "The current domain is empty. You should create a new one or load one from file.");
+                } else {
+                    domain.saveDomain(null);
                 }
             }
         });
