@@ -1,6 +1,8 @@
 package Implementation;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  * Created by Lindsey on 6/8/2015.
@@ -21,9 +23,35 @@ public class PredicateCreation extends JFrame
     private JTable tblPreds;
     private JButton btnSaveContinue;
     private JLabel lblAllParams;
-    private MasterDomain masterDomain;
+    private JButton btnSave;
+    private JButton btnSignatureCreation;
+    private MasterDomain mdomain;
 
     public PredicateCreation (MasterDomain domain){
-        this.masterDomain = domain;
+        this.mdomain = domain;
+
+        btnSave.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                mdomain.saveDomain(null);
+            }
+        });
+
+        btnSignatureCreation.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                SignatureCreation signatureCreation = new SignatureCreation(mdomain);
+            }
+        });
+
+        btnSaveContinue.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                mdomain.saveDomain(null);
+
+            }
+        });
     }
+
+
 }

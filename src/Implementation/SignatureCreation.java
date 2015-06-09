@@ -39,6 +39,8 @@ public class SignatureCreation extends JFrame
     private JLabel lblAllSigs;
     private JLabel lblChildren;
     private JButton btnSaveContinue;
+    private JButton btnSave;
+    private JButton btnPredicateCreation;
 
     MasterDomain domain;
     JFrame frame;
@@ -119,6 +121,27 @@ public class SignatureCreation extends JFrame
             }
         });
 
+        btnSaveContinue.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                mdomain.saveDomain(null);
+                PredicateCreation predicateCreation = new PredicateCreation(mdomain);
+            }
+        });
+
+        btnSave.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                mdomain.saveDomain(null);
+            }
+        });
+
+        btnPredicateCreation.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                PredicateCreation predicateCreation = new PredicateCreation(mdomain);
+            }
+        });
 ////////Action Listener for btnCreateSig
         btnCreateSig.addActionListener(new ActionListener()
         {
@@ -276,6 +299,8 @@ public class SignatureCreation extends JFrame
             }
         });
     }
+
+
 
     public void addEntry()
     {

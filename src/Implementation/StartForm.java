@@ -42,18 +42,6 @@ public class StartForm extends JFrame
             }
         });
 
-        saveButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (domain == null) {
-                    JOptionPane.showMessageDialog(panel1, "The current domain is empty. You should create a new one or load one from file.");
-                } else {
-                    String name = (domain.getSaveAs().equalsIgnoreCase("Domain")? null : txtFileName.getText());
-                    domain.saveDomain(name);
-                }
-            }
-        });
-
         btnSignatures.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
