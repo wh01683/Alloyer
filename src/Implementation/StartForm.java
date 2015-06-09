@@ -10,11 +10,13 @@ import java.awt.event.ActionListener;
 public class StartForm extends JFrame
 {
     private JPanel panel1;
-    private JButton loadButton;
+    private JButton btnLoad;
     private JButton saveButton;
-    private JButton signaturesButton;
-    private JButton predicatesButton;
-    private JTextField textField1;
+    private JButton btnSignatures;
+    private JButton btnPredicates;
+    private JTextField txtFileName;
+    private JLabel lblTitle;
+    private JButton btnCreateNew;
     private MasterDomain domain;
 
     public StartForm () {
@@ -24,7 +26,7 @@ public class StartForm extends JFrame
         this.setVisible(true);
         this.pack();
 
-        loadButton.addActionListener(new ActionListener() {
+        btnLoad.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 //TODO: get file input from user
@@ -44,7 +46,7 @@ public class StartForm extends JFrame
             }
         });
 
-        signaturesButton.addActionListener(new ActionListener() {
+        btnSignatures.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (domain == null) {
@@ -54,7 +56,7 @@ public class StartForm extends JFrame
             }}
         });
 
-        predicatesButton.addActionListener(new ActionListener() {
+        btnPredicates.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if(domain == null){

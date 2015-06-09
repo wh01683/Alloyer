@@ -19,7 +19,7 @@
     </properties>
     <border type="none"/>
     <children>
-      <component id="2f4e9" class="javax.swing.JLabel">
+      <component id="2f4e9" class="javax.swing.JLabel" binding="lblTitle">
         <constraints>
           <grid row="0" column="0" row-span="1" col-span="3" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
           <forms defaultalign-horz="false"/>
@@ -31,7 +31,7 @@
           <text value="Alloyer"/>
         </properties>
       </component>
-      <component id="3c2f7" class="javax.swing.JButton" binding="loadButton" default-binding="true">
+      <component id="3c2f7" class="javax.swing.JButton" binding="btnLoad">
         <constraints>
           <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
           <forms/>
@@ -41,7 +41,7 @@
           <text value="Load"/>
         </properties>
       </component>
-      <component id="eafd9" class="javax.swing.JButton" binding="signaturesButton" default-binding="true">
+      <component id="eafd9" class="javax.swing.JButton" binding="btnSignatures">
         <constraints>
           <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
           <forms/>
@@ -52,7 +52,7 @@
           <visible value="false"/>
         </properties>
       </component>
-      <component id="42282" class="javax.swing.JButton" binding="predicatesButton" default-binding="true">
+      <component id="42282" class="javax.swing.JButton" binding="btnPredicates">
         <constraints>
           <grid row="6" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
           <forms/>
@@ -63,7 +63,7 @@
           <visible value="false"/>
         </properties>
       </component>
-      <component id="f1cc" class="javax.swing.JTextField" binding="textField1" default-binding="true">
+      <component id="f1cc" class="javax.swing.JTextField" binding="txtFileName">
         <constraints>
           <grid row="4" column="0" row-span="1" col-span="3" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
             <preferred-size width="150" height="-1"/>
@@ -75,7 +75,7 @@
           <visible value="false"/>
         </properties>
       </component>
-      <component id="89a38" class="javax.swing.JButton" default-binding="true">
+      <component id="89a38" class="javax.swing.JButton" binding="btnCreateNew">
         <constraints>
           <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
           <forms/>

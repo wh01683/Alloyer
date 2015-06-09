@@ -82,7 +82,7 @@
               <component id="bf683" class="javax.swing.JList" binding="list1" default-binding="true">
                 <constraints/>
                 <properties>
-                  <font name="Century Gothic" size="18"/>
+                  <font name="Century Gothic" size="14"/>
                 </properties>
               </component>
             </children>
@@ -105,7 +105,7 @@
               <forms defaultalign-horz="false"/>
             </constraints>
             <properties>
-              <font name="Century Gothic" size="18"/>
+              <font name="Century Gothic" size="14"/>
             </properties>
           </component>
           <component id="b9d5f" class="javax.swing.JComboBox" binding="comboBox1" default-binding="true">
