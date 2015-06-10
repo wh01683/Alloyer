@@ -125,10 +125,7 @@ public class TestDomain {
 
             for(Expr f : dir1.getFacts()){
                 System.out.printf(f.toString());
-
             }
-
-
         }
 
     public Set getSigs(){

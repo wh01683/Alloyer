@@ -19,13 +19,14 @@ import edu.mit.csail.sdg.alloy4.*;
 import edu.mit.csail.sdg.alloy4.ConstList.TempList;
 import edu.mit.csail.sdg.alloy4compiler.ast.Attr.AttrType;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
 /** Mutable; represents a signature. */
 
-public abstract class Sig extends Expr {
+public abstract class Sig extends Expr implements Serializable{
 
    /** The built-in "univ" signature. */
    public static final PrimSig UNIV = new PrimSig("univ", null, false);
@@ -259,7 +260,7 @@ public abstract class Sig extends Expr {
     * the intersection of A and B even if the caller later constructs more sigs or subsigs or subsetsigs...
     */
 
-   public static final class PrimSig extends Sig {
+   public static final class PrimSig extends Sig implements Serializable{
 
       /** Stores its immediate children sigs (not including NONE)
        * <p> Note: if this==UNIV, then this list will always be empty, since we don't keep track of UNIV's children
@@ -368,7 +369,7 @@ public abstract class Sig extends Expr {
 
    /** Mutable; represents a subset signature. */
 
-   public static final class SubsetSig extends Sig {
+   public static final class SubsetSig extends Sig implements Serializable{
 
       /** The list of Sig that it is a subset of; this list is never empty. */
       public final ConstList<Sig> parents;
