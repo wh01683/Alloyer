@@ -7,6 +7,7 @@ package Implementation;
 import edu.mit.csail.sdg.alloy4.Err;
 import edu.mit.csail.sdg.alloy4compiler.ast.*;
 import edu.mit.csail.sdg.alloy4viz.AlloyType;
+import static edu.mit.csail.sdg.alloy4compiler.ast.Sig.SIGINT;
 import kodkod.engine.bool.Int;
 
 /**
@@ -65,13 +66,13 @@ public class GridMetamodel {
         Expr load = Supply.addField("load", Load.setOf());
 
         /*watts: one Int in Supply*/
-        Expr load_watts = Supply.addField("watts", oneOf(Int)));
+        Expr load_watts = Supply.addField("watts", SIGINT.oneOf());
 
         /*supply: one Supply in Load*/
         Expr supply = Load.addField("supply", Supply.oneOf());
 
         /*watts: one Int in Load*/
-        Expr supply_watts = Supply.addField("watts", AlloyType.INT);
+        Expr supply_watts = Supply.addField("watts", SIGINT.oneOf());
 
         /*sig GP extends Supply*/
         Sig.PrimSig GP = new Sig.PrimSig("GP", Supply);
