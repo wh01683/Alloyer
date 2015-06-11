@@ -5,9 +5,7 @@ import edu.mit.csail.sdg.alloy4compiler.ast.Attr;
 import edu.mit.csail.sdg.alloy4compiler.ast.Sig;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import javax.swing.table.DefaultTableModel;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -21,47 +19,68 @@ import java.util.List;
  */
 public class SignatureCreation extends JFrame
 {
-    private JTextField txtSigName;
-    private JRadioButton rbPrimary;
-    private JRadioButton rbSubset;
-    private JCheckBox cbAbstract;
-    private JComboBox cmbMultiplicity;
-    private JButton btnCreateSig;
-    private JTable tblSignatures;
-    private JList lstChildren;
+    //Form components
+    //Frame
+    JFrame frame;
+
+    //Panels
     public JPanel mainPanel;
     public JPanel creatorPanel;
     public JPanel allSigsPanel;
     public JPanel childrenPanel;
+
+    //Buttons
+    private JButton btnCreateSig;
+    private JButton btnAddField;
+    private JButton btnRemoveField;
+    private JButton btnDeleteSig;
     private JButton btnShowChildren;
-    private JTextArea txtFields;
-    private JLabel lblSigTitle;
-    private JLabel lblName;
-    private JLabel lblMultiplicity;
-    private JLabel lblAllSigs;
-    private JLabel lblChildren;
     private JButton btnSaveContinue;
     private JButton btnSave;
     private JButton btnPredicateCreation;
 
+    //Text Fields
+    private JTextField txtSigName;
+    private JTextField txtFieldName;
+    private JTextField txtFieldDesc;
+
+    //Radio Buttons
+    private JRadioButton rbPrimary;
+    private JRadioButton rbSubset;
+
+    //Checkboxes
+    private JCheckBox cbAbstract;
+
+    //Combo Boxes
+    private JComboBox cmbMultiplicity;
+
+    //Tables
+    private JTable tblSignatures;
+
+    //Lists
+    private JList lstFields;
+    private JList lstChildren;
+
+    //Labels
+    private JLabel lblName;
+    private JLabel lblMultiplicity;
+    private JLabel lblFieldName;
+    private JLabel lblFieldDesc;
+    private JLabel lblAllSigs;
+    private JLabel lblChildren;
+
     static MasterDomain domain;
-    JFrame frame;
+    DefaultListModel fieldListModel;
     DefaultTableModel tableModel;
-    DefaultListModel listModel;
-    //ArrayList<String[]> sigData;
-    //int[] selectedSigs;
+    DefaultListModel childrenlistModel;
     Sig newSig;
-
-
-
 
     public SignatureCreation(MasterDomain mdomain)
     {
         domain = mdomain;
 
         //Creation of GUI
-        frame = new JFrame();
-        mainPanel = new JPanel();
+        frame = new JFrame("Signature Creation");
         mainPanel.setVisible(true);
         frame.add(mainPanel);
         frame.setContentPane(mainPanel);
@@ -72,21 +91,18 @@ public class SignatureCreation extends JFrame
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
 
-        //tableModel for tblSignatures
-        tableModel = (DefaultTableModel) tblSignatures.getModel();
 
-        //listModel for lstChildren
-        listModel = (DefaultListModel) lstChildren.getModel();
+        tableModel = (DefaultTableModel) tblSignatures.getModel();
+        childrenlistModel = (DefaultListModel) lstChildren.getModel();
+        fieldListModel = (DefaultListModel) lstFields.getModel();
+
 
         //Adds columns to table
-        String[] ColumnHeaders = {"NAME", "TYPE", "ABSTRACT", "MULTIPLICITY", "PARENTS", "ID"};
+        String[] ColumnHeaders = {"Name", "Type", "Abstract", "Multiplicity", "Parents", "ID", "Fields"};
         for (String s : ColumnHeaders)
         {
             tableModel.addColumn(s);//adds the columns to the table
         }
-
-        Border border = BorderFactory.createLineBorder(Color.GRAY);
-        txtFields.setBorder(border);
 
         //disables reordering and cell selection; enables row selection
         tblSignatures.getTableHeader().setReorderingAllowed(false);
@@ -94,28 +110,26 @@ public class SignatureCreation extends JFrame
         tblSignatures.setRowSelectionAllowed(true);
 
 
-
-        this.addKeyListener(new KeyListener() {
+        this.addKeyListener(new KeyListener()
+        {
             @Override
-            public void keyTyped(KeyEvent e) {
-
-            }
+            public void keyTyped(KeyEvent e){}
 
             @Override
-            public void keyPressed(KeyEvent e) {
-                if(e.getKeyCode() == KeyEvent.VK_DELETE){ //if key is the delete button
+            public void keyPressed(KeyEvent e)
+            {
+                if(e.getKeyCode() == KeyEvent.VK_DELETE)
+                { //if key is the delete button
                     domain.deleteSig(Integer.parseInt(tableModel.getValueAt(tblSignatures.getSelectedRow(), 5).toString())); //delete sig
                     tableModel.removeRow(tblSignatures.getSelectedRow()); //delete row
                 }
             }
 
             @Override
-            public void keyReleased(KeyEvent e) {
-
-            }
+            public void keyReleased(KeyEvent e){}
         });
 
-////////Action Listener for rbPrimary
+        //Primary radio button
         rbPrimary.addActionListener(new ActionListener()
         {
             //occurs when an action is performed on rbPrimary
@@ -129,7 +143,7 @@ public class SignatureCreation extends JFrame
             }
         });
 
-////////Action Listener for rbSubset
+        //Subset radio button
         rbSubset.addActionListener(new ActionListener()
         {
             //occurs when an action is performed on rbSubset
@@ -144,29 +158,54 @@ public class SignatureCreation extends JFrame
             }
         });
 
-        btnSaveContinue.addActionListener(new ActionListener() {
+        //Save & Continue button
+        btnSaveContinue.addActionListener(new ActionListener()
+        {
             @Override
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(ActionEvent e)
+            {
                 DataIO.setDomain(domain);
                 domain.save(null);
                 PredicateCreation predicateCreation = new PredicateCreation(domain);
             }
         });
 
-        btnSave.addActionListener(new ActionListener() {
+        //Save button
+        btnSave.addActionListener(new ActionListener()
+        {
             @Override
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(ActionEvent e)
+            {
                 domain.save(null);
             }
         });
 
-        btnPredicateCreation.addActionListener(new ActionListener() {
+        //Predicate Creation button
+        btnPredicateCreation.addActionListener(new ActionListener()
+        {
             @Override
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(ActionEvent e)
+            {
                 PredicateCreation predicateCreation = new PredicateCreation(domain);
             }
         });
-////////Action Listener for btnCreateSig
+
+
+        //Add Field button
+        btnAddField.addActionListener(new ActionListener()
+        {
+            public void actionPerformed(ActionEvent actionEvent)
+            {
+                String fieldLabel = txtFieldName.getText();
+                String fieldExpr = txtFieldDesc.getText();
+
+
+
+            }
+        });
+
+
+        //Create Signature button
         btnCreateSig.addActionListener(new ActionListener()
         {
             //occurs when btnCreateSig is pressed
@@ -182,7 +221,8 @@ public class SignatureCreation extends JFrame
                 if (cbAbstract.isSelected())
                 {
                     abstr = true;
-                } else
+                }
+                else
                 {
                     abstr = false;
                 }
@@ -191,15 +231,21 @@ public class SignatureCreation extends JFrame
                 if (multiplicity.equals("One"))
                 {
                     multiplicityAttr = Attr.ONE;
-                } else if (multiplicity.equals("Lone"))
+                }
+                else if (multiplicity.equals("Lone"))
                 {
                     multiplicityAttr = Attr.LONE;
-                } else if (multiplicity.equals("Some"))
+                }
+                else if (multiplicity.equals("Some"))
                 {
                     multiplicityAttr = Attr.SOME;
                 }
 
-                ////////Sig is Primary
+
+         //TODO: Fields
+
+
+                //Sig is Primary
                 if (rbPrimary.isSelected())
                 {
                     //Check to see if there is another top level primary present
@@ -232,7 +278,9 @@ public class SignatureCreation extends JFrame
 
                                 newSig = domain.addChildSig(sigLabel, (Sig.PrimSig) domain.getSigFromHash(parentID[0]), abstr, multiplicityAttr);
                                 addEntry();
-                            }else{
+                            }
+                            else
+                            {
                                 JOptionPane.showMessageDialog(frame, "A Subset Signature may not be a parent");
                             }
 
@@ -249,7 +297,7 @@ public class SignatureCreation extends JFrame
                     }
                 }
 
-                ////////Sig is Subset
+                //Sig is Subset
                 else if (rbSubset.isSelected())
                 {
                     //subset cant be abstract so deselect and disable checkbox
@@ -301,7 +349,17 @@ public class SignatureCreation extends JFrame
             }
         });
 
-////////Action Listener for btnShowChildren
+        //Delete Signature button
+        btnDeleteSig.addActionListener(new ActionListener()
+        {
+            public void actionPerformed(ActionEvent actionEvent)
+            {
+                domain.deleteSig(Integer.parseInt(tableModel.getValueAt(tblSignatures.getSelectedRow(), 5).toString())); //delete sig
+                tableModel.removeRow(tblSignatures.getSelectedRow()); //delete row
+            }
+        });
+
+        //Show Children button
         btnShowChildren.addActionListener(new ActionListener()
         {
             //occurs when btnShowChildren is pressed
@@ -311,7 +369,7 @@ public class SignatureCreation extends JFrame
                 {
                     JOptionPane.showMessageDialog(frame, "Please select a signature from the table to view its children.");
                 }
-                else if (tblSignatures.getSelectedRowCount() != 1)
+                else if (tblSignatures.getSelectedRowCount() > 1)
                 {
                     JOptionPane.showMessageDialog(frame, "Please select only one signature from the table to view its children.");
                 }
@@ -325,7 +383,7 @@ public class SignatureCreation extends JFrame
     }
 
 
-
+    //Adds entry to table
     public void addEntry()
     {
         if (newSig != null)
@@ -333,65 +391,75 @@ public class SignatureCreation extends JFrame
             String[] tableEntry = domain.tableEntryBuilder(newSig);
             tableModel.addRow(tableEntry);
             tblSignatures.updateUI();
-        } else{
+        }
+        else
+        {
             JOptionPane.showMessageDialog(frame, "Cannot add a null Signature");
         }
     }
 
+    //Updates child list
     public void updateChildList(int parentHash)
     {
         //clears elements of the list model
-        listModel.clear();
+        childrenlistModel.clear();
 
         String info = "";
-        if(domain.getSigFromHash(parentHash).isSubset != null){
-            listModel.addElement("Subset Signature - No Children");
+        if(domain.getSigFromHash(parentHash).isSubset != null)
+        {
+            childrenlistModel.addElement("Subset Signature - No Children");
             lstChildren.updateUI();
-        }else {
+        }
+        else
+        {
             List<Sig> children = domain.getChildren((Sig.PrimSig) domain.getSigFromHash(parentHash));
 
-            for (Sig c : children) {
+            for (Sig c : children)
+            {
                 info += "Label: " + c.toString() + "\n";
-                if (c.isSubset == null) {
-                    for (Sig sig : domain.getChildren((Sig.PrimSig) c)) {
+                if (c.isSubset == null)
+                {
+                    for (Sig sig : domain.getChildren((Sig.PrimSig) c))
+                    {
                         info += "\tChild: " + c.toString() + "\n";
                     }
                 }
             }
 
-            listModel.addElement(children);//adds child elements to the list model
+            childrenlistModel.addElement(children);//adds child elements to the list model
             lstChildren.updateUI();//updates the table being displayed
         }
     }
 
-    public Integer[] updateSelectedSigs (){
-
-
-        if ((tblSignatures.getSelectedRowCount() > 0)){
+    public Integer[] updateSelectedSigs ()
+    {
+        if ((tblSignatures.getSelectedRowCount() > 0))
+        {
             int[] selectedRows = tblSignatures.getSelectedRows();
             Integer[] ids = new Integer[selectedRows.length];
-            for (int i = 0; i < ids.length; i++){
+            for (int i = 0; i < ids.length; i++)
+            {
                 ids[i] = Integer.parseInt(tableModel.getValueAt(selectedRows[i], 5).toString());
             }
             return ids;
         }
-        else {
+        else
+        {
             return null; //do something if ids has stuff in it
-
         }
     }
 
-    public boolean containsSubsetSigs(Collection<Sig> sigs){
-
-        for (Sig s : sigs){
-            if (s.isSubset != null){
+    public boolean containsSubsetSigs(Collection<Sig> sigs)
+    {
+        for (Sig s : sigs)
+        {
+            if (s.isSubset != null)
+            {
                 return true;
             }
         }
         return false;
     }
-
-
 
 }
 

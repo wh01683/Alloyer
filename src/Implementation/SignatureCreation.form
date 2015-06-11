@@ -11,14 +11,16 @@
     <colspec value="fill:max(d;4px):noGrow"/>
     <colspec value="left:4dlu:noGrow"/>
     <colspec value="fill:268px:grow"/>
-    <colspec value="left:17dlu:noGrow"/>
-    <colspec value="fill:432px:grow"/>
+    <colspec value="left:6dlu:noGrow"/>
+    <colspec value="left:128dlu:noGrow"/>
+    <colspec value="fill:12dlu:noGrow"/>
+    <colspec value="fill:459px:grow"/>
     <colspec value="left:12dlu:noGrow"/>
     <colspec value="fill:246px:grow"/>
     <colspec value="left:4dlu:noGrow"/>
     <colspec value="fill:15px:noGrow"/>
     <constraints>
-      <xy x="20" y="20" width="1045" height="462"/>
+      <xy x="20" y="20" width="1293" height="462"/>
     </constraints>
     <properties/>
     <border type="none"/>
@@ -26,30 +28,35 @@
       <grid id="e4e39" binding="creatorPanel" layout-manager="FormLayout">
         <rowspec value="center:d:noGrow"/>
         <rowspec value="top:4dlu:noGrow"/>
-        <rowspec value="center:max(d;4px):noGrow"/>
-        <rowspec value="top:8dlu:noGrow"/>
         <rowspec value="center:24px:noGrow"/>
-        <rowspec value="top:4dlu:noGrow"/>
-        <rowspec value="center:max(d;4px):noGrow"/>
         <rowspec value="top:4dlu:noGrow"/>
         <rowspec value="center:36px:noGrow"/>
         <rowspec value="top:4dlu:noGrow"/>
-        <rowspec value="center:38px:noGrow"/>
+        <rowspec value="center:4dlu:noGrow"/>
         <rowspec value="top:4dlu:noGrow"/>
-        <rowspec value="top:47dlu:noGrow"/>
-        <rowspec value="center:10px:noGrow"/>
-        <rowspec value="center:37px:noGrow"/>
-        <rowspec value="top:12dlu:noGrow"/>
-        <rowspec value="center:max(d;4px):noGrow"/>
+        <rowspec value="center:25px:noGrow"/>
+        <rowspec value="top:4dlu:noGrow"/>
+        <rowspec value="center:27px:noGrow"/>
+        <rowspec value="top:6dlu:noGrow"/>
+        <rowspec value="center:132px:grow"/>
+        <rowspec value="top:5dlu:noGrow"/>
+        <rowspec value="center:4dlu:noGrow"/>
+        <rowspec value="top:4dlu:noGrow"/>
+        <rowspec value="center:49px:grow"/>
         <colspec value="fill:max(d;4px):noGrow"/>
         <colspec value="left:4dlu:noGrow"/>
-        <colspec value="fill:109px:noGrow"/>
+        <colspec value="fill:103px:noGrow"/>
         <colspec value="left:4dlu:noGrow"/>
-        <colspec value="fill:121px:noGrow"/>
+        <colspec value="fill:98px:noGrow"/>
         <colspec value="left:4dlu:noGrow"/>
-        <colspec value="fill:11px:noGrow"/>
+        <colspec value="fill:63px:noGrow"/>
+        <colspec value="left:4dlu:noGrow"/>
+        <colspec value="fill:99px:noGrow"/>
+        <colspec value="left:4dlu:noGrow"/>
+        <colspec value="fill:96px:noGrow"/>
+        <colspec value="left:4dlu:noGrow"/>
         <constraints>
-          <grid row="4" column="2" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+          <grid row="4" column="2" row-span="1" col-span="3" vsize-policy="3" hsize-policy="3" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
           <forms defaultalign-vert="false"/>
         </constraints>
         <properties/>
@@ -59,29 +66,105 @@
         <children>
           <component id="d25b1" class="javax.swing.JRadioButton" binding="rbPrimary">
             <constraints>
-              <grid row="4" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
               <forms defaultalign-horz="false"/>
             </constraints>
             <properties>
-              <font name="Century Gothic" size="14"/>
+              <font name="Century Gothic" size="16" style="0"/>
               <text value="Primary"/>
               <toolTipText value="A Primary may have 0 or 1 parents, and 0+ children."/>
             </properties>
           </component>
           <component id="70ebd" class="javax.swing.JRadioButton" binding="rbSubset" default-binding="true">
             <constraints>
-              <grid row="4" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <grid row="2" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
               <forms defaultalign-horz="false"/>
             </constraints>
             <properties>
-              <font name="Century Gothic" size="14"/>
+              <font name="Century Gothic" size="16" style="0"/>
               <text value="Subset"/>
               <toolTipText value="A Subset Signature must extend at least one PrimSig"/>
             </properties>
           </component>
+          <component id="67a40" class="javax.swing.JButton" binding="btnCreateSig">
+            <constraints>
+              <grid row="16" column="2" row-span="1" col-span="3" vsize-policy="0" hsize-policy="3" anchor="1" fill="1" indent="0" use-parent-layout="false"/>
+              <forms defaultalign-vert="false"/>
+            </constraints>
+            <properties>
+              <font name="Century Gothic" size="18" style="0"/>
+              <text value="Create Signature"/>
+              <toolTipText value="Creates the signature with the specified attributes, parents, and fields."/>
+            </properties>
+          </component>
+          <component id="667aa" class="javax.swing.JTextField" binding="txtFieldName">
+            <constraints>
+              <grid row="8" column="4" row-span="1" col-span="5" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                <preferred-size width="150" height="-1"/>
+              </grid>
+              <forms defaultalign-horz="false"/>
+            </constraints>
+            <properties>
+              <toolTipText value="Field Name"/>
+            </properties>
+          </component>
+          <component id="1a28a" class="javax.swing.JTextField" binding="txtFieldDesc">
+            <constraints>
+              <grid row="10" column="4" row-span="1" col-span="5" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                <preferred-size width="150" height="-1"/>
+              </grid>
+              <forms defaultalign-horz="false"/>
+            </constraints>
+            <properties/>
+          </component>
+          <component id="cbb05" class="javax.swing.JLabel" binding="lblFieldDesc">
+            <constraints>
+              <grid row="10" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
+              <forms defaultalign-horz="false" defaultalign-vert="false"/>
+            </constraints>
+            <properties>
+              <font name="Century Gothic" size="16" style="0"/>
+              <text value="Description:"/>
+            </properties>
+          </component>
+          <component id="c5b04" class="javax.swing.JLabel" binding="lblFieldName">
+            <constraints>
+              <grid row="8" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
+              <forms defaultalign-horz="false"/>
+            </constraints>
+            <properties>
+              <font name="Century Gothic" size="16" style="0"/>
+              <text value="Field Name:"/>
+            </properties>
+          </component>
+          <component id="72476" class="javax.swing.JSeparator">
+            <constraints>
+              <grid row="6" column="0" row-span="1" col-span="12" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+              <forms defaultalign-horz="false" defaultalign-vert="false"/>
+            </constraints>
+            <properties/>
+          </component>
+          <component id="69b0d" class="javax.swing.JCheckBox" binding="cbAbstract" default-binding="true">
+            <constraints>
+              <grid row="2" column="6" row-span="1" col-span="5" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <forms defaultalign-horz="false"/>
+            </constraints>
+            <properties>
+              <font name="Century Gothic" size="16" style="0"/>
+              <text value="Abstract"/>
+              <toolTipText value="An abstract signature may only be instantiated through its children."/>
+            </properties>
+          </component>
+          <component id="3dc6f" class="javax.swing.JSeparator">
+            <constraints>
+              <grid row="14" column="1" row-span="1" col-span="10" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+              <forms defaultalign-horz="false" defaultalign-vert="false"/>
+            </constraints>
+            <properties/>
+          </component>
           <component id="a8a1a" class="javax.swing.JTextField" binding="txtSigName">
             <constraints>
-              <grid row="8" column="3" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false">
+              <grid row="4" column="8" row-span="1" col-span="3" vsize-policy="0" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false">
                 <preferred-size width="150" height="-1"/>
               </grid>
               <forms defaultalign-horz="false"/>
@@ -92,23 +175,33 @@
               <toolTipText value="Label of the new signature. Does not need to be unique."/>
             </properties>
           </component>
-          <component id="fec16" class="javax.swing.JLabel" binding="lblMultiplicity">
+          <component id="a9531" class="javax.swing.JLabel" binding="lblName">
             <constraints>
-              <grid row="10" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <grid row="4" column="6" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
               <forms defaultalign-horz="false"/>
             </constraints>
             <properties>
-              <font name="Century Gothic" size="18"/>
+              <font name="Century Gothic" size="16" style="0"/>
+              <text value="Name:"/>
+            </properties>
+          </component>
+          <component id="fec16" class="javax.swing.JLabel" binding="lblMultiplicity">
+            <constraints>
+              <grid row="4" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
+              <forms defaultalign-horz="false"/>
+            </constraints>
+            <properties>
+              <font name="Century Gothic" size="16" style="0"/>
               <text value="Multiplicity:"/>
             </properties>
           </component>
           <component id="a43f7" class="javax.swing.JComboBox" binding="cmbMultiplicity">
             <constraints>
-              <grid row="10" column="3" row-span="1" col-span="2" vsize-policy="0" hsize-policy="2" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+              <grid row="4" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
               <forms defaultalign-horz="false"/>
             </constraints>
             <properties>
-              <font name="Century Gothic" size="14"/>
+              <font name="Century Gothic" size="14" style="0"/>
               <model>
                 <item value="One"/>
                 <item value="Lone"/>
@@ -117,60 +210,42 @@
               <toolTipText value="One: exactly 1. Lone: 0 or 1. Some: 1+"/>
             </properties>
           </component>
-          <component id="a9531" class="javax.swing.JLabel" binding="lblName">
+          <scrollpane id="9d415">
             <constraints>
-              <grid row="8" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-              <forms defaultalign-horz="false"/>
+              <grid row="12" column="4" row-span="1" col-span="5" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+              <forms defaultalign-horz="false" defaultalign-vert="false"/>
             </constraints>
-            <properties>
-              <font name="Century Gothic" size="18"/>
-              <text value="Name:"/>
-            </properties>
-          </component>
-          <component id="1496b" class="javax.swing.JLabel" binding="lblSigTitle">
+            <properties/>
+            <border type="none"/>
+            <children>
+              <component id="54909" class="javax.swing.JList" binding="lstFields">
+                <constraints/>
+                <properties>
+                  <font name="Century Gothic" style="0"/>
+                </properties>
+              </component>
+            </children>
+          </scrollpane>
+          <component id="227a6" class="javax.swing.JButton" binding="btnAddField">
             <constraints>
-              <grid row="2" column="2" row-span="1" col-span="5" vsize-policy="0" hsize-policy="0" anchor="1" fill="1" indent="0" use-parent-layout="false"/>
+              <grid row="10" column="10" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="10" fill="0" indent="0" use-parent-layout="false"/>
               <forms defaultalign-horz="false" defaultalign-vert="false"/>
             </constraints>
             <properties>
-              <enabled value="true"/>
-              <font name="Century Gothic" size="24" style="0"/>
-              <text value="SIGNATURE CREATOR"/>
+              <font name="Century Gothic" size="14" style="0"/>
+              <text value="Add"/>
+              <toolTipText value="Adds a field to the signature being created."/>
             </properties>
           </component>
-          <component id="67a40" class="javax.swing.JButton" binding="btnCreateSig">
+          <component id="afd7e" class="javax.swing.JButton" binding="btnRemoveField">
             <constraints>
-              <grid row="14" column="2" row-span="1" col-span="3" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-              <forms defaultalign-vert="false"/>
-            </constraints>
-            <properties>
-              <font name="Century Gothic" size="18"/>
-              <text value="Create Signature"/>
-              <toolTipText value="Creates the signature with the specified attributes and parents."/>
-            </properties>
-          </component>
-          <component id="69b0d" class="javax.swing.JCheckBox" binding="cbAbstract" default-binding="true">
-            <constraints>
-              <grid row="6" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-              <forms defaultalign-horz="false"/>
-            </constraints>
-            <properties>
-              <font name="Century Gothic" size="14"/>
-              <text value="Abstract"/>
-              <toolTipText value="An abstract signature may only be instantiated through its children."/>
-            </properties>
-          </component>
-          <component id="d388d" class="javax.swing.JTextArea" binding="txtFields">
-            <constraints>
-              <grid row="12" column="2" row-span="1" col-span="3" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
-                <preferred-size width="150" height="50"/>
-              </grid>
+              <grid row="12" column="10" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="10" fill="0" indent="0" use-parent-layout="false"/>
               <forms defaultalign-horz="false" defaultalign-vert="false"/>
             </constraints>
             <properties>
-              <lineWrap value="true"/>
-              <opaque value="true"/>
-              <wrapStyleWord value="true"/>
+              <font name="Century Gothic" size="14" style="0"/>
+              <text value="Remove"/>
+              <toolTipText value="Removes the selected field from the signature being created."/>
             </properties>
           </component>
         </children>
@@ -178,18 +253,20 @@
       <grid id="450df" binding="allSigsPanel" layout-manager="FormLayout">
         <rowspec value="center:max(d;4px):noGrow"/>
         <rowspec value="top:4dlu:noGrow"/>
-        <rowspec value="center:d:grow"/>
+        <rowspec value="center:286px:grow"/>
         <rowspec value="top:4dlu:noGrow"/>
         <rowspec value="center:max(d;4px):noGrow"/>
         <rowspec value="top:6dlu:noGrow"/>
         <rowspec value="center:max(d;4px):noGrow"/>
         <colspec value="fill:13px:noGrow"/>
         <colspec value="left:4dlu:noGrow"/>
-        <colspec value="fill:395px:grow"/>
-        <colspec value="left:8dlu:noGrow"/>
-        <colspec value="fill:max(d;4px):noGrow"/>
+        <colspec value="fill:149px:grow"/>
+        <colspec value="left:4dlu:noGrow"/>
+        <colspec value="fill:264px:noGrow"/>
+        <colspec value="left:6dlu:grow"/>
+        <colspec value="fill:10px:noGrow"/>
         <constraints>
-          <grid row="4" column="4" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+          <grid row="4" column="6" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
           <forms defaultalign-vert="false"/>
         </constraints>
         <properties/>
@@ -199,7 +276,7 @@
         <children>
           <component id="4b4b8" class="javax.swing.JLabel" binding="lblAllSigs">
             <constraints>
-              <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <grid row="0" column="2" row-span="1" col-span="3" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
               <forms/>
             </constraints>
             <properties>
@@ -209,7 +286,7 @@
           </component>
           <scrollpane id="5f552">
             <constraints>
-              <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false">
+              <grid row="2" column="2" row-span="1" col-span="3" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false">
                 <preferred-size width="453" height="276"/>
               </grid>
               <forms defaultalign-horz="false" defaultalign-vert="false"/>
@@ -229,13 +306,24 @@
           </scrollpane>
           <component id="eedd4" class="javax.swing.JButton" binding="btnShowChildren">
             <constraints>
+              <grid row="4" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
+              <forms defaultalign-horz="false"/>
+            </constraints>
+            <properties>
+              <font name="Century Gothic" size="18" style="0"/>
+              <text value="Show Children"/>
+              <toolTipText value="Click this button to display the children signatures of the highlighted primary signature."/>
+            </properties>
+          </component>
+          <component id="c4de7" class="javax.swing.JButton" binding="btnDeleteSig">
+            <constraints>
               <grid row="4" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
               <forms/>
             </constraints>
             <properties>
-              <font name="Century Gothic" size="18"/>
-              <text value="Show Children"/>
-              <toolTipText value="Click this button to display the children signatures of the highlighted primary signature."/>
+              <font name="Century Gothic" size="18" style="0"/>
+              <text value="Delete Sig"/>
+              <toolTipText value="Click this button to delete the selected signature from the table."/>
             </properties>
           </component>
         </children>
@@ -253,7 +341,7 @@
         <colspec value="left:4dlu:noGrow"/>
         <colspec value="fill:5dlu:noGrow"/>
         <constraints>
-          <grid row="4" column="6" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+          <grid row="4" column="8" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
           <forms defaultalign-vert="false"/>
         </constraints>
         <properties/>
@@ -294,7 +382,7 @@
               <forms/>
             </constraints>
             <properties>
-              <font name="Century Gothic" size="18"/>
+              <font name="Century Gothic" size="18" style="0"/>
               <text value="Save and Continue"/>
             </properties>
           </component>
