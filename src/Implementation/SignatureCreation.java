@@ -198,12 +198,35 @@ public class SignatureCreation extends JFrame
             {
                 String fieldLabel = txtFieldName.getText();
                 String fieldExpr = txtFieldDesc.getText();
+                String listEntry;
 
-
+                if(fieldLabel == null || fieldExpr == null)
+                {
+                    JOptionPane.showMessageDialog(frame, "Please provide a name and expression for the field being created.");
+                }
+                else
+                {
+                    listEntry = fieldLabel + ": " + fieldExpr;
+                    fieldListModel.addElement(listEntry);
+                    lstFields.updateUI();
+                }
 
             }
         });
 
+        //Remove Field button
+        btnRemoveField.addActionListener(new ActionListener()
+        {
+            public void actionPerformed(ActionEvent actionEvent)
+            {
+                int[] selectedIndices = lstFields.getSelectedIndices();
+                for(int i : selectedIndices)
+                {
+                    fieldListModel.removeElementAt(i);
+                }
+                lstFields.updateUI();
+            }
+        });
 
         //Create Signature button
         btnCreateSig.addActionListener(new ActionListener()
@@ -329,7 +352,8 @@ public class SignatureCreation extends JFrame
                                 newSig = domain.addSubsetSig(sigLabel, parentSigs, multiplicityAttr);
                                 addEntry();
 
-                            } else
+                            }
+                            else
                             {
                                 JOptionPane.showMessageDialog(frame, "Parent signatures may not be subset signatures.");
                             }
