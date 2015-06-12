@@ -70,9 +70,11 @@ public class SignatureCreation extends JFrame
     private JLabel lblChildren;
 
     static MasterDomain domain;
-    DefaultListModel fieldListModel;
+
     DefaultTableModel tableModel;
     DefaultListModel childrenlistModel;
+    DefaultListModel fieldListModel;
+
     Sig newSig;
 
     public SignatureCreation(MasterDomain mdomain)
@@ -81,6 +83,7 @@ public class SignatureCreation extends JFrame
 
         //Creation of GUI
         frame = new JFrame("Signature Creation");
+        mainPanel = new JPanel();
         mainPanel.setVisible(true);
         frame.add(mainPanel);
         frame.setContentPane(mainPanel);
@@ -91,6 +94,7 @@ public class SignatureCreation extends JFrame
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
 
+        lstFields.setModel(new DefaultListModel());
 
         tableModel = (DefaultTableModel) tblSignatures.getModel();
         childrenlistModel = (DefaultListModel) lstChildren.getModel();
@@ -265,7 +269,7 @@ public class SignatureCreation extends JFrame
                 }
 
 
-         //TODO: Fields
+         //TODO: Fields passed to Master Domain
 
 
                 //Sig is Primary
