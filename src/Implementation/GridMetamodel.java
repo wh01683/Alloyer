@@ -30,7 +30,7 @@ public class GridMetamodel {
     public static Command command;
     public static A4Options options = new A4Options();
     public static Sig.PrimSig Grid, Circuit, SupplyCircuit, LoadCircuit, Component, Load, Supply, Switch, GP, SP, Wind, Geo, Hydro;
-    public static List<Sig> sigs = Arrays.asList(new Sig[]{Grid, Circuit, SupplyCircuit, LoadCircuit, Component, Load, Supply, Switch, GP, SP, Wind, Geo, Hydro});
+    public static List<Sig> staticSigs;
 
 
 
@@ -249,13 +249,18 @@ public class GridMetamodel {
 
         /**Predicate: body = g: some Grid*/
 
-        Func someGrid = new Func(null, "SomeG", null, null, Grid.some());
-
+        List<Sig> sigs = Arrays.asList(new Sig[]{Grid, Circuit, SupplyCircuit, LoadCircuit, Component, Load, Supply, Switch, GP, SP, Wind, Geo, Hydro});
 
 
         expression = Circuit.some();
+        command = makeCommand(4);
+        command = changeCommand(command, Grid, false, 1);
 
-        run();
+        Func someGrid = new Func(null, "SomeG", null, null, expression);
+
+        staticSigs = sigs;
+
+        run(sigs);
 
     }
 
@@ -268,12 +273,15 @@ public class GridMetamodel {
     }
 
     public static List<Sig> getSigs(){
-        return sigs;
+            return staticSigs;
+
     }
 
-    public static void run() throws Err {
+    public static void run(List<Sig> sigs) throws Err {
 
         try {
+
+
 
             A4Solution solution = TranslateAlloyToKodkod.execute_command(NOP, sigs, command, options);
 
