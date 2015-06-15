@@ -18,6 +18,7 @@ import static edu.mit.csail.sdg.alloy4.A4Reporter.NOP;
 import static edu.mit.csail.sdg.alloy4compiler.ast.Sig.SIGINT;
 
 
+
 /**
  * The following class will be the Grid Metamodel constructed using the API
  *
@@ -26,31 +27,32 @@ public class GridMetamodel {
 
     public static Expr expression;
     public static Command command;
+    public static A4Options options = new A4Options();
+    public static Sig.PrimSig Grid, Circuit, SupplyCircuit, LoadCircuit, Component, Load, Supply, Switch, GP, SP, Wind, Geo, Hydro;
+    public List<Sig> sigs = Arrays.asList(new Sig[]{Grid, Circuit, SupplyCircuit, LoadCircuit, Component, Load, Supply, Switch, GP, SP, Wind, Geo, Hydro});
+
+
+
+
 
 
     public static void main(String[] args) throws Err {
 
         //each domain that you make needs A4Options, used to make the solution
-        A4Options options = new A4Options();
 
         //just telling the option to use the SAT4J solver
         options.solver = A4Options.SatSolver.SAT4J;
-
-
-        Sig.PrimSig obj=null, dir=null, file=null, root=null;
-        Sig.Field parent=null, contains=null;
-
 
         Expr fact = ExprConstant.TRUE;
 
         /**one sig Grid*/
             //making a new Primsig called Grid, there is exactly one grid in any instance
-        Sig.PrimSig Grid = new Sig.PrimSig("Grid", Attr.ONE);
+         Grid = new Sig.PrimSig("Grid", Attr.ONE);
 
 
         /**abstract sig Circuit*/
             //making new sig Circuit, which is abstract
-        Sig.PrimSig Circuit = new Sig.PrimSig("Circuit", Attr.ABSTRACT);
+         Circuit = new Sig.PrimSig("Circuit", Attr.ABSTRACT);
 
         /**circuit: some Circuit in Grid*/
             //this is the body of the Grid sig declaration. each grid has at least one Circuit
@@ -58,11 +60,11 @@ public class GridMetamodel {
 
         /**sig Load_Circuit extends Circuit*/
             //child circuit of Circuit, load circuit must have a negative watt supply (supply less than they consume)
-        Sig.PrimSig LoadCircuit = new Sig.PrimSig("Load_Circuit", Circuit);
+         LoadCircuit = new Sig.PrimSig("Load_Circuit", Circuit);
 
         /**sig Supply_Circuit extends Circuit*/
             //child circuit of Circuit, supply circuits produce 0 or positive wattage
-        Sig.PrimSig SupplyCircuit = new Sig.PrimSig("Supply_Circuit", Circuit);
+         SupplyCircuit = new Sig.PrimSig("Supply_Circuit", Circuit);
 
         /**supply_circuit: set Supply_Circuit in Load_Circuit*/
             //each load circuit can have 0 or more supply circuits
@@ -74,14 +76,14 @@ public class GridMetamodel {
 
         /**abstract sig Component*/
             //parent sig for Load, supply, and switch
-        Sig.PrimSig Component = new Sig.PrimSig("Component", Attr.ABSTRACT);
+         Component = new Sig.PrimSig("Component", Attr.ABSTRACT);
         /**containing_circuit: one Circuit*/
             //every component must belong to a circuit
         Expr field_containing_circuit_COMPONENT = Component.addField("containing_circuit", Circuit.oneOf());
 
         /**sig Switch extends Component*/
             //switch is a child of Component, switch links other circuits
-        Sig.PrimSig Switch = new Sig.PrimSig("Switch", Component);
+         Switch = new Sig.PrimSig("Switch", Component);
         /**switch: Circuit -> Circuit*/
             //the body of the switch sig, a switch is a mapping of one Circuit to another
         Expr field_switch_CIRCUIT = Switch.addField("switch", Circuit.some_arrow_some(Circuit));
@@ -89,11 +91,11 @@ public class GridMetamodel {
 
         /**abstract sig Supply extends Component*/
             //child of Component, represents a power source
-        Sig.PrimSig Supply = new Sig.PrimSig("Supply", Component, Attr.ABSTRACT);
+         Supply = new Sig.PrimSig("Supply", Component, Attr.ABSTRACT);
 
         /**sig Load extends Component*/
             //child of component, represents a power consumer like a house, hospital, etc
-        Sig.PrimSig Load = new Sig.PrimSig("Load", Component);
+         Load = new Sig.PrimSig("Load", Component);
 
         /**load: set Load in Supply*/
             //every supply has 0 or more load
@@ -113,19 +115,19 @@ public class GridMetamodel {
 
         /**sig GP extends Supply*/
             //all of the below signatures are children of supply
-        Sig.PrimSig GP = new Sig.PrimSig("GP", Supply);
+         GP = new Sig.PrimSig("GP", Supply);
 
         /**sig SP extends Supply*/
-        Sig.PrimSig SP = new Sig.PrimSig("SP", Supply);
+         SP = new Sig.PrimSig("SP", Supply);
 
         /**sig Wind extends Supply*/
-        Sig.PrimSig Wind = new Sig.PrimSig("Wind", Supply);
+         Wind = new Sig.PrimSig("Wind", Supply);
 
         /**sig Geo extends Supply*/
-        Sig.PrimSig Geo = new Sig.PrimSig("Geo", Supply);
+         Geo = new Sig.PrimSig("Geo", Supply);
 
         /**sig Hydro extends Supply*/
-        Sig.PrimSig Hydro = new Sig.PrimSig("Hydro", Supply);
+         Hydro = new Sig.PrimSig("Hydro", Supply);
 
 
 
@@ -249,24 +251,9 @@ public class GridMetamodel {
         Func someGrid = new Func(null, "SomeG", null, null, Grid.some());
 
 
-        List<Sig> sigs = Arrays.asList(new Sig[]{Grid, Circuit, SupplyCircuit, LoadCircuit, Component, Load, Supply, Switch, GP, SP, Wind, Geo, Hydro});
 
-        // run { some A && atMostThree[B,B] } for 3 but 3 int, 3 seq
         expression = Circuit.some();
 
-
-
-
-
-
-        A4Solution solution = TranslateAlloyToKodkod.execute_command(NOP, sigs, command, options);
-        System.out.println("[Solution1]:");
-        System.out.println(solution.toString());
-        while(solution.satisfiable()){
-            System.out.println("[Solution]:");
-            System.out.println(solution.toString());
-            solution = solution.next();
-        }
     }
 
     public static Command makeCommand(int forInt) throws Err{
@@ -275,6 +262,17 @@ public class GridMetamodel {
 
     public static Command changeCommand(Command prev, Sig sig, boolean exact, int number) throws Err{
         return prev.change(sig, exact, number);
+    }
+
+    public void run() throws Err{
+        A4Solution solution = TranslateAlloyToKodkod.execute_command(NOP, sigs, command, options);
+        System.out.println("[Solution]:");
+        System.out.println(solution.toString());
+        while(solution.satisfiable()){
+            System.out.println("[Solution]:");
+            System.out.println(solution.toString());
+            solution = solution.next();
+        }
     }
 
 
