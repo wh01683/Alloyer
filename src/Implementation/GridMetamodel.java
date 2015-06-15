@@ -10,6 +10,7 @@ import edu.mit.csail.sdg.alloy4compiler.ast.*;
 import edu.mit.csail.sdg.alloy4compiler.translator.A4Options;
 import edu.mit.csail.sdg.alloy4compiler.translator.A4Solution;
 import edu.mit.csail.sdg.alloy4compiler.translator.TranslateAlloyToKodkod;
+import edu.mit.csail.sdg.alloy4whole.SimpleGUI;
 
 import java.util.Arrays;
 import java.util.List;
@@ -29,7 +30,7 @@ public class GridMetamodel {
     public static Command command;
     public static A4Options options = new A4Options();
     public static Sig.PrimSig Grid, Circuit, SupplyCircuit, LoadCircuit, Component, Load, Supply, Switch, GP, SP, Wind, Geo, Hydro;
-    public List<Sig> sigs = Arrays.asList(new Sig[]{Grid, Circuit, SupplyCircuit, LoadCircuit, Component, Load, Supply, Switch, GP, SP, Wind, Geo, Hydro});
+    public static List<Sig> sigs = Arrays.asList(new Sig[]{Grid, Circuit, SupplyCircuit, LoadCircuit, Component, Load, Supply, Switch, GP, SP, Wind, Geo, Hydro});
 
 
 
@@ -254,6 +255,8 @@ public class GridMetamodel {
 
         expression = Circuit.some();
 
+        run();
+
     }
 
     public static Command makeCommand(int forInt) throws Err{
@@ -264,14 +267,29 @@ public class GridMetamodel {
         return prev.change(sig, exact, number);
     }
 
-    public void run() throws Err{
-        A4Solution solution = TranslateAlloyToKodkod.execute_command(NOP, sigs, command, options);
-        System.out.println("[Solution]:");
-        System.out.println(solution.toString());
-        while(solution.satisfiable()){
+    public static List<Sig> getSigs(){
+        return sigs;
+    }
+
+    public static void run() throws Err {
+
+        try {
+
+            A4Solution solution = TranslateAlloyToKodkod.execute_command(NOP, sigs, command, options);
+
+            SimpleGUI.main(new String[]{solution.toString()});
+
+
+            System.out.println("[Solution]:");
+            System.out.println(solution.toString());
+        /*while(solution.satisfiable()){
             System.out.println("[Solution]:");
             System.out.println(solution.toString());
             solution = solution.next();
+        }*/
+
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
 
