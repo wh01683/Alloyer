@@ -24,6 +24,10 @@ import static edu.mit.csail.sdg.alloy4compiler.ast.Sig.SIGINT;
  * */
 public class GridMetamodel {
 
+    public static Expr expression;
+    public static Command command;
+
+
     public static void main(String[] args) throws Err {
 
         //each domain that you make needs A4Options, used to make the solution
@@ -245,40 +249,32 @@ public class GridMetamodel {
         Func someGrid = new Func(null, "SomeG", null, null, Grid.some());
 
 
-        // pred atMostThree[x:univ, y:univ] { #(x+y) >= 3 }
-        Decl decl_loads = Load.someOf("l");
-        Decl decl_supplies = Supply.someOf("s");
-
-
-
-
-
-        Expr body = decl_loads.get().plus(decl_supplies.get()).cardinality().lte(ExprConstant.makeNUMBER(3));
-        Func atMost3 = new Func(null, "atMost3", Util.asList(decl_loads,decl_supplies), null, body);
-
-        List<Sig> sigs = Arrays.asList(new Sig[] {Grid, Circuit, SupplyCircuit, LoadCircuit, Component, Load, Supply, Switch, GP, SP, Wind, Geo, Hydro});
+        List<Sig> sigs = Arrays.asList(new Sig[]{Grid, Circuit, SupplyCircuit, LoadCircuit, Component, Load, Supply, Switch, GP, SP, Wind, Geo, Hydro});
 
         // run { some A && atMostThree[B,B] } for 3 but 3 int, 3 seq
-        Expr expr1 = Circuit.some().and(atMost3.call(SP,SP));
-        Command cmd1 = new Command(false, 3, 8, 7, expr1);
-        A4Solution sol1 = TranslateAlloyToKodkod.execute_command(NOP, sigs, cmd1, options);
+        expression = Circuit.some();
+
+
+
+
+
+
+        A4Solution solution = TranslateAlloyToKodkod.execute_command(NOP, sigs, command, options);
         System.out.println("[Solution1]:");
-        System.out.println(sol1.toString());
-
-
-
-
-        A4Solution solution = TranslateAlloyToKodkod.execute_command(NOP, sigs, cmd1, options);
-
+        System.out.println(solution.toString());
         while(solution.satisfiable()){
             System.out.println("[Solution]:");
             System.out.println(solution.toString());
             solution = solution.next();
         }
+    }
 
+    public static Command makeCommand(int forInt) throws Err{
+        return new Command(false, forInt, 8, 7, expression);
+    }
 
-
-
+    public static Command changeCommand(Command prev, Sig sig, boolean exact, int number) throws Err{
+        return prev.change(sig, exact, number);
     }
 
 
