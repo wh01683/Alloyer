@@ -289,16 +289,17 @@ public class GridMetamodel {
 
             A4Solution solution = TranslateAlloyToKodkod.execute_command(NOP, sigs, command, options);
 
+            SimpleGUI gui = new SimpleGUI(null);
             SimpleGUI.main(new String[]{solution.toString()});
-
-
+            gui.doVisualize(solution.toString());
             System.out.println("[Solution]:");
             System.out.println(solution.toString());
-        /*while(solution.satisfiable()){
+
+        while(solution.satisfiable()){
             System.out.println("[Solution]:");
             System.out.println(solution.toString());
             solution = solution.next();
-        }*/
+        }
 
         }catch (Exception e){
             e.printStackTrace();

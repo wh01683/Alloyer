@@ -1450,7 +1450,8 @@ public final class SimpleGUI implements ComponentListener, Listener {
 
     /** This method displays a particular instance or message. */
     @SuppressWarnings("unchecked")
-    Runner doVisualize(String arg) {
+    //TODO: figure out how to visualize solutions from models solved with the api
+    public Runner doVisualize(String arg) {
         if (wrap) return wrapMe(arg);
         text.clearShade();
         if (arg.startsWith("MSG: ")) { // MSG: message
@@ -1656,7 +1657,7 @@ public final class SimpleGUI implements ComponentListener, Listener {
     };
 
     /** The constructor; this method will be called by the AWT event thread, using the "invokeLater" method. */
-    private SimpleGUI (final String[] args) {
+    public SimpleGUI (final String[] args) {
 
         // Register an exception handler for uncaught exceptions
         MailBug.setup();
