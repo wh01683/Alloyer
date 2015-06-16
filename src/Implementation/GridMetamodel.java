@@ -39,6 +39,8 @@ public class GridMetamodel {
 
     public static void main(String[] args) throws Err {
 
+
+
         //each domain that you make needs A4Options, used to make the solution
 
         //just telling the option to use the SAT4J solver
@@ -261,6 +263,8 @@ public class GridMetamodel {
         staticSigs = sigs;
 
         run(sigs);
+
+
 
     }
 

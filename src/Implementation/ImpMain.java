@@ -9,7 +9,8 @@ public class ImpMain {
 
     public static void main(String[] args) throws Err {
 
-        StartForm startForm = new StartForm();
+
+        AlloyerForm alloyerForm = new AlloyerForm();
 
        /* TestDomain x;
         x = new TestDomain();
