@@ -262,7 +262,7 @@ public class GridMetamodel {
 
         staticSigs = sigs;
 
-        run(sigs);
+        //run(sigs, command);
 
 
 
@@ -281,15 +281,15 @@ public class GridMetamodel {
 
     }
 
-    public static void run(List<Sig> sigs) throws Err {
+    public static void run(List<Sig> sigs, Command cmd) throws Err {
 
         try {
 
 
 
-            A4Solution solution = TranslateAlloyToKodkod.execute_command(NOP, sigs, command, options);
+            A4Solution solution = TranslateAlloyToKodkod.execute_command(NOP, sigs, cmd, options);
 
-            SimpleGUI.main(new String[]{solution.toString()});
+            //SimpleGUI.main(new String[]{solution.toString()});
 
 
             System.out.println("[Solution]:");

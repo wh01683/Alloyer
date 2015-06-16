@@ -1,5 +1,7 @@
 package Implementation;
 
+import edu.mit.csail.sdg.alloy4.Err;
+import edu.mit.csail.sdg.alloy4compiler.ast.Command;
 import edu.mit.csail.sdg.alloy4compiler.ast.Sig;
 
 import javax.swing.*;
@@ -7,6 +9,9 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.util.ArrayList;
+import java.util.Dictionary;
+import java.util.Enumeration;
 import java.util.List;
 
 /**
@@ -22,28 +27,51 @@ public class AlloyerForm extends JFrame
     private JTextField txtValue;
     private JList lstSigValues;
     private JButton btnAdd;
+    private JCheckBox exactCheckBox;
+    private JLabel lblNumCircuits;
+    private JComboBox cmbCircuits;
 
-
-    DefaultComboBoxModel cmbSigModel;
     DefaultListModel lstSigValuesModel;
+    List<Sig> sigs;
+    List<Sig> sigsList;
+
+    Command cmd;
 
 
     public AlloyerForm()
     {
-
         this.setContentPane(panel1);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.setVisible(true);
         this.pack();
 
-        List<Sig> sigs = GridMetamodel.getSigs();
+        sigs = null;
+        sigsList = new ArrayList<>();
+
+
+
+        try
+        {
+            GridMetamodel.main(null);
+            sigs = GridMetamodel.getSigs();
+        }
+        catch(Exception err)
+        {
+            err.printStackTrace();
+
+        }
+
         if(sigs != null)
         {
             for(Sig s : sigs)
             {
                 cmbSig.addItem(s.label);
+                sigsList.add(s);
             }
         }
+        cmbSig.updateUI();
+
+
 
 
         lstSigValues.setModel(new DefaultListModel());
@@ -53,12 +81,25 @@ public class AlloyerForm extends JFrame
         {
             String sig = (String)cmbSig.getSelectedItem();
             String amount = txtValue.getText();
+            boolean boolExact = exactCheckBox.isSelected();
+            String exact;
+
+            if(boolExact == true)
+            {
+                exact = "exact";
+            }
+            else
+            {
+                exact = "";
+            }
+
             try
             {
                 int amt = Integer.parseInt(amount);
                 if(amt >= -128 && amt <= 127)
                 {
-                    lstSigValuesModel.addElement(sig + " " + amt);
+                    lstSigValuesModel.addElement(sig + "  " + amt + "  " + exact);
+
                 }
                 else
                 {
@@ -72,12 +113,9 @@ public class AlloyerForm extends JFrame
             txtValue.setText("");
         });
 
-        btnRun.addActionListener(ae ->
-        {
 
-        });
 
-        this.addKeyListener(new KeyListener()
+        lstSigValues.addKeyListener(new KeyListener()
         {
             @Override
             public void keyTyped(KeyEvent e)
@@ -88,9 +126,12 @@ public class AlloyerForm extends JFrame
             @Override
             public void keyPressed(KeyEvent e)
             {
-                if(e.getKeyCode() == KeyEvent.VK_DELETE)
+                if (e.getKeyCode() == KeyEvent.VK_DELETE)
                 {
+                    sigsList.remove(lstSigValues.getSelectedIndex());
 
+                    lstSigValuesModel.remove(lstSigValues.getSelectedIndex());
+                    lstSigValues.updateUI();
                 }
             }
 
@@ -100,5 +141,68 @@ public class AlloyerForm extends JFrame
 
             }
         });
+
+        btnRun.addActionListener(ae ->
+        {
+            int circuits = Integer.parseInt((String) cmbCircuits.getSelectedItem());
+
+            try
+            {
+               cmd = GridMetamodel.makeCommand(circuits);
+            }
+            catch (Err err)
+            {
+                err.printStackTrace();
+            }
+
+
+            String[] listContents = new String[lstSigValuesModel.size()];
+            String listModel= lstSigValuesModel.toString();
+            listModel = listModel.replace("[", "");
+            listModel = listModel.replace("]", "");
+            listContents = listModel.split(",");
+
+            Sig sig = null;
+            String amt = "";
+            int amount = 0;
+            boolean boolExact = false;
+
+            int i = 0;
+            for(String s : listContents)
+            {
+                String[] current = s.split("  ");
+                amt = current[1];
+
+                if(current.length == 3)
+                {
+                    boolExact = true;
+                }
+                sig = sigsList.get(i);
+                amount = Integer.parseInt(amt);
+
+                try
+                {
+                    cmd = GridMetamodel.changeCommand(cmd, sig, boolExact, amount);
+                }
+                catch (Err err)
+                {
+                    err.printStackTrace();
+                }
+                i++;
+            }
+
+            try
+            {
+                GridMetamodel.run(sigsList, cmd);
+            }
+            catch (Err err)
+            {
+                err.printStackTrace();
+            }
+
+
+        });
     }
+
+
 }
