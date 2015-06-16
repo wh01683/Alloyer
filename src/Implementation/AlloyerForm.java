@@ -200,7 +200,6 @@ public class AlloyerForm extends JFrame
                 err.printStackTrace();
             }
 
-
         });
     }
 
