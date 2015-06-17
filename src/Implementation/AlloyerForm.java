@@ -7,11 +7,8 @@ import edu.mit.csail.sdg.alloy4compiler.ast.Sig;
 import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.util.ArrayList;
-import java.util.Dictionary;
-import java.util.Enumeration;
+
 import java.util.List;
 
 /**
@@ -34,9 +31,7 @@ public class AlloyerForm extends JFrame
     DefaultListModel lstSigValuesModel;
     List<Sig> sigs;
     List<Sig> sigsList;
-
     Command cmd;
-
 
     public AlloyerForm()
     {
@@ -48,19 +43,18 @@ public class AlloyerForm extends JFrame
         sigs = null;
         sigsList = new ArrayList<>();
 
-
-
+        //Try to run the main method of GridMetamodel class and get sigs
         try
         {
-            GridMetamodel.main(null);
+            GridMetamodel.setUp();
             sigs = GridMetamodel.getSigs();
         }
         catch(Exception err)
         {
             err.printStackTrace();
-
         }
 
+        //Add sigs to the combo box
         if(sigs != null)
         {
             for(Sig s : sigs)
@@ -71,12 +65,10 @@ public class AlloyerForm extends JFrame
         }
         cmbSig.updateUI();
 
-
-
-
         lstSigValues.setModel(new DefaultListModel());
         lstSigValuesModel = (DefaultListModel)lstSigValues.getModel();
 
+        //Add button to add sigs and their respective values to list
         btnAdd.addActionListener(ae ->
         {
             String sig = (String)cmbSig.getSelectedItem();
@@ -193,7 +185,7 @@ public class AlloyerForm extends JFrame
 
             try
             {
-                GridMetamodel.run(sigsList, cmd);
+                GridMetamodel.run(cmd);
             }
             catch (Err err)
             {
@@ -202,6 +194,8 @@ public class AlloyerForm extends JFrame
 
         });
     }
+
+
 
 
 }
