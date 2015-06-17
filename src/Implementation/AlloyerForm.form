@@ -3,7 +3,11 @@
   <grid id="27dc6" binding="panel1" default-binding="true" layout-manager="FormLayout">
     <rowspec value="center:79px:noGrow"/>
     <rowspec value="top:4dlu:noGrow"/>
-    <rowspec value="center:30px:noGrow"/>
+    <rowspec value="center:max(d;4px):noGrow"/>
+    <rowspec value="top:4dlu:noGrow"/>
+    <rowspec value="center:d:grow"/>
+    <rowspec value="top:4dlu:noGrow"/>
+    <rowspec value="center:34px:noGrow"/>
     <rowspec value="top:4dlu:noGrow"/>
     <rowspec value="center:d:grow"/>
     <rowspec value="top:4dlu:noGrow"/>
@@ -12,15 +16,17 @@
     <rowspec value="center:max(d;4px):noGrow"/>
     <colspec value="fill:max(d;4px):noGrow"/>
     <colspec value="left:20dlu:noGrow"/>
-    <colspec value="fill:157px:noGrow"/>
+    <colspec value="fill:133px:noGrow"/>
     <colspec value="left:5dlu:noGrow"/>
-    <colspec value="fill:95px:noGrow"/>
+    <colspec value="fill:70px:noGrow"/>
     <colspec value="left:4dlu:noGrow"/>
-    <colspec value="fill:max(d;4px):noGrow"/>
+    <colspec value="fill:70px:noGrow"/>
+    <colspec value="left:4dlu:noGrow"/>
+    <colspec value="fill:63px:noGrow"/>
     <colspec value="left:20dlu:noGrow"/>
     <colspec value="fill:max(d;4px):noGrow"/>
     <constraints>
-      <xy x="20" y="20" width="415" height="379"/>
+      <xy x="20" y="20" width="437" height="379"/>
     </constraints>
     <properties>
       <font name="Century Gothic" style="0"/>
@@ -29,7 +35,7 @@
     <children>
       <component id="f80fc" class="javax.swing.JLabel" binding="Alloyer">
         <constraints>
-          <grid row="0" column="2" row-span="1" col-span="5" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="0" column="2" row-span="1" col-span="7" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
           <forms defaultalign-horz="false" defaultalign-vert="false"/>
         </constraints>
         <properties>
@@ -39,34 +45,30 @@
       </component>
       <component id="e0798" class="javax.swing.JComboBox" binding="cmbSig">
         <constraints>
-          <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="3" indent="0" use-parent-layout="false"/>
+          <grid row="6" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="3" indent="0" use-parent-layout="false"/>
           <forms defaultalign-vert="false"/>
         </constraints>
         <properties>
           <font name="Century Gothic" size="18" style="0"/>
-          <model>
-            <item value="This"/>
-            <item value="Is"/>
-            <item value="A"/>
-            <item value="Sample"/>
-            <item value="List"/>
-          </model>
+          <model/>
+          <visible value="true"/>
         </properties>
       </component>
       <component id="52afc" class="javax.swing.JTextField" binding="txtValue">
         <constraints>
-          <grid row="2" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="3" indent="0" use-parent-layout="false">
+          <grid row="6" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="3" indent="0" use-parent-layout="false">
             <preferred-size width="150" height="-1"/>
           </grid>
           <forms defaultalign-horz="false" defaultalign-vert="false"/>
         </constraints>
         <properties>
           <font name="Century Gothic" size="18" style="0"/>
+          <visible value="true"/>
         </properties>
       </component>
       <scrollpane id="ae6a6">
         <constraints>
-          <grid row="4" column="2" row-span="1" col-span="5" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <grid row="8" column="2" row-span="1" col-span="7" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
           <forms defaultalign-horz="false" defaultalign-vert="false"/>
         </constraints>
         <properties/>
@@ -76,29 +78,81 @@
             <constraints/>
             <properties>
               <font name="Century Gothic" size="16" style="0"/>
+              <visible value="true"/>
             </properties>
           </component>
         </children>
       </scrollpane>
       <component id="8c868" class="javax.swing.JButton" binding="btnAdd">
         <constraints>
-          <grid row="2" column="6" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <grid row="6" column="8" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
           <forms defaultalign-vert="false"/>
         </constraints>
         <properties>
-          <font name="Century Gothic" size="18" style="0"/>
-          <text value="Add"/>
+          <font name="Century Gothic" size="14" style="1"/>
+          <text value="+"/>
+          <visible value="true"/>
+        </properties>
+      </component>
+      <component id="8bdf8" class="javax.swing.JCheckBox" binding="exactCheckBox" default-binding="true">
+        <constraints>
+          <grid row="6" column="6" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="2" indent="0" use-parent-layout="false"/>
+          <forms defaultalign-vert="false"/>
+        </constraints>
+        <properties>
+          <font name="Century Gothic" size="14" style="0"/>
+          <text value="exact"/>
+          <visible value="true"/>
         </properties>
       </component>
       <component id="bd683" class="javax.swing.JButton" binding="btnRun">
         <constraints>
-          <grid row="6" column="4" row-span="1" col-span="3" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="10" column="6" row-span="1" col-span="3" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
           <forms/>
         </constraints>
         <properties>
           <font name="Century Gothic" size="18" style="0"/>
           <text value="Run"/>
+          <visible value="true"/>
         </properties>
+      </component>
+      <component id="1350a" class="javax.swing.JLabel" binding="lblNumCircuits">
+        <constraints>
+          <grid row="2" column="2" row-span="1" col-span="3" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
+          <forms defaultalign-horz="false"/>
+        </constraints>
+        <properties>
+          <enabled value="true"/>
+          <font name="Century Gothic" size="18" style="0"/>
+          <text value="Number of circuits:"/>
+        </properties>
+      </component>
+      <component id="917a2" class="javax.swing.JComboBox" binding="cmbCircuits">
+        <constraints>
+          <grid row="2" column="6" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="3" indent="0" use-parent-layout="false"/>
+          <forms defaultalign-vert="false"/>
+        </constraints>
+        <properties>
+          <font name="Century Gothic" size="18" style="0"/>
+          <model>
+            <item value="2"/>
+            <item value="3"/>
+            <item value="4"/>
+            <item value="5"/>
+            <item value="6"/>
+            <item value="7"/>
+            <item value="8"/>
+            <item value="9"/>
+            <item value="10"/>
+          </model>
+        </properties>
+      </component>
+      <component id="81c67" class="javax.swing.JSeparator">
+        <constraints>
+          <grid row="4" column="2" row-span="1" col-span="7" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <forms defaultalign-horz="false" defaultalign-vert="false"/>
+        </constraints>
+        <properties/>
       </component>
     </children>
   </grid>
