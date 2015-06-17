@@ -285,14 +285,16 @@ public class GridMetamodel {
 
     }
 
-    public static void makeJavaFile(A4Solution solution) throws Err{
+    public static void makeJavaFile(List<A4Solution> solutions) throws Err{
 
         try {
             PrintWriter writer = new PrintWriter(file);
-            writer.print(solution.debugExtractKInput());
+            for (A4Solution s : solutions){
+                writer.print(s.debugExtractKInput());
+            }
         } catch (FileNotFoundException f){
             System.out.printf("File not found.");
-            makeJavaFile(solution);
+            makeJavaFile(solutions);
         }
 
     }
@@ -320,7 +322,7 @@ public class GridMetamodel {
 
             options.solverDirectory = "/tmp/alloy4tmp40-robert/binary";
             options.tempDirectory = "/tmp/alloy4tmp40-robert/tmp";
-            Module world = CompUtil.parseEverything_fromFile(A4Reporter.NOP, null, "circuitry.als");
+            Module world = CompUtil.parseEverything_fromFile(A4Reporter.NOP, null, "/tmp/alloy4tmp40-robert/models/circuitry.als");
 
             List<Command> commands= world.getAllCommands();
             sigs = world.getAllReachableSigs();
@@ -331,13 +333,15 @@ public class GridMetamodel {
                 solutions.add(TranslateAlloyToKodkod.execute_command(A4Reporter.NOP, sigs, c, options));
             }
 
+            solutions.add(TranslateAlloyToKodkod.execute_command(A4Reporter.NOP, sigs, commands.get(0), options));
+
+
             //CompUtil.parseEverything_fromFile(NOP, null, System.getProperty("user.dir") + "/circuitry.als").;
 
-            makeJavaFile(solutions.get(0));
+            makeJavaFile(solutions);
 
-            /*SimpleGUI gui = new SimpleGUI(null);
-            SimpleGUI.main(new String[]{solution.toString()});
-            gui.doVisualize(solution.toString());
+            A4Solution solution = solutions.get(0);
+
             System.out.println("[Solution]:");
             System.out.println(solution.toString());
 
@@ -346,7 +350,7 @@ public class GridMetamodel {
             System.out.println(solution.toString());
             solution = solution.next();
         }
-*/
+
 
 
         }catch (Exception e){
