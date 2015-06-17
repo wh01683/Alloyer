@@ -52,7 +52,7 @@ public class GridMetamodel {
     }
 
 
-    public static void main(String[] args) throws Err {
+    public static void ancientMain(String[] args) throws Err {
 
 
 
@@ -283,6 +283,16 @@ public class GridMetamodel {
 
     }
 
+    public static void main(String[] args){
+        try {
+            Command cmd = makeCommand(3);
+            run(cmd);
+
+        }catch (Err e){
+            e.printStackTrace();
+        }
+    }
+
     public static Command makeCommand(int forInt) throws Err{
         return new Command(false, forInt, 8, 7, expression);
     }
@@ -316,15 +326,13 @@ public class GridMetamodel {
 
     }
 
-    public static void run(Command cmd) throws Err {
+    public static A4Solution run(Command cmd) throws Err {
 
-            List<Sig> sigs = world.getAllReachableSigs();
-            A4Solution solution = (TranslateAlloyToKodkod.execute_command(A4Reporter.NOP, sigs, cmd, options));
-            System.out.println("[Solution]:");
+        List<Sig> sigs = world.getAllReachableSigs();
+        A4Solution solution = (TranslateAlloyToKodkod.execute_command(A4Reporter.NOP, sigs, cmd, options));
+        return solution;
 
-            System.out.println(solution.toString());
-
-        }
+    }
 
     public static void evaluateSolutionPerformance(A4Solution solution, long times){
 
@@ -346,9 +354,21 @@ public class GridMetamodel {
             }catch (Err e){
                 e.printStackTrace();
             }
+    }
 
+    public static A4Solution getNext(A4Solution solution){
+        try{
+            if(solution.satisfiable()){
+                return solution.next();
+            }else{
+                return null;
+            }
 
+        }catch (Err e){
+            e.printStackTrace();
+            return null;
         }
+    }
 
 
 
