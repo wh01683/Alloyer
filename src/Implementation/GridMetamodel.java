@@ -44,7 +44,8 @@ public class GridMetamodel {
             options.tempDirectory = dirPath + "tmp";
             options.solver = A4Options.SatSolver.SAT4J;
 
-            Module world = CompUtil.parseEverything_fromFile(A4Reporter.NOP, null, alsDirPath);
+            world = CompUtil.parseEverything_fromFile(A4Reporter.NOP, null, alsDirPath);
+
         }catch (Err e){
             e.printStackTrace();
         }
