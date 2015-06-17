@@ -28,12 +28,27 @@ import static edu.mit.csail.sdg.alloy4compiler.ast.Sig.SIGINT;
  * */
 public class GridMetamodel {
 
-    public static File file = new File(System.getProperty("user.dir") + "/circuitry.java");
+    public static File file = new File(System.getProperty("user.dir") + "/timesData.csv");
     public static Expr expression;
     public static Command command;
     public static A4Options options = new A4Options();
     public static Sig.PrimSig Grid, Circuit, SupplyCircuit, LoadCircuit, Component, Load, Supply, Switch, GP, SP, Wind, Geo, Hydro;
     public static List<Sig> staticSigs;
+    private static String dirPath = "/tmp/alloy4tmp40-robert/";
+    private static String alsDirPath = dirPath + "models/circuitry.als";
+    private static Module world;
+
+    private static void setUp(){
+        try {
+            options.solverDirectory = dirPath + "binary";
+            options.tempDirectory = dirPath + "tmp";
+            options.solver = A4Options.SatSolver.SAT4J;
+
+            Module world = CompUtil.parseEverything_fromFile(A4Reporter.NOP, null, alsDirPath);
+        }catch (Err e){
+            e.printStackTrace();
+        }
+    }
 
 
 
@@ -47,7 +62,6 @@ public class GridMetamodel {
         //each domain that you make needs A4Options, used to make the solution
 
         //just telling the option to use the SAT4J solver
-        options.solver = A4Options.SatSolver.SAT4J;
 
         Expr fact = ExprConstant.TRUE;
 
@@ -265,7 +279,7 @@ public class GridMetamodel {
 
         staticSigs = sigs;
 
-        run(sigs, command);
+        //run(sigs, command);
 
 
 
@@ -281,82 +295,64 @@ public class GridMetamodel {
     }
 
     public static List<Sig> getSigs(){
-            return staticSigs;
-
+            return world.getAllReachableSigs();
     }
 
-    public static void makeJavaFile(List<A4Solution> solutions) throws Err{
+    public static List<Command> getCommands (){
+        return world.getAllCommands();
+    }
+
+    public static void makeCSVFile(ArrayList<Long> times) throws Err{
 
         try {
             PrintWriter writer = new PrintWriter(file);
-            for (A4Solution s : solutions){
-                writer.print(s.debugExtractKInput());
+            long solutionNumber = 0;
+            for(Long l : times){
+                writer.println(solutionNumber + "\t" + l);
+                solutionNumber ++;
             }
+            writer.close();
         } catch (FileNotFoundException f){
             System.out.printf("File not found.");
-            makeJavaFile(solutions);
+            makeCSVFile(times);
         }
 
     }
-    public static void run(List<Sig> sigs, Command cmd) throws Err {
 
-        String everything;
-        try {
+    public static void run(Command cmd) throws Err {
 
-            BufferedReader br = new BufferedReader(new FileReader(System.getProperty("user.dir") + "/circuitry.als"));
+            List<Sig> sigs = world.getAllReachableSigs();
+            A4Solution solution = (TranslateAlloyToKodkod.execute_command(A4Reporter.NOP, sigs, cmd, options));
+            System.out.println("[Solution]:");
+
+            System.out.println(solution.toString());
+
+        }
+
+    public static void evaluateSolutionPerformance(A4Solution solution, long times){
+
+            ArrayList<Long> timesList = new ArrayList<Long>((int)times);
             try {
-                StringBuilder sb = new StringBuilder();
-                String line = br.readLine();
+                long i = 0;
 
-                while (line != null) {
-                    sb.append(line);
-                    sb.append(System.lineSeparator());
-                    line = br.readLine();
+                while (solution.satisfiable() && i < times) {
+                    long start = System.currentTimeMillis();
+
+                    solution = solution.next();
+                    long end = System.currentTimeMillis();
+                    i++;
+                    timesList.add(end - start);
+                    System.out.printf("\nSolution: % d; Time between solutions: %d", i, (end - start));
                 }
-                everything = sb.toString();
-            } finally {
-                br.close();
+                makeCSVFile(timesList);
+
+            }catch (Err e){
+                e.printStackTrace();
             }
 
-            //System.out.println(options.solverDirectory.toString());
 
-            options.solverDirectory = "/tmp/alloy4tmp40-robert/binary";
-            options.tempDirectory = "/tmp/alloy4tmp40-robert/tmp";
-            Module world = CompUtil.parseEverything_fromFile(A4Reporter.NOP, null, "/tmp/alloy4tmp40-robert/models/circuitry.als");
-
-            List<Command> commands= world.getAllCommands();
-            sigs = world.getAllReachableSigs();
-
-            List<A4Solution> solutions = new ArrayList<>(10);
-
-            for ( Command c : commands){
-                solutions.add(TranslateAlloyToKodkod.execute_command(A4Reporter.NOP, sigs, c, options));
-            }
-
-            solutions.add(TranslateAlloyToKodkod.execute_command(A4Reporter.NOP, sigs, commands.get(0), options));
-
-
-            //CompUtil.parseEverything_fromFile(NOP, null, System.getProperty("user.dir") + "/circuitry.als").;
-
-            makeJavaFile(solutions);
-
-            A4Solution solution = solutions.get(0);
-
-            System.out.println("[Solution]:");
-            System.out.println(solution.toString());
-
-        while(solution.satisfiable()){
-            System.out.println("[Solution]:");
-            System.out.println(solution.toString());
-            solution = solution.next();
         }
 
-
-
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-    }
 
 
 
