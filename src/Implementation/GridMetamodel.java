@@ -265,7 +265,7 @@ public class GridMetamodel {
 
         staticSigs = sigs;
 
-        run(sigs);
+        run(sigs, command);
 
 
 
@@ -296,7 +296,7 @@ public class GridMetamodel {
         }
 
     }
-    public static void run(List<Sig> sigs) throws Err {
+    public static void run(List<Sig> sigs, Command cmd) throws Err {
 
         String everything;
         try {
