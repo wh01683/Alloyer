@@ -15,54 +15,19 @@
 
 package edu.mit.csail.sdg.alloy4compiler.translator;
 
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.IdentityHashMap;
-import java.util.Map;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import kodkod.ast.BinaryExpression;
-import kodkod.ast.BinaryFormula;
-import kodkod.ast.BinaryIntExpression;
-import kodkod.ast.ComparisonFormula;
-import kodkod.ast.Comprehension;
-import kodkod.ast.ConstantExpression;
-import kodkod.ast.ConstantFormula;
-import kodkod.ast.Decl;
-import kodkod.ast.Decls;
-import kodkod.ast.ExprToIntCast;
-import kodkod.ast.IfExpression;
-import kodkod.ast.IfIntExpression;
-import kodkod.ast.IntComparisonFormula;
-import kodkod.ast.IntConstant;
-import kodkod.ast.IntExpression;
-import kodkod.ast.IntToExprCast;
-import kodkod.ast.NaryExpression;
-import kodkod.ast.NaryFormula;
-import kodkod.ast.NaryIntExpression;
-import kodkod.ast.Node;
-import kodkod.ast.ProjectExpression;
-import kodkod.ast.MultiplicityFormula;
-import kodkod.ast.NotFormula;
-import kodkod.ast.QuantifiedFormula;
-import kodkod.ast.Relation;
-import kodkod.ast.RelationPredicate;
-import kodkod.ast.UnaryExpression;
-import kodkod.ast.SumExpression;
-import kodkod.ast.UnaryIntExpression;
-import kodkod.ast.Variable;
-import kodkod.ast.Expression;
-import kodkod.ast.Formula;
+import kodkod.ast.*;
 import kodkod.ast.RelationPredicate.Function;
 import kodkod.ast.visitor.ReturnVisitor;
 import kodkod.ast.visitor.VoidVisitor;
 import kodkod.instance.Bounds;
-import kodkod.instance.TupleSet;
 import kodkod.instance.Tuple;
+import kodkod.instance.TupleSet;
 import kodkod.util.ints.IndexedEntry;
 import kodkod.util.nodes.PrettyPrinter;
+
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.*;
 
 /** Translate a Kodkod formula node to an equivalent Java program that solves the formula.
  *
@@ -158,6 +123,7 @@ public final class TranslateKodkodToJava implements VoidVisitor {
             return string.toString();
         }
     }
+
 
     /** The PrintWriter that is receiving the text. */
     private final PrintWriter file;

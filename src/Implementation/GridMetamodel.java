@@ -4,18 +4,20 @@ package Implementation;
  * Created by robert on 6/10/15.
  */
 
+import edu.mit.csail.sdg.alloy4.A4Reporter;
 import edu.mit.csail.sdg.alloy4.Err;
 import edu.mit.csail.sdg.alloy4.Util;
 import edu.mit.csail.sdg.alloy4compiler.ast.*;
+import edu.mit.csail.sdg.alloy4compiler.parser.CompUtil;
 import edu.mit.csail.sdg.alloy4compiler.translator.A4Options;
 import edu.mit.csail.sdg.alloy4compiler.translator.A4Solution;
 import edu.mit.csail.sdg.alloy4compiler.translator.TranslateAlloyToKodkod;
-import edu.mit.csail.sdg.alloy4whole.SimpleGUI;
 
+import java.io.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static edu.mit.csail.sdg.alloy4.A4Reporter.NOP;
 import static edu.mit.csail.sdg.alloy4compiler.ast.Sig.SIGINT;
 
 
@@ -26,6 +28,7 @@ import static edu.mit.csail.sdg.alloy4compiler.ast.Sig.SIGINT;
  * */
 public class GridMetamodel {
 
+    public static File file = new File(System.getProperty("user.dir") + "/circuitry.java");
     public static Expr expression;
     public static Command command;
     public static A4Options options = new A4Options();
@@ -266,6 +269,7 @@ public class GridMetamodel {
 
 
 
+
     }
 
     public static Command makeCommand(int forInt) throws Err{
@@ -281,15 +285,57 @@ public class GridMetamodel {
 
     }
 
-    public static void run(List<Sig> sigs) throws Err {
+    public static void makeJavaFile(A4Solution solution) throws Err{
 
         try {
+            PrintWriter writer = new PrintWriter(file);
+            writer.print(solution.debugExtractKInput());
+        } catch (FileNotFoundException f){
+            System.out.printf("File not found.");
+            makeJavaFile(solution);
+        }
 
+    }
+    public static void run(List<Sig> sigs) throws Err {
 
+        String everything;
+        try {
 
-            A4Solution solution = TranslateAlloyToKodkod.execute_command(NOP, sigs, command, options);
+            BufferedReader br = new BufferedReader(new FileReader(System.getProperty("user.dir") + "/circuitry.als"));
+            try {
+                StringBuilder sb = new StringBuilder();
+                String line = br.readLine();
 
-            SimpleGUI gui = new SimpleGUI(null);
+                while (line != null) {
+                    sb.append(line);
+                    sb.append(System.lineSeparator());
+                    line = br.readLine();
+                }
+                everything = sb.toString();
+            } finally {
+                br.close();
+            }
+
+            //System.out.println(options.solverDirectory.toString());
+
+            options.solverDirectory = "/tmp/alloy4tmp40-robert/binary";
+            options.tempDirectory = "/tmp/alloy4tmp40-robert/tmp";
+            Module world = CompUtil.parseEverything_fromFile(A4Reporter.NOP, null, "circuitry.als");
+
+            List<Command> commands= world.getAllCommands();
+            sigs = world.getAllReachableSigs();
+
+            List<A4Solution> solutions = new ArrayList<>(10);
+
+            for ( Command c : commands){
+                solutions.add(TranslateAlloyToKodkod.execute_command(A4Reporter.NOP, sigs, c, options));
+            }
+
+            //CompUtil.parseEverything_fromFile(NOP, null, System.getProperty("user.dir") + "/circuitry.als").;
+
+            makeJavaFile(solutions.get(0));
+
+            /*SimpleGUI gui = new SimpleGUI(null);
             SimpleGUI.main(new String[]{solution.toString()});
             gui.doVisualize(solution.toString());
             System.out.println("[Solution]:");
@@ -300,6 +346,8 @@ public class GridMetamodel {
             System.out.println(solution.toString());
             solution = solution.next();
         }
+*/
+
 
         }catch (Exception e){
             e.printStackTrace();
