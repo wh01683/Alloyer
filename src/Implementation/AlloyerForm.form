@@ -11,7 +11,7 @@
     <colspec value="fill:d:noGrow"/>
     <colspec value="left:20dlu:noGrow"/>
     <constraints>
-      <xy x="20" y="20" width="814" height="494"/>
+      <xy x="20" y="20" width="898" height="494"/>
     </constraints>
     <properties/>
     <border type="none"/>
@@ -36,7 +36,9 @@
         <colspec value="left:4dlu:noGrow"/>
         <colspec value="fill:63px:noGrow"/>
         <colspec value="left:21dlu:noGrow"/>
-        <colspec value="fill:199dlu:noGrow"/>
+        <colspec value="fill:329px:noGrow"/>
+        <colspec value="left:4dlu:noGrow"/>
+        <colspec value="fill:56dlu:noGrow"/>
         <constraints>
           <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
           <forms defaultalign-vert="false"/>
@@ -170,7 +172,7 @@
           </component>
           <scrollpane id="fad11">
             <constraints>
-              <grid row="0" column="8" row-span="9" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+              <grid row="0" column="8" row-span="9" col-span="3" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
               <forms defaultalign-horz="false" defaultalign-vert="false"/>
             </constraints>
             <properties>
@@ -190,7 +192,7 @@
           </scrollpane>
           <component id="43898" class="javax.swing.JButton" binding="btnNext">
             <constraints>
-              <grid row="10" column="8" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
+              <grid row="10" column="10" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
               <forms defaultalign-horz="false"/>
             </constraints>
             <properties>
@@ -233,6 +235,17 @@
               </component>
             </children>
           </grid>
+          <component id="3f40" class="javax.swing.JButton" binding="showGraphButton" default-binding="true">
+            <constraints>
+              <grid row="10" column="8" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
+              <forms defaultalign-horz="false"/>
+            </constraints>
+            <properties>
+              <font name="Century Gothic" size="18" style="0"/>
+              <horizontalAlignment value="0"/>
+              <text value="Show Graph"/>
+            </properties>
+          </component>
         </children>
       </grid>
     </children>

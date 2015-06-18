@@ -32,6 +32,7 @@ public class AlloyerForm extends JFrame
     private JButton btnNext;
     private JRadioButton rbTextSolution;
     private JRadioButton rbGraphSolution;
+    private JButton showGraphButton;
 
     DefaultListModel lstSigValuesModel;
     SafeList<Sig> sigsFromMeta;
