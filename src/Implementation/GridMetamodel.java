@@ -4,16 +4,18 @@ package Implementation;
  * Created by robert on 6/10/15.
  */
 
-import edu.mit.csail.sdg.alloy4.A4Reporter;
-import edu.mit.csail.sdg.alloy4.Err;
-import edu.mit.csail.sdg.alloy4.Util;
+import edu.mit.csail.sdg.alloy4.*;
 import edu.mit.csail.sdg.alloy4compiler.ast.*;
 import edu.mit.csail.sdg.alloy4compiler.parser.CompUtil;
 import edu.mit.csail.sdg.alloy4compiler.translator.A4Options;
 import edu.mit.csail.sdg.alloy4compiler.translator.A4Solution;
 import edu.mit.csail.sdg.alloy4compiler.translator.TranslateAlloyToKodkod;
+import edu.mit.csail.sdg.alloy4viz.VizGUI;
 
-import java.io.*;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -34,8 +36,11 @@ public class GridMetamodel {
     public static A4Options options = new A4Options();
     public static Sig.PrimSig Grid, Circuit, SupplyCircuit, LoadCircuit, Component, Load, Supply, Switch, GP, SP, Wind, Geo, Hydro;
     public static List<Sig> staticSigs;
-    private static String dirPath = "C:/Users/Lindsey/AppData/Local/Temp/alloy4tmp40-Lindsey/";
+//    private static String dirPath = "C:/Users/Lindsey/AppData/Local/Temp/alloy4tmp40-Lindsey/";
+//    private static String alsDirPath = dirPath + "models/circuitry.als";
+    private static String dirPath = "/tmp/alloy4tmp40-robert/";
     private static String alsDirPath = dirPath + "models/circuitry.als";
+
     private static Module world;
 
     public static void setUp(){
@@ -285,15 +290,17 @@ public class GridMetamodel {
 
     public static void main(String[] args){
         try {
+            setUp();
             Command cmd = makeCommand(3);
-            run(cmd);
 
+            visualize(run(cmd));
         }catch (Err e){
             e.printStackTrace();
         }
     }
 
     public static Command makeCommand(int forInt) throws Err{
+        expression = world.getAllSigs().get(1).some();
         return new Command(false, forInt, 8, 7, expression);
     }
 
@@ -334,6 +341,36 @@ public class GridMetamodel {
 
     }
 
+    public static void visualize(A4Solution solution) {
+        try{
+
+            solution.writeXML("xmlCircuitry.xml");
+            VizGUI visualizer = new VizGUI(true, "xmlCircuitry.xml", null);
+            visualizer.doShowViz();
+        }catch (NullPointerException n){
+        } catch ( Err e){
+            e.printStackTrace();
+        }
+    }
+    public static A4Solution visualizeNext(A4Solution solution) {
+        try{
+            if(solution.satisfiable()){
+                A4Solution next = solution.next();
+                next.writeXML("xmlCircuitry.xml");
+                VizGUI visualizer = new VizGUI(true, "xmlCircuitry.xml", null);
+                visualizer.doShowViz();
+                return next;
+            }else{
+                return null;
+            }
+        }catch (NullPointerException n){
+            return null;
+        } catch ( Err e){
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     public static void evaluateSolutionPerformance(A4Solution solution, long times){
 
             ArrayList<Long> timesList = new ArrayList<Long>((int)times);
@@ -369,11 +406,5 @@ public class GridMetamodel {
             return null;
         }
     }
-
-
-
-
-
-
 
 }
