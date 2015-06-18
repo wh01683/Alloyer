@@ -308,8 +308,8 @@ public class GridMetamodel {
         return prev.change(sig, exact, number);
     }
 
-    public static List<Sig> getSigs(){
-            return world.getAllReachableSigs();
+    public static SafeList<Sig> getSigs(){
+            return world.getAllSigs();
     }
 
     public static List<Command> getCommands (){
