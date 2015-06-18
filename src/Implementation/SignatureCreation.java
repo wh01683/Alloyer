@@ -344,7 +344,7 @@ public class SignatureCreation extends JFrame
 
 
 
-                            //creates arraylist of parent sigs from the IDs
+                            //creates arraylist of parent sigsFromMeta from the IDs
                             int i = 0;
                             for (Integer j : parentIDs)
                             {

@@ -36,10 +36,10 @@ public class GridMetamodel {
     public static A4Options options = new A4Options();
     public static Sig.PrimSig Grid, Circuit, SupplyCircuit, LoadCircuit, Component, Load, Supply, Switch, GP, SP, Wind, Geo, Hydro;
     public static List<Sig> staticSigs;
-//    private static String dirPath = "C:/Users/Lindsey/AppData/Local/Temp/alloy4tmp40-Lindsey/";
-//    private static String alsDirPath = dirPath + "models/circuitry.als";
-    private static String dirPath = "/tmp/alloy4tmp40-robert/";
+    private static String dirPath = "C:/Users/Lindsey/AppData/Local/Temp/alloy4tmp40-Lindsey/";
     private static String alsDirPath = dirPath + "models/circuitry.als";
+//    private static String dirPath = "/tmp/alloy4tmp40-robert/";
+//   private static String alsDirPath = dirPath + "models/circuitry.als";
 
     private static Module world;
 
@@ -281,7 +281,7 @@ public class GridMetamodel {
 
         staticSigs = sigs;
 
-        //run(sigs, command);
+        //run(sigsFromMeta, command);
 
 
 
