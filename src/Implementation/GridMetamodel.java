@@ -16,9 +16,7 @@ import edu.mit.csail.sdg.alloy4viz.VizGUI;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 import static edu.mit.csail.sdg.alloy4compiler.ast.Sig.SIGINT;
 
@@ -36,10 +34,12 @@ public class GridMetamodel {
     public static A4Options options = new A4Options();
     public static Sig.PrimSig Grid, Circuit, SupplyCircuit, LoadCircuit, Component, Load, Supply, Switch, GP, SP, Wind, Geo, Hydro;
     public static List<Sig> staticSigs;
-    private static String dirPath = "C:/Users/Lindsey/AppData/Local/Temp/alloy4tmp40-Lindsey/";
+//    private static String dirPath = "C:/Users/Lindsey/AppData/Local/Temp/alloy4tmp40-Lindsey/";
+//    private static String alsDirPath = dirPath + "models/circuitry.als";
+    private static String dirPath = "/tmp/alloy4tmp40-robert/";
     private static String alsDirPath = dirPath + "models/circuitry.als";
-//    private static String dirPath = "/tmp/alloy4tmp40-robert/";
-//   private static String alsDirPath = dirPath + "models/circuitry.als";
+    private static ArrayList<OurSig> constrainedSigs = new ArrayList<>(10);
+    private static Hashtable<String, Sig> namesToSig = new Hashtable<>(20);
 
     private static Module world;
 
@@ -50,6 +50,11 @@ public class GridMetamodel {
             options.solver = A4Options.SatSolver.SAT4J;
 
             world = CompUtil.parseEverything_fromFile(A4Reporter.NOP, null, alsDirPath);
+
+            for(Sig s : world.getAllSigs()){
+                namesToSig.putIfAbsent(s.toString(), s);
+            }
+
 
         }catch (Err e){
             e.printStackTrace();
@@ -293,7 +298,12 @@ public class GridMetamodel {
             setUp();
             Command cmd = makeCommand(3);
 
-            visualize(run(cmd));
+            A4Solution solution = run(cmd);
+
+            checkConstraints(solution);
+
+
+
         }catch (Err e){
             e.printStackTrace();
         }
@@ -316,7 +326,7 @@ public class GridMetamodel {
         return world.getAllCommands();
     }
 
-    public static void makeCSVFile(ArrayList<Long> times) throws Err{
+    public static boolean makeCSVFile(ArrayList<Long> times) throws Err{
 
         try {
             PrintWriter writer = new PrintWriter(file);
@@ -326,9 +336,11 @@ public class GridMetamodel {
                 solutionNumber ++;
             }
             writer.close();
+            return true;
         } catch (FileNotFoundException f){
             System.out.printf("File not found.");
             makeCSVFile(times);
+            return false;
         }
 
     }
@@ -406,5 +418,104 @@ public class GridMetamodel {
             return null;
         }
     }
+
+
+    public static void sendConstraints(ArrayList<OurSig> sigs){
+        constrainedSigs = sigs;
+    }
+
+    public static A4Solution getNewInstance(A4Solution solution){
+        try {
+            while (!checkConstraints(solution) && solution.satisfiable()) {
+                A4Solution temp = solution.next();
+                if(checkConstraints(temp)){
+                    return temp;
+                }else if (temp.satisfiable() && !checkConstraints(temp)){
+                    getNewInstance(temp.next());
+                }else{
+                    return null;
+                }
+            }
+            return null; //shouldn't get here unless there are no more satisfying instances
+        }catch (Err e ){
+            e.printStackTrace();
+            return null;
+        }
+
+    }
+
+    public static boolean checkConstraints(A4Solution solution){
+        boolean pass = false;
+        ArrayList<OurSig> sigsFromSolution = new ArrayList<>();
+
+
+        String[] templines = solution.toString().split("\n");
+        ArrayList<String> linesArrayList = new ArrayList<String>(templines.length);
+
+        for(String s : templines){
+            linesArrayList.add(s);
+        }
+
+        StringBuilder relationships = new StringBuilder();
+        for(String s : linesArrayList){
+            if(s.contains("<:")){
+                relationships.append(s + "\n");
+            }
+        }
+
+        templines = relationships.toString().split("\n");
+
+        ArrayList<ArrayList<String>> relations = new ArrayList<>();
+
+        for(String s : templines){
+            ArrayList<String> temp = new ArrayList<>();
+                if(s.contains("watts")){
+                    ArrayList<String> wattValues = new ArrayList<>();
+                    String w = "";
+                    for(int i = s.indexOf("{")+1; i < s.toCharArray().length - 1; i++){
+                        w+= s.toCharArray()[i];
+                    }
+                    System.out.printf(w);
+                    if(w.length() > 0){
+                    for(String q : w.split(",\b")){
+                        String name = q.split("->")[0];
+                        String type = "this/" + q.split("\\W^_")[0];
+                        int num = Integer.parseInt(q.split("->")[1]);
+                        sigsFromSolution.add(new OurSig(namesToSig.get(type), name, num));
+                    }}
+
+                }
+
+            for(String s2 : (s.split("[<:=\\{,?\\}]"))){
+                temp.add(s2);
+            }
+            relations.add(temp);
+        }
+
+        for(ArrayList<String> lines : relations){
+            for(String word : lines){
+                if(word.contains("->")){
+                    String ourSigName = word.split("->")[0];
+                    String childSigName = word.split("->")[1];
+
+                    for(OurSig p : sigsFromSolution){
+                        if(p.getLabel() == ourSigName){
+                            p.addRelation(childSigName);
+                        }
+                    }
+
+                }
+            }
+
+        }
+
+        for(OurSig l : sigsFromSolution){
+            System.out.printf(l.toString());
+        }
+
+        return pass;
+
+    }
+
 
 }
