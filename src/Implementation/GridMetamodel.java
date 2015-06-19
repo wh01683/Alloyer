@@ -492,13 +492,17 @@ public class GridMetamodel {
 
 
         //String[] templines = solution.toString().split("\n");
+
+        //splits the solution into single lines
         String[] templines = testSolution.split("\n");
         ArrayList<String> linesArrayList = new ArrayList<String>(templines.length);
 
+        //add lines to an array list
         for(String s : templines){
             linesArrayList.add(s);
         }
 
+        //get all of the "<:" (has) relationships and store them in a single string
         StringBuilder relationships = new StringBuilder();
         for(String s : linesArrayList){
             if(s.contains("<:")){
@@ -506,30 +510,43 @@ public class GridMetamodel {
             }
         }
 
+        //this is an overwritten array from earlier
         templines = relationships.toString().split("\n");
 
         ArrayList<ArrayList<String>> relations = new ArrayList<>();
 
         for(String s : templines){
             ArrayList<String> temp = new ArrayList<>();
+            //get the lines in which watts is assigned
                 if(s.contains("watts")){
                     ArrayList<String> wattValues = new ArrayList<>();
                     String w = "";
+                    //gets the text between the two { }
+                    //BEFORE this code: {Wind$0->8, Wind$1->8}
+                    //After: Wind$0->8, Wind$1->8
                     for(int i = s.indexOf("{")+1; i < s.toCharArray().length - 1; i++){
                         w+= s.toCharArray()[i];
                     }
+                    //a print statement for testing
                     System.out.printf(w);
+                    //to stop null pointer problems here
                     if(w.length() > 0){
+                       // Wind$0->8, Wind$1->8
+                        //splits Wind$0->8, Wind$1->8 into String[] {Wind$0->8, Wind$1->8}
                     for(String q : w.split("[,\b]")){
-                        String[] info = q.split("[->]");
+                        String[] info = q.split("[->]"); //String[] {Wind$1, "", 8}
+                        //name = Wind$1
                         String name = info[0];
+                        //type = this/Wind
                         String type = "this/" + name.split("[$\\d]")[0];
+                        //num = 8
                         int num = Integer.parseInt(info[2]);
+                        //adds new simple sig to our temp hashtable
                         sigsFromSolution.add(new OurSig(namesToSig.get(type), name, num));
                     }}
 
                 }
-
+            //for every other line that does not contain watts, it's just a relationship
             for(String s2 : (s.split("[<:=\\{,?\\}]"))){
                 temp.add(s2);
             }
@@ -539,6 +556,7 @@ public class GridMetamodel {
         for(ArrayList<String> lines : relations){
             for(String word : lines){
                 if(word.contains("->")){
+                    //splits the arrow to get the parent and the child
                     String ourSigName = word.split("->")[0];
                     String childSigName = word.split("->")[1];
 
@@ -553,6 +571,7 @@ public class GridMetamodel {
 
         }
 
+        //null pointer problem here
         for(OurSig l : sigsFromSolution){
             System.out.printf(l.toString());
         }
