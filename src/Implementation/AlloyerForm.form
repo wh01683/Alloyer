@@ -2,18 +2,24 @@
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="Implementation.AlloyerForm">
   <grid id="fa57f" binding="mainPanel" layout-manager="FormLayout">
     <rowspec value="center:0px:noGrow"/>
-    <rowspec value="top:20dlu:noGrow"/>
-    <rowspec value="center:425px:noGrow"/>
-    <rowspec value="top:21dlu:noGrow"/>
+    <rowspec value="top:20px:noGrow"/>
+    <rowspec value="fill:d:grow"/>
+    <rowspec value="top:20px:noGrow"/>
     <rowspec value="center:0px:noGrow"/>
     <colspec value="fill:max(d;0px):noGrow"/>
-    <colspec value="left:20dlu:noGrow"/>
-    <colspec value="fill:d:noGrow"/>
-    <colspec value="left:20dlu:noGrow"/>
+    <colspec value="left:20px:noGrow"/>
+    <colspec value="fill:d:grow"/>
+    <colspec value="left:20px:noGrow"/>
     <constraints>
-      <xy x="20" y="20" width="898" height="494"/>
+      <xy x="20" y="20" width="898" height="657"/>
     </constraints>
-    <properties/>
+    <properties>
+      <alignmentX value="0.5"/>
+      <alignmentY value="0.5"/>
+      <autoscrolls value="false"/>
+      <minimumSize width="420" height="400"/>
+      <preferredSize width="420" height="460"/>
+    </properties>
     <border type="none"/>
     <children>
       <grid id="27dc6" binding="innerPanel" layout-manager="FormLayout">
@@ -25,9 +31,9 @@
         <rowspec value="top:4dlu:noGrow"/>
         <rowspec value="center:34px:noGrow"/>
         <rowspec value="top:4dlu:noGrow"/>
-        <rowspec value="center:237px:noGrow"/>
+        <rowspec value="fill:d:grow"/>
         <rowspec value="top:4dlu:noGrow"/>
-        <rowspec value="center:49px:noGrow"/>
+        <rowspec value="center:45px:noGrow"/>
         <colspec value="fill:133px:noGrow"/>
         <colspec value="left:4dlu:noGrow"/>
         <colspec value="fill:70px:noGrow"/>
@@ -35,16 +41,18 @@
         <colspec value="fill:70px:noGrow"/>
         <colspec value="left:4dlu:noGrow"/>
         <colspec value="fill:63px:noGrow"/>
-        <colspec value="left:21dlu:noGrow"/>
-        <colspec value="fill:329px:noGrow"/>
+        <colspec value="left:20px:noGrow"/>
+        <colspec value="fill:max(d;1px):grow"/>
         <colspec value="left:4dlu:noGrow"/>
-        <colspec value="fill:56dlu:noGrow"/>
+        <colspec value="fill:max(d;1px):grow"/>
         <constraints>
           <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
           <forms defaultalign-vert="false"/>
         </constraints>
         <properties>
           <font name="Century Gothic" style="0"/>
+          <minimumSize width="380" height="360"/>
+          <preferredSize width="380" height="440"/>
         </properties>
         <border type="none"/>
         <children>
@@ -81,12 +89,14 @@
               <visible value="true"/>
             </properties>
           </component>
-          <scrollpane id="ae6a6">
+          <scrollpane id="ae6a6" binding="scrlList">
             <constraints>
               <grid row="8" column="0" row-span="1" col-span="7" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-              <forms defaultalign-horz="false" defaultalign-vert="false"/>
+              <forms top="5" left="0" bottom="0" right="0" defaultalign-horz="false" defaultalign-vert="false"/>
             </constraints>
-            <properties/>
+            <properties>
+              <autoscrolls value="true"/>
+            </properties>
             <border type="none"/>
             <children>
               <component id="7882f" class="javax.swing.JList" binding="lstSigValues">
@@ -126,6 +136,7 @@
               <forms/>
             </constraints>
             <properties>
+              <enabled value="false"/>
               <font name="Century Gothic" size="18" style="0"/>
               <text value="Run"/>
               <visible value="true"/>
@@ -170,13 +181,15 @@
             </constraints>
             <properties/>
           </component>
-          <scrollpane id="fad11">
+          <scrollpane id="fad11" binding="scrlSolution">
             <constraints>
               <grid row="0" column="8" row-span="9" col-span="3" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
               <forms defaultalign-horz="false" defaultalign-vert="false"/>
             </constraints>
             <properties>
+              <autoscrolls value="false"/>
               <verticalScrollBarPolicy value="20"/>
+              <visible value="false"/>
             </properties>
             <border type="none"/>
             <children>
@@ -186,6 +199,7 @@
                   <editable value="false"/>
                   <enabled value="true"/>
                   <text value=""/>
+                  <visible value="false"/>
                 </properties>
               </component>
             </children>
@@ -198,7 +212,7 @@
             <properties>
               <font name="Century Gothic" size="18" style="0"/>
               <text value="Next"/>
-              <visible value="true"/>
+              <visible value="false"/>
             </properties>
           </component>
           <grid id="a05a6" layout-manager="FormLayout">
@@ -212,18 +226,18 @@
             <properties/>
             <border type="none"/>
             <children>
-              <component id="967e6" class="javax.swing.JRadioButton" binding="rbTextSolution">
+              <component id="c8859" class="javax.swing.JCheckBox" binding="cbTextSolution">
                 <constraints>
                   <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
                   <forms top="0" left="0" bottom="0" right="10" defaultalign-horz="false"/>
                 </constraints>
                 <properties>
                   <font name="Century Gothic" size="16" style="0"/>
-                  <selected value="true"/>
+                  <selected value="false"/>
                   <text value="Text"/>
                 </properties>
               </component>
-              <component id="2c674" class="javax.swing.JRadioButton" binding="rbGraphSolution">
+              <component id="bdeb5" class="javax.swing.JCheckBox" binding="cbGraphSolution">
                 <constraints>
                   <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                   <forms top="0" left="10" bottom="0" right="0" defaultalign-horz="false"/>
@@ -235,17 +249,6 @@
               </component>
             </children>
           </grid>
-          <component id="3f40" class="javax.swing.JButton" binding="showGraphButton" default-binding="true">
-            <constraints>
-              <grid row="10" column="8" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
-              <forms defaultalign-horz="false"/>
-            </constraints>
-            <properties>
-              <font name="Century Gothic" size="18" style="0"/>
-              <horizontalAlignment value="0"/>
-              <text value="Show Graph"/>
-            </properties>
-          </component>
         </children>
       </grid>
     </children>
@@ -256,8 +259,8 @@
       <member id="11c"/>
     </group>
     <group name="txtOrVis">
-      <member id="967e6"/>
       <member id="2c674"/>
+      <member id="967e6"/>
     </group>
   </buttonGroups>
 </form>

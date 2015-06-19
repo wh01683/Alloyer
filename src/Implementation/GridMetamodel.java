@@ -357,19 +357,23 @@ public class GridMetamodel {
         try{
 
             solution.writeXML("xmlCircuitry.xml");
-            VizGUI visualizer = new VizGUI(true, "xmlCircuitry.xml", null);
+            VizGUI visualizer = new VizGUI(false, "xmlCircuitry.xml", null);
+            AlloyerForm.currentModelForm = visualizer;
             visualizer.doShowViz();
         }catch (NullPointerException n){
         } catch ( Err e){
             e.printStackTrace();
         }
     }
-    public static A4Solution visualizeNext(A4Solution solution) {
+    public static A4Solution visualizeNext(A4Solution solution, VizGUI visualizer) {
         try{
             if(solution.satisfiable()){
                 A4Solution next = solution.next();
                 next.writeXML("xmlCircuitry.xml");
-                VizGUI visualizer = new VizGUI(true, "xmlCircuitry.xml", null);
+                //VizGUI visualizer = new VizGUI(true, "xmlCircuitry.xml", null);
+                visualizer.doClose();
+                visualizer = new VizGUI(false, "xmlCircuitry.xml", null);
+                AlloyerForm.currentModelForm = visualizer;
                 visualizer.doShowViz();
                 return next;
             }else{

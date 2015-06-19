@@ -759,7 +759,7 @@ public final class VizGUI implements ComponentListener {
     * otherwise, this window will set itself as invisible (if not in standalone mode),
     * or it will terminate the entire application (if in standalone mode).
     */
-   private Runner doClose() {
+   public Runner doClose() {
       if (wrap) return wrapMe();
       xmlLoaded.remove(xmlFileName);
       if (xmlLoaded.size()>0) { doLoadInstance(xmlLoaded.get(xmlLoaded.size()-1)); return null; }

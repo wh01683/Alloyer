@@ -5,18 +5,21 @@ import edu.mit.csail.sdg.alloy4.SafeList;
 import edu.mit.csail.sdg.alloy4compiler.ast.Command;
 import edu.mit.csail.sdg.alloy4compiler.ast.Sig;
 import edu.mit.csail.sdg.alloy4compiler.translator.A4Solution;
+import edu.mit.csail.sdg.alloy4viz.VizGUI;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.*;
+import java.util.List;
 
 /**
  * Created by Lindsey on 6/11/2015.
  */
 public class AlloyerForm extends JFrame
 {
-
+    private JFrame frame;
     private JPanel innerPanel;
     private JLabel lblTitle;
     private JButton btnRun;
@@ -30,27 +33,31 @@ public class AlloyerForm extends JFrame
     private JPanel mainPanel;
     private JTextArea txtSolution;
     private JButton btnNext;
-    private JRadioButton rbTextSolution;
-    private JRadioButton rbGraphSolution;
-    private JButton showGraphButton;
+    private JCheckBox cbTextSolution;
+    private JCheckBox cbGraphSolution;
+    private JScrollPane scrlList;
+    private JScrollPane scrlSolution;
+
 
     DefaultListModel lstSigValuesModel;
     SafeList<Sig> sigsFromMeta;
     Hashtable<String, Sig> sigsDict;
     List<String> availableSigs;
     Command cmd;
-    A4Solution solution;
-
+    static A4Solution solution;
+    static VizGUI currentModelForm;
 
 
     public AlloyerForm()
     {
         //Form Setup
+        frame = this;
         this.setContentPane(mainPanel);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.setVisible(true);
         this.pack();
-        this.setResizable(false);
+        frame.setMinimumSize(new Dimension(420,400));
+        frame.setPreferredSize(new Dimension(420.460));
 
         GridMetamodel.setUp();
         sigsFromMeta = GridMetamodel.getSigs();
@@ -59,8 +66,6 @@ public class AlloyerForm extends JFrame
         loadSigCombo(sigsFromMeta);
         lstSigValues.setModel(new DefaultListModel());
         lstSigValuesModel = (DefaultListModel)lstSigValues.getModel();
-
-
 
         //Add Button
         btnAdd.addActionListener(ae -> addToList());
@@ -86,11 +91,16 @@ public class AlloyerForm extends JFrame
             }
         });
 
+        //Text and Graph Radiobuttons
+        cbTextSolution.addActionListener(ae -> cbSelected(cbTextSolution, cbGraphSolution));
+        cbGraphSolution.addActionListener(ae -> cbSelected(cbGraphSolution, cbTextSolution));
+
         //Run Button
         btnRun.addActionListener(ae -> runCommand());
 
-        //Next Button
+       //Next Button
         btnNext.addActionListener(ae -> showNextSolution());
+
     }
 
     public static void main(String[] args)
@@ -196,6 +206,26 @@ public class AlloyerForm extends JFrame
         lstSigValues.updateUI();
     }
 
+    public void cbSelected(JCheckBox cb, JCheckBox partner)
+    {
+        if(cb.isSelected() && !partner.isSelected())
+        {
+            btnRun.setEnabled(true);
+        }
+        else if(!cb.isSelected() && partner.isSelected())
+        {
+            btnRun.setEnabled(true);
+        }
+        else if(cb.isSelected() && partner.isSelected())
+        {
+            btnRun.setEnabled(true);
+        }
+        else
+        {
+            btnRun.setEnabled(false);
+        }
+    }
+
     public void runCommand()
     {
 
@@ -250,17 +280,28 @@ public class AlloyerForm extends JFrame
         try
         {
             solution = GridMetamodel.run(cmd);
-            if(rbTextSolution.isSelected())
+            if(cbTextSolution.isSelected() && !cbGraphSolution.isSelected())
             {
+                scrlSolution.setVisible(true);
+                txtSolution.setVisible(true);
+                btnNext.setVisible(true);
+                frame.setMinimumSize(new Dimension(900,800));
                 txtSolution.setText(solution.toString());
-                rbTextSolution.setEnabled(false);
-                rbGraphSolution.setEnabled(false);
             }
-            else if(rbGraphSolution.isSelected())
+            else if(!cbTextSolution.isSelected() && cbGraphSolution.isSelected())
             {
                 GridMetamodel.visualize(solution);
-                rbTextSolution.setEnabled(false);
-                rbGraphSolution.setEnabled(false);
+                txtSolution.setText("");
+            }
+            else if(cbTextSolution.isSelected() && cbGraphSolution.isSelected())
+            {
+                scrlSolution.setVisible(true);
+                txtSolution.setVisible(true);
+                btnNext.setVisible(true);
+                frame.setPreferredSize(new Dimension(900, 800));
+
+                txtSolution.setText(solution.toString());
+                GridMetamodel.visualize(solution);
             }
         }
         catch (Err err)
@@ -273,14 +314,23 @@ public class AlloyerForm extends JFrame
     {
         try
         {
-            if(rbTextSolution.isSelected())
+            if(cbTextSolution.isSelected() && !cbGraphSolution.isSelected())
             {
                 solution = GridMetamodel.getNext(solution);
                 txtSolution.setText(solution.toString());
             }
-            else if(rbGraphSolution.isSelected())
+            else if(!cbTextSolution.isSelected() && cbGraphSolution.isSelected())
             {
-                solution = GridMetamodel.visualizeNext(solution);
+                solution = GridMetamodel.visualizeNext(solution, currentModelForm);
+            }
+            else if(cbTextSolution.isSelected() && cbGraphSolution.isSelected())
+            {
+                solution = GridMetamodel.visualizeNext(solution, currentModelForm);
+                txtSolution.setText(solution.toString());
+            }
+            else
+            {
+
             }
 
         }
