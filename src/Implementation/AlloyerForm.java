@@ -57,7 +57,7 @@ public class AlloyerForm extends JFrame
         this.setVisible(true);
         this.pack();
         frame.setMinimumSize(new Dimension(420,400));
-        frame.setPreferredSize(new Dimension(420.460));
+        frame.setPreferredSize(new Dimension(420,460));
 
         GridMetamodel.setUp();
         sigsFromMeta = GridMetamodel.getSigs();

@@ -28,6 +28,44 @@ import static edu.mit.csail.sdg.alloy4compiler.ast.Sig.SIGINT;
  * */
 public class GridMetamodel {
 
+    public static String testSolution = "---INSTANCE---\n" +
+            "integers={-128, -127, -126, -125, -124, -123, -122, -121, -120, -119, -118, -117, -116, -115, -114, -113, -112, -111, -110, -109, -108, -107, -106, -105, -104, -103, -102, -101, -100, -99, -98, -97, -96, -95, -94, -93, -92, -91, -90, -89, -88, -87, -86, -85, -84, -83, -82, -81, -80, -79, -78, -77, -76, -75, -74, -73, -72, -71, -70, -69, -68, -67, -66, -65, -64, -63, -62, -61, -60, -59, -58, -57, -56, -55, -54, -53, -52, -51, -50, -49, -48, -47, -46, -45, -44, -43, -42, -41, -40, -39, -38, -37, -36, -35, -34, -33, -32, -31, -30, -29, -28, -27, -26, -25, -24, -23, -22, -21, -20, -19, -18, -17, -16, -15, -14, -13, -12, -11, -10, -9, -8, -7, -6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127}\n" +
+            "univ={-1, -10, -100, -101, -102, -103, -104, -105, -106, -107, -108, -109, -11, -110, -111, -112, -113, -114, -115, -116, -117, -118, -119, -12, -120, -121, -122, -123, -124, -125, -126, -127, -128, -13, -14, -15, -16, -17, -18, -19, -2, -20, -21, -22, -23, -24, -25, -26, -27, -28, -29, -3, -30, -31, -32, -33, -34, -35, -36, -37, -38, -39, -4, -40, -41, -42, -43, -44, -45, -46, -47, -48, -49, -5, -50, -51, -52, -53, -54, -55, -56, -57, -58, -59, -6, -60, -61, -62, -63, -64, -65, -66, -67, -68, -69, -7, -70, -71, -72, -73, -74, -75, -76, -77, -78, -79, -8, -80, -81, -82, -83, -84, -85, -86, -87, -88, -89, -9, -90, -91, -92, -93, -94, -95, -96, -97, -98, -99, 0, 1, 10, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 11, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 12, 120, 121, 122, 123, 124, 125, 126, 127, 13, 14, 15, 16, 17, 18, 19, 2, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 3, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 4, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 5, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 6, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 7, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 8, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 9, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, Grid$0, Load$0, Load$1, Load$2, Load_Circuit$0, Load_Circuit$1, Load_Circuit$2, Supply_Circuit$0, Wind$0, Wind$1, boolean/False$0, boolean/True$0, ord/Ord$0}\n" +
+            "Int={-1, -10, -100, -101, -102, -103, -104, -105, -106, -107, -108, -109, -11, -110, -111, -112, -113, -114, -115, -116, -117, -118, -119, -12, -120, -121, -122, -123, -124, -125, -126, -127, -128, -13, -14, -15, -16, -17, -18, -19, -2, -20, -21, -22, -23, -24, -25, -26, -27, -28, -29, -3, -30, -31, -32, -33, -34, -35, -36, -37, -38, -39, -4, -40, -41, -42, -43, -44, -45, -46, -47, -48, -49, -5, -50, -51, -52, -53, -54, -55, -56, -57, -58, -59, -6, -60, -61, -62, -63, -64, -65, -66, -67, -68, -69, -7, -70, -71, -72, -73, -74, -75, -76, -77, -78, -79, -8, -80, -81, -82, -83, -84, -85, -86, -87, -88, -89, -9, -90, -91, -92, -93, -94, -95, -96, -97, -98, -99, 0, 1, 10, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 11, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 12, 120, 121, 122, 123, 124, 125, 126, 127, 13, 14, 15, 16, 17, 18, 19, 2, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 3, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 4, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 5, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 6, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 7, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 8, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 9, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99}\n" +
+            "seq/Int={0, 1, 2, 3}\n" +
+            "String={}\n" +
+            "none={}\n" +
+            "this/Grid={Grid$0}\n" +
+            "this/Grid<:circuit={Grid$0->Load_Circuit$0, Grid$0->Load_Circuit$1, Grid$0->Load_Circuit$2, Grid$0->Supply_Circuit$0}\n" +
+            "this/Circuit={Load_Circuit$0, Load_Circuit$1, Load_Circuit$2, Supply_Circuit$0}\n" +
+            "this/Circuit<:supply={Load_Circuit$1->Wind$0, Load_Circuit$1->Wind$1}\n" +
+            "this/Circuit<:load={Load_Circuit$0->Load$2, Supply_Circuit$0->Load$1}\n" +
+            "this/Load_Circuit={Load_Circuit$0, Load_Circuit$1, Load_Circuit$2}\n" +
+            "this/Load_Circuit<:supply_circuit={}\n" +
+            "this/Supply_Circuit={Supply_Circuit$0}\n" +
+            "this/Supply_Circuit<:load_circuit={Supply_Circuit$0->Load_Circuit$0, Supply_Circuit$0->Load_Circuit$2}\n" +
+            "this/Component={Load$0, Load$1, Load$2, Wind$0, Wind$1}\n" +
+            "this/Component<:containing_circuit={Load$0->Load_Circuit$2, Load$1->Load_Circuit$2, Load$2->Supply_Circuit$0, Wind$0->Load_Circuit$2, Wind$1->Supply_Circuit$0}\n" +
+            "this/Switch={}\n" +
+            "this/Switch<:switch={}\n" +
+            "this/Supply={Wind$0, Wind$1}\n" +
+            "this/Supply<:load={Wind$0->Load$1, Wind$0->Load$2, Wind$1->Load$1, Wind$1->Load$2}\n" +
+            "this/Supply<:watts={Wind$0->8, Wind$1->8}\n" +
+            "this/GP={}\n" +
+            "this/SP={}\n" +
+            "this/Wind={Wind$0, Wind$1}\n" +
+            "this/Geo={}\n" +
+            "this/Hydro={}\n" +
+            "this/Load={Load$0, Load$1, Load$2}\n" +
+            "this/Load<:supply={Load$0->Wind$1, Load$1->Wind$1, Load$2->Wind$1}\n" +
+            "this/Load<:watts={Load$0->0, Load$1->2, Load$2->1}\n" +
+            "boolean/Bool={boolean/False$0, boolean/True$0}\n" +
+            "boolean/True={boolean/True$0}\n" +
+            "boolean/False={boolean/False$0}\n" +
+            "ord/Ord={ord/Ord$0}\n" +
+            "ord/Ord<:First={ord/Ord$0->Supply_Circuit$0}\n" +
+            "ord/Ord<:Next={ord/Ord$0->Load_Circuit$0->Load_Circuit$1, ord/Ord$0->Load_Circuit$2->Load_Circuit$0, ord/Ord$0->Supply_Circuit$0->Load_Circuit$2}\n";
+
     public static File file = new File(System.getProperty("user.dir") + "/timesData.csv");
     public static Expr expression;
     public static Command command;
@@ -300,7 +338,7 @@ public class GridMetamodel {
 
             A4Solution solution = run(cmd);
 
-            checkConstraints(solution);
+            checkConstraints(null);
 
 
 
@@ -453,7 +491,8 @@ public class GridMetamodel {
         ArrayList<OurSig> sigsFromSolution = new ArrayList<>();
 
 
-        String[] templines = solution.toString().split("\n");
+        //String[] templines = solution.toString().split("\n");
+        String[] templines = testSolution.split("\n");
         ArrayList<String> linesArrayList = new ArrayList<String>(templines.length);
 
         for(String s : templines){
@@ -481,10 +520,11 @@ public class GridMetamodel {
                     }
                     System.out.printf(w);
                     if(w.length() > 0){
-                    for(String q : w.split(",\b")){
-                        String name = q.split("->")[0];
-                        String type = "this/" + q.split("\\W^_")[0];
-                        int num = Integer.parseInt(q.split("->")[1]);
+                    for(String q : w.split("[,\b]")){
+                        String[] info = q.split("[->]");
+                        String name = info[0];
+                        String type = "this/" + name.split("[$\\d]")[0];
+                        int num = Integer.parseInt(info[2]);
                         sigsFromSolution.add(new OurSig(namesToSig.get(type), name, num));
                     }}
 
@@ -520,6 +560,10 @@ public class GridMetamodel {
         return pass;
 
     }
+
+
+
+
 
 
 }

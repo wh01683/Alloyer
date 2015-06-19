@@ -13,7 +13,7 @@ public class OurSig {
     private Sig it;
     private String label;
     private int value;
-    private HashMap<String, String> relations;
+    private HashMap<String, String> relations = new HashMap<>(5);
 
     public OurSig (Sig s, String name, int val){
         this.hashKey = this.hashCode();
@@ -48,9 +48,19 @@ public class OurSig {
 
     public String toString(){
         String relationsString = "";
-        for(String s : relations.keySet()){
-            relationsString += s + "->" + relations.get(s) + "\b";
+
+        if(!(relations == null)){
+            for(String s : relations.keySet()){
+                if(s != null){
+                    relationsString += s + "->" + relations.get(s) + "\b";
+                }
+            }
         }
-        return (it.toString() + " " + label + " " + value + "Relations:\n " + relationsString);
+
+
+        String returnString = (((it.toString() == null)? "" : it.toString()) + " " + label + " " + value + "Relations:\n " + relationsString + "\n");
+
+
+        return returnString;
     }
 }
