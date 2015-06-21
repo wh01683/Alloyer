@@ -1,7 +1,5 @@
 package Implementation;
 
-import edu.mit.csail.sdg.alloy4compiler.ast.Sig;
-
 import java.util.HashMap;
 
 /**
@@ -10,14 +8,14 @@ import java.util.HashMap;
 public class OurSig {
 
     private int hashKey;
-    private Sig it;
     private String label;
+    private String type;
     private int value;
     private HashMap<String, String> relations = new HashMap<>(5);
 
-    public OurSig (Sig s, String name, int val){
+    public OurSig (String type, String name, int val){
         this.hashKey = this.hashCode();
-        this.it = s;
+        this.type = type;
         this.label = name;
         this.value = val;
     }
@@ -30,8 +28,8 @@ public class OurSig {
         return hashKey;
     }
 
-    public Sig getIt() {
-        return it;
+    public String getType() {
+        return type;
     }
 
     public String getLabel() {
@@ -58,7 +56,7 @@ public class OurSig {
         }
 
 
-        String returnString = (((it == null)? "" : it.toString()) + " " + label + " " + value + "Relations:\n " + relationsString + "\n");
+        String returnString = ("Type: " + this.type + " Name: " + label + " Value: " + value + "Relations:\n " + relationsString + "\n");
 
 
         return returnString;

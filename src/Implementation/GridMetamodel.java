@@ -4,21 +4,26 @@ package Implementation;
  * Created by robert on 6/10/15.
  */
 
-import edu.mit.csail.sdg.alloy4.*;
-import edu.mit.csail.sdg.alloy4compiler.ast.*;
+import edu.mit.csail.sdg.alloy4.A4Reporter;
+import edu.mit.csail.sdg.alloy4.Err;
+import edu.mit.csail.sdg.alloy4.SafeList;
+import edu.mit.csail.sdg.alloy4compiler.ast.Command;
+import edu.mit.csail.sdg.alloy4compiler.ast.Expr;
+import edu.mit.csail.sdg.alloy4compiler.ast.Module;
+import edu.mit.csail.sdg.alloy4compiler.ast.Sig;
 import edu.mit.csail.sdg.alloy4compiler.parser.CompUtil;
 import edu.mit.csail.sdg.alloy4compiler.translator.A4Options;
 import edu.mit.csail.sdg.alloy4compiler.translator.A4Solution;
 import edu.mit.csail.sdg.alloy4compiler.translator.TranslateAlloyToKodkod;
 import edu.mit.csail.sdg.alloy4viz.VizGUI;
 
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
-import java.util.*;
-
-import static edu.mit.csail.sdg.alloy4compiler.ast.Sig.SIGINT;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Hashtable;
+import java.util.List;
 
 
 
@@ -27,6 +32,14 @@ import static edu.mit.csail.sdg.alloy4compiler.ast.Sig.SIGINT;
  *
  * */
 public class GridMetamodel {
+
+    private static OurSig wind$0 = new OurSig("this/Wind", "Wind$0", 8);
+    private static OurSig wind$1 = new OurSig("this/Wind", "Wind$1", 8);
+    private static OurSig load$0 = new OurSig("this/Load", "Load$0", 0);
+    private static OurSig load$1 = new OurSig("this/Load", "Load$1", 2);
+    private static OurSig load$2 = new OurSig("this/Load", "Load$2", 1);
+    public static ArrayList<OurSig> testConstraints = new ArrayList<>();
+
 
     public static String testSolution = "---INSTANCE---\n" +
             "integers={-128, -127, -126, -125, -124, -123, -122, -121, -120, -119, -118, -117, -116, -115, -114, -113, -112, -111, -110, -109, -108, -107, -106, -105, -104, -103, -102, -101, -100, -99, -98, -97, -96, -95, -94, -93, -92, -91, -90, -89, -88, -87, -86, -85, -84, -83, -82, -81, -80, -79, -78, -77, -76, -75, -74, -73, -72, -71, -70, -69, -68, -67, -66, -65, -64, -63, -62, -61, -60, -59, -58, -57, -56, -55, -54, -53, -52, -51, -50, -49, -48, -47, -46, -45, -44, -43, -42, -41, -40, -39, -38, -37, -36, -35, -34, -33, -32, -31, -30, -29, -28, -27, -26, -25, -24, -23, -22, -21, -20, -19, -18, -17, -16, -15, -14, -13, -12, -11, -10, -9, -8, -7, -6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127}\n" +
@@ -76,8 +89,10 @@ public class GridMetamodel {
 //    private static String alsDirPath = dirPath + "models/circuitry.als";
     private static String dirPath = "/tmp/alloy4tmp40-robert/";
     private static String alsDirPath = dirPath + "models/circuitry.als";
-    private static ArrayList<OurSig> constrainedSigs = new ArrayList<>(10);
-    private static Hashtable<String, Sig> namesToSig = new Hashtable<>(20);
+    private static ArrayList<OurSig> constrainedSigs = new ArrayList<>(10); //will store the list of signatures constrained by the specifications
+    private static ArrayList<String> namesOfConstrainedSigs = new ArrayList<>();
+    private static ArrayList<String> typesOfConstrainedSigs = new ArrayList<>();
+    private static Hashtable<String, Sig> namesToSig = new Hashtable<>(20); //will store a mapping of String type names to Signature objects
 
     private static Module world;
 
@@ -100,6 +115,7 @@ public class GridMetamodel {
     }
 
 
+/*
     public static void ancientMain(String[] args) throws Err {
 
 
@@ -110,95 +126,141 @@ public class GridMetamodel {
 
         Expr fact = ExprConstant.TRUE;
 
-        /**one sig Grid*/
+        */
+/**one sig Grid*//*
+
             //making a new Primsig called Grid, there is exactly one grid in any instance
          Grid = new Sig.PrimSig("Grid", Attr.ONE);
 
 
-        /**abstract sig Circuit*/
+        */
+/**abstract sig Circuit*//*
+
             //making new sig Circuit, which is abstract
          Circuit = new Sig.PrimSig("Circuit", Attr.ABSTRACT);
 
-        /**circuit: some Circuit in Grid*/
+        */
+/**circuit: some Circuit in Grid*//*
+
             //this is the body of the Grid sig declaration. each grid has at least one Circuit
         Expr field_circuit_GRID = Grid.addField("circuit", Circuit.someOf());
 
-        /**sig Load_Circuit extends Circuit*/
+        */
+/**sig Load_Circuit extends Circuit*//*
+
             //child circuit of Circuit, load circuit must have a negative watt supply (supply less than they consume)
          LoadCircuit = new Sig.PrimSig("Load_Circuit", Circuit);
 
-        /**sig Supply_Circuit extends Circuit*/
+        */
+/**sig Supply_Circuit extends Circuit*//*
+
             //child circuit of Circuit, supply circuits produce 0 or positive wattage
          SupplyCircuit = new Sig.PrimSig("Supply_Circuit", Circuit);
 
-        /**supply_circuit: set Supply_Circuit in Load_Circuit*/
+        */
+/**supply_circuit: set Supply_Circuit in Load_Circuit*//*
+
             //each load circuit can have 0 or more supply circuits
         Expr field_supply_circuit_LOAD_CIRCUIT = LoadCircuit.addField("supply_circuit", SupplyCircuit.setOf());
 
-        /**load_circuit: set Load_Circuit in Supply_Circuit*/
+        */
+/**load_circuit: set Load_Circuit in Supply_Circuit*//*
+
             //each supply circuit contains 0 or more load circuits
         Expr field_load_circuit_SUPPLY_CIRCUIT = SupplyCircuit.addField("load_circuit", LoadCircuit.setOf());
 
-        /**abstract sig Component*/
+        */
+/**abstract sig Component*//*
+
             //parent sig for Load, supply, and switch
          Component = new Sig.PrimSig("Component", Attr.ABSTRACT);
-        /**containing_circuit: one Circuit*/
+        */
+/**containing_circuit: one Circuit*//*
+
             //every component must belong to a circuit
         Expr field_containing_circuit_COMPONENT = Component.addField("containing_circuit", Circuit.oneOf());
 
-        /**sig Switch extends Component*/
+        */
+/**sig Switch extends Component*//*
+
             //switch is a child of Component, switch links other circuits
          Switch = new Sig.PrimSig("Switch", Component);
-        /**switch: Circuit -> Circuit*/
+        */
+/**switch: Circuit -> Circuit*//*
+
             //the body of the switch sig, a switch is a mapping of one Circuit to another
         Expr field_switch_CIRCUIT = Switch.addField("switch", Circuit.some_arrow_some(Circuit));
 
 
-        /**abstract sig Supply extends Component*/
+        */
+/**abstract sig Supply extends Component*//*
+
             //child of Component, represents a power source
          Supply = new Sig.PrimSig("Supply", Component, Attr.ABSTRACT);
 
-        /**sig Load extends Component*/
+        */
+/**sig Load extends Component*//*
+
             //child of component, represents a power consumer like a house, hospital, etc
          Load = new Sig.PrimSig("Load", Component);
 
-        /**load: set Load in Supply*/
+        */
+/**load: set Load in Supply*//*
+
             //every supply has 0 or more load
         Expr field_load_SUPPLY = Supply.addField("load", Load.setOf());
 
-        /**watts: one Int in Supply*/
+        */
+/**watts: one Int in Supply*//*
+
             //every supply has one Integer representing the number of watts they produce, used in facts
         Expr field_watts_SUPPLY = Supply.addField("watts", SIGINT.oneOf());
 
-        /**supply: one Supply in Load*/
+        */
+/**supply: one Supply in Load*//*
+
             //each load belongs to just one supply source, representing a power plant
         Expr field_supply_LOAD = Load.addField("supply", Supply.oneOf());
 
-        /**watts: one Int in Load*/
+        */
+/**watts: one Int in Load*//*
+
             //int representing number of wattage demanded
         Expr field_watts_LOAD = Supply.addField("watts", SIGINT.oneOf());
 
-        /**sig GP extends Supply*/
+        */
+/**sig GP extends Supply*//*
+
             //all of the below signatures are children of supply
          GP = new Sig.PrimSig("GP", Supply);
 
-        /**sig SP extends Supply*/
+        */
+/**sig SP extends Supply*//*
+
          SP = new Sig.PrimSig("SP", Supply);
 
-        /**sig Wind extends Supply*/
+        */
+/**sig Wind extends Supply*//*
+
          Wind = new Sig.PrimSig("Wind", Supply);
 
-        /**sig Geo extends Supply*/
+        */
+/**sig Geo extends Supply*//*
+
          Geo = new Sig.PrimSig("Geo", Supply);
 
-        /**sig Hydro extends Supply*/
+        */
+/**sig Hydro extends Supply*//*
+
          Hydro = new Sig.PrimSig("Hydro", Supply);
 
 
 
 
-        /**fun s_watts [c: Circuit]: one Int
-        *   sum s: c.supply | s.watts*/
+        */
+/**fun s_watts [c: Circuit]: one Int
+        *   sum s: c.supply | s.watts*//*
+
 
         //declare "c" as equal to One Circuit sig (it's one by default), everything inside the brackets are parameters of the function
         Decl decl_oneOf_Circuit = Circuit.oneOf("c");
@@ -216,36 +278,46 @@ public class GridMetamodel {
         //the body of the function
         Func fun_s_watts = new Func(null, "s_watts", Util.asList(decl_oneOf_Circuit), SIGINT.oneOf(), s_watts_body);
 
-        /*fun l_watts [c: Circuit]: one Int
-        *   sum l: c.load | l.watts*/
+        */
+/*fun l_watts [c: Circuit]: one Int
+        *   sum l: c.load | l.watts*//*
+
         Decl decl_c_load = decl_oneOf_Circuit.get().join(field_load_SUPPLY).oneOf("l");
         Expr l_watts_body = decl_c_load.get().join(field_watts_LOAD).sumOver(decl_c_load);
         Func fun_l_watts = new Func(null, "l_watts", Util.asList(decl_oneOf_Circuit), SIGINT.oneOf(), l_watts_body);
 
-        /*fun grid_l_watts [g: Grid]: one Int
-        *   sum l: g.circuit.load | l.watts*/
+        */
+/*fun grid_l_watts [g: Grid]: one Int
+        *   sum l: g.circuit.load | l.watts*//*
+
 
         Decl decl_one_Grid = Grid.oneOf("g");
         Decl decl_g_circuit_load = decl_one_Grid.get().join(field_circuit_GRID.join(field_load_SUPPLY)).oneOf("l");
         Expr grid_l_watts_body = decl_g_circuit_load.get().join(field_watts_LOAD).sumOver(decl_g_circuit_load);
         Func fun_grid_l_watts = new Func(null, "grid_l_watts", Util.asList(decl_one_Grid), SIGINT.oneOf(), grid_l_watts_body);
 
-        /*fun grid_s_watts [g: Grid]: one Int
-        *   sum s: g.circuit.supply | s.watts*/
+        */
+/*fun grid_s_watts [g: Grid]: one Int
+        *   sum s: g.circuit.supply | s.watts*//*
+
 
         Decl decl_g_circuit_supply = decl_one_Grid.get().join(field_circuit_GRID).join(field_supply_LOAD).oneOf("s");
         Expr grid_s_watts_body = decl_g_circuit_supply.get().join(field_watts_SUPPLY).sumOver(decl_g_circuit_supply);
         Func fun_grid_s_watts = new Func(null, "grid_s_watts", Util.asList(decl_one_Grid), SIGINT.oneOf(), grid_s_watts_body);
 
-        /*fun load_watts [l: Load]: one Int
-        *   sum l.watts*/
+        */
+/*fun load_watts [l: Load]: one Int
+        *   sum l.watts*//*
+
 
         Decl decl_oneOf_Load = Load.oneOf("l");
         Expr load_watts_body = decl_oneOf_Load.get().join(field_watts_LOAD).sumOver(decl_oneOf_Load);
         Func fun_load_watts = new Func(null, "load_watts", Util.asList(decl_oneOf_Load), SIGINT.oneOf(), load_watts_body);
 
-        /*fun supply_watts [s: Supply]: one Int
-           sum s.watts*/
+        */
+/*fun supply_watts [s: Supply]: one Int
+           sum s.watts*//*
+
         Decl decl_oneOf_Supply = Supply.oneOf("s");
         Expr supply_watts_body = decl_oneOf_Supply.get().join(field_watts_SUPPLY).sumOver(decl_oneOf_Supply);
         Func fun_supply_watts = new Func(null, "supply_watts", Util.asList(decl_oneOf_Supply), SIGINT.oneOf(), supply_watts_body);
@@ -311,7 +383,9 @@ public class GridMetamodel {
                 .iff(decl_load_circuit.get().in(decl_supply_circuit.get().join(field_load_circuit_SUPPLY_CIRCUIT)))))).and(fact);
 
 
-        /**Predicate: body = g: some Grid*/
+        */
+/**Predicate: body = g: some Grid*//*
+
 
         List<Sig> sigs = Arrays.asList(new Sig[]{Grid, Circuit, SupplyCircuit, LoadCircuit, Component, Load, Supply, Switch, GP, SP, Wind, Geo, Hydro});
 
@@ -330,6 +404,7 @@ public class GridMetamodel {
 
 
     }
+*/
 
     public static void main(String[] args){
         try {
@@ -337,8 +412,13 @@ public class GridMetamodel {
             Command cmd = makeCommand(3);
 
             A4Solution solution = run(cmd);
-
-            checkConstraints(null);
+            testConstraints.add(load$0);
+            testConstraints.add(load$1);
+            testConstraints.add(load$2);
+            testConstraints.add(wind$0);
+            testConstraints.add(wind$1);
+            sendConstraints(testConstraints);
+            checkSpecificConstraints(null);
 
 
 
@@ -464,6 +544,10 @@ public class GridMetamodel {
 
     public static void sendConstraints(ArrayList<OurSig> sigs){
         constrainedSigs = sigs;
+        for(OurSig o : constrainedSigs){
+            namesOfConstrainedSigs.add(o.getLabel());
+            typesOfConstrainedSigs.add(o.getType());
+        }
     }
 
     public static A4Solution getNewInstance(A4Solution solution){
@@ -483,6 +567,60 @@ public class GridMetamodel {
             e.printStackTrace();
             return null;
         }
+
+    }
+
+    public static boolean checkSpecificConstraints(A4Solution solution){
+
+        boolean pass = false;
+
+        ArrayList<OurSig> sigsFromInstance = new ArrayList<>();
+        //ArrayList<String> linesOfSolution = new ArrayList<>(Arrays.asList(solution.toString().split("\n")));
+        ArrayList<String> linesOfSolution = new ArrayList<>(Arrays.asList(testSolution.split("\n")));
+
+
+        ArrayList<String> hasRelationshipAndConstrained = new ArrayList<>();
+
+        //for every line of a solution instance, check for the sequence :> denoting a "has" relationship
+        for(String s : linesOfSolution){
+            if(s.contains("<:")){
+                for(String l : typesOfConstrainedSigs){
+                    //now check the names of the constrained sigs. if the line is a "has" relationship for a constrained sig,
+                    //put it aside in a special arraylist
+                    if(s.contains(l+"<:")){
+                        hasRelationshipAndConstrained.add(s);
+                    }
+                }
+            }
+        }
+        //now for each of these lines, we're going to grab the integer values associated with the signature. in our case,
+        //these are wattages
+        for(String s : hasRelationshipAndConstrained){
+            //if the line specifies wattage
+            if(s.contains("watts")) {
+
+                ArrayList<String[]> specificSigsToWatts = new ArrayList<>();
+
+                //get the array of watt relationships to establish the values
+                specificSigsToWatts.add(s.split("[<:{\\->,?\b}]"));
+
+                for (String[] p : specificSigsToWatts) {
+                    String type = p[0];
+                    for (int i = 3; i < p.length - 2; i+= 3) {
+                        sigsFromInstance.add(new OurSig(type, p[i], Integer.parseInt(p[i + 2])));
+                    }
+                }
+            }else{
+                //otherwise, the line does not contain a wattage relationship
+                //         this/Load<:supply={Load$0->Wind$1, Load$1->Wind$1, Load$2->Wind$1}
+
+                String[] relationships = s.split("[<:{,?}]");
+                for(String relation : relationships){
+                    System.out.printf(relation + "\n");
+                }
+            }
+        }
+        return pass;
 
     }
 
@@ -519,18 +657,20 @@ public class GridMetamodel {
             ArrayList<String> temp = new ArrayList<>();
             //get the lines in which watts is assigned
                 if(s.contains("watts")){
-                    ArrayList<String> wattValues = new ArrayList<>();
-                    String w = "";
-                    //gets the text between the two { }
-                    //BEFORE this code: {Wind$0->8, Wind$1->8}
-                    //After: Wind$0->8, Wind$1->8
-                    for(int i = s.indexOf("{")+1; i < s.toCharArray().length - 1; i++){
-                        w+= s.toCharArray()[i];
+
+                    ArrayList<String[]> specificSigsToWatts = new ArrayList<>();
+
+                    specificSigsToWatts.add(s.split("[<:{\\->,\b}]"));
+
+                    for(String[] p : specificSigsToWatts){
+                        System.out.printf("\n");
+                        for(String ind : p){
+                            System.out.printf(ind + " ");
+                        }
                     }
                     //a print statement for testing
-                    System.out.printf(w);
                     //to stop null pointer problems here
-                    if(w.length() > 0){
+                    /*if(w.length() > 0){
                        // Wind$0->8, Wind$1->8
                         //splits Wind$0->8, Wind$1->8 into String[] {Wind$0->8, Wind$1->8}
                     for(String q : w.split("[,\b]")){
@@ -543,7 +683,7 @@ public class GridMetamodel {
                         int num = Integer.parseInt(info[2]);
                         //adds new simple sig to our temp hashtable
                         sigsFromSolution.add(new OurSig(namesToSig.get(type), name, num));
-                    }}
+                    }}*/
 
                 }
             //for every other line that does not contain watts, it's just a relationship
@@ -571,7 +711,6 @@ public class GridMetamodel {
 
         }
 
-        //null pointer problem here
         for(OurSig l : sigsFromSolution){
             System.out.printf(l.toString());
         }
