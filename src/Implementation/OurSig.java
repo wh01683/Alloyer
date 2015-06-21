@@ -58,7 +58,7 @@ public class OurSig {
         }
 
 
-        String returnString = (((it.toString() == null)? "" : it.toString()) + " " + label + " " + value + "Relations:\n " + relationsString + "\n");
+        String returnString = (((it == null)? "" : it.toString()) + " " + label + " " + value + "Relations:\n " + relationsString + "\n");
 
 
         return returnString;
