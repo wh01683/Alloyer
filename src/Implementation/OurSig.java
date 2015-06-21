@@ -56,9 +56,18 @@ public class OurSig {
         }
 
 
-        String returnString = ("Type: " + this.type + " Name: " + label + " Value: " + value + "Relations:\n " + relationsString + "\n");
+        String returnString = ("Type: " + this.type + " Name: " + label + " Value: " + value + " Relations:\n " + relationsString + "\n");
 
 
         return returnString;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
+    }
+
+    public boolean isEqual(OurSig sig){
+        return ((sig.getLabel().equalsIgnoreCase(this.getLabel())) && (sig.getValue() == this.getValue()));
     }
 }

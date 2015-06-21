@@ -20,11 +20,7 @@ import edu.mit.csail.sdg.alloy4viz.VizGUI;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Hashtable;
-import java.util.List;
-
+import java.util.*;
 
 
 /**
@@ -33,8 +29,8 @@ import java.util.List;
  * */
 public class GridMetamodel {
 
-    private static OurSig wind$0 = new OurSig("this/Wind", "Wind$0", 8);
-    private static OurSig wind$1 = new OurSig("this/Wind", "Wind$1", 8);
+    private static OurSig wind$0 = new OurSig("this/Supply", "Wind$0", 8);
+    private static OurSig wind$1 = new OurSig("this/Supply", "Wind$1", 8);
     private static OurSig load$0 = new OurSig("this/Load", "Load$0", 0);
     private static OurSig load$1 = new OurSig("this/Load", "Load$1", 2);
     private static OurSig load$2 = new OurSig("this/Load", "Load$2", 1);
@@ -93,6 +89,7 @@ public class GridMetamodel {
     private static ArrayList<String> namesOfConstrainedSigs = new ArrayList<>();
     private static ArrayList<String> typesOfConstrainedSigs = new ArrayList<>();
     private static Hashtable<String, Sig> namesToSig = new Hashtable<>(20); //will store a mapping of String type names to Signature objects
+    private static HashMap<String, OurSig> namesToConstrainedOurSigs = new HashMap<>();
 
     private static Module world;
 
@@ -418,7 +415,10 @@ public class GridMetamodel {
             testConstraints.add(wind$0);
             testConstraints.add(wind$1);
             sendConstraints(testConstraints);
-            checkSpecificConstraints(null);
+
+            while (!checkSpecificConstraints(solution)){
+                checkSpecificConstraints(getNext(solution));
+            }
 
 
 
@@ -547,6 +547,7 @@ public class GridMetamodel {
         for(OurSig o : constrainedSigs){
             namesOfConstrainedSigs.add(o.getLabel());
             typesOfConstrainedSigs.add(o.getType());
+            namesToConstrainedOurSigs.putIfAbsent(o.getLabel(), o);
         }
     }
 
@@ -572,14 +573,13 @@ public class GridMetamodel {
 
     public static boolean checkSpecificConstraints(A4Solution solution){
 
-        boolean pass = false;
+        boolean pass = true;
 
-        ArrayList<OurSig> sigsFromInstance = new ArrayList<>();
-        //ArrayList<String> linesOfSolution = new ArrayList<>(Arrays.asList(solution.toString().split("\n")));
+        HashMap<String, OurSig> namesToInstanceOurSigs = new HashMap<>();
         ArrayList<String> linesOfSolution = new ArrayList<>(Arrays.asList(testSolution.split("\n")));
-
-
         ArrayList<String> hasRelationshipAndConstrained = new ArrayList<>();
+
+        //ArrayList<String> linesOfSolution = new ArrayList<>(Arrays.asList(solution.toString().split("\n")));
 
         //for every line of a solution instance, check for the sequence :> denoting a "has" relationship
         for(String s : linesOfSolution){
@@ -602,24 +602,38 @@ public class GridMetamodel {
                 ArrayList<String[]> specificSigsToWatts = new ArrayList<>();
 
                 //get the array of watt relationships to establish the values
-                specificSigsToWatts.add(s.split("[<:{\\->,?\b}]"));
+                specificSigsToWatts.add(s.split("[<:{\b\\->,?\b}]"));
 
                 for (String[] p : specificSigsToWatts) {
-                    String type = p[0];
+                    String type = p[0].trim();
                     for (int i = 3; i < p.length - 2; i+= 3) {
-                        sigsFromInstance.add(new OurSig(type, p[i], Integer.parseInt(p[i + 2])));
+                        OurSig instanceSig = new OurSig(type, p[i].trim(), Integer.parseInt(p[i + 2].trim()));
+                        namesToInstanceOurSigs.putIfAbsent(instanceSig.getLabel(), instanceSig);
                     }
                 }
             }else{
                 //otherwise, the line does not contain a wattage relationship
                 //         this/Load<:supply={Load$0->Wind$1, Load$1->Wind$1, Load$2->Wind$1}
-
-                String[] relationships = s.split("[<:{,?}]");
+                //TODO: handle relationships later
+                String[] relationships = s.split("[<:{\b\\->,?}]");
                 for(String relation : relationships){
-                    System.out.printf(relation + "\n");
+                    //System.out.printf(relation + "\n");
                 }
             }
         }
+
+        Iterator<OurSig> sigsConstrainedEnumeration = namesToConstrainedOurSigs.values().iterator();
+
+        while(sigsConstrainedEnumeration.hasNext() && pass){
+            OurSig toCompareConstrained = sigsConstrainedEnumeration.next();
+            OurSig toCompareInstance = namesToInstanceOurSigs.get(toCompareConstrained.getLabel());
+
+            pass = namesToInstanceOurSigs.containsKey(toCompareConstrained.getLabel()) && namesToInstanceOurSigs.get(toCompareConstrained.getLabel()).isEqual(toCompareConstrained);
+
+        }
+
+        System.out.printf("Result: %s\n", pass);
+
         return pass;
 
     }
