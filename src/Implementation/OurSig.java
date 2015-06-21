@@ -10,10 +10,11 @@ public class OurSig {
     private int hashKey;
     private String label;
     private String type;
+    private String subType;
     private int value;
     private HashMap<String, String> relations = new HashMap<>(5);
 
-    public OurSig (String type, String name, int val){
+    public OurSig(String type, String subType, String name, int val){
         this.hashKey = this.hashCode();
         this.type = type;
         this.label = name;
@@ -38,6 +39,10 @@ public class OurSig {
 
     public int getValue() {
         return value;
+    }
+
+    public String getSubType() {
+        return subType;
     }
 
     public HashMap<String, String> getRelations() {

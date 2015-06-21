@@ -29,11 +29,11 @@ import java.util.*;
  * */
 public class GridMetamodel {
 
-    private static OurSig wind$0 = new OurSig("this/Supply", "Wind$0", 8);
-    private static OurSig wind$1 = new OurSig("this/Supply", "Wind$1", 8);
-    private static OurSig load$0 = new OurSig("this/Load", "Load$0", 0);
-    private static OurSig load$1 = new OurSig("this/Load", "Load$1", 2);
-    private static OurSig load$2 = new OurSig("this/Load", "Load$2", 1);
+    private static OurSig wind$0 = new OurSig("this/Supply", "this/Wind", "Wind$0", 8);
+    private static OurSig wind$1 = new OurSig("this/Supply", "this/Wind", "Wind$1", 8);
+    private static OurSig load$0 = new OurSig("this/Load", "this/Wind", "Load$0", 0);
+    private static OurSig load$1 = new OurSig("this/Load", null, "Load$1", 2);
+    private static OurSig load$2 = new OurSig("this/Load", null, "Load$2", 1);
     public static ArrayList<OurSig> testConstraints = new ArrayList<>();
 
 
@@ -79,17 +79,19 @@ public class GridMetamodel {
     public static Expr expression;
     public static Command command;
     public static A4Options options = new A4Options();
-    public static Sig.PrimSig Grid, Circuit, SupplyCircuit, LoadCircuit, Component, Load, Supply, Switch, GP, SP, Wind, Geo, Hydro;
-    public static List<Sig> staticSigs;
+    public static A4Solution solution;
+
 //    private static String dirPath = "C:/Users/Lindsey/AppData/Local/Temp/alloy4tmp40-Lindsey/";
 //    private static String alsDirPath = dirPath + "models/circuitry.als";
     private static String dirPath = "/tmp/alloy4tmp40-robert/";
     private static String alsDirPath = dirPath + "models/circuitry.als";
-    private static ArrayList<OurSig> constrainedSigs = new ArrayList<>(10); //will store the list of signatures constrained by the specifications
     private static ArrayList<String> namesOfConstrainedSigs = new ArrayList<>();
     private static ArrayList<String> typesOfConstrainedSigs = new ArrayList<>();
     private static Hashtable<String, Sig> namesToSig = new Hashtable<>(20); //will store a mapping of String type names to Signature objects
     private static HashMap<String, OurSig> namesToConstrainedOurSigs = new HashMap<>();
+    private static Hashtable<Long, String> solInfo = new Hashtable<>();
+    private static Long numberOfSolutions = new Long(0);
+
 
     private static Module world;
 
@@ -406,9 +408,9 @@ public class GridMetamodel {
     public static void main(String[] args){
         try {
             setUp();
-            Command cmd = makeCommand(3);
+            command = makeCommand(4);
 
-            A4Solution solution = run(cmd);
+            solution = run(command);
             testConstraints.add(load$0);
             testConstraints.add(load$1);
             testConstraints.add(load$2);
@@ -416,10 +418,7 @@ public class GridMetamodel {
             testConstraints.add(wind$1);
             sendConstraints(testConstraints);
 
-            while (!checkSpecificConstraints(solution)){
-                checkSpecificConstraints(getNext(solution));
-            }
-
+            evaluateSolutionPerformance(solution, 10000);
 
 
         }catch (Err e){
@@ -444,20 +443,24 @@ public class GridMetamodel {
         return world.getAllCommands();
     }
 
-    public static boolean makeCSVFile(ArrayList<Long> times) throws Err{
+    public static boolean makeCSVFile() throws Err{
 
         try {
             PrintWriter writer = new PrintWriter(file);
-            long solutionNumber = 0;
-            for(Long l : times){
-                writer.println(solutionNumber + "\t" + l);
-                solutionNumber ++;
+            Iterator<Long> solutionIterator = solInfo.keySet().iterator();
+
+            writer.println("solNum\trunTime\tnumSigs\tnumSigInstances\tnumRelationships\tnumConstrainingSigs");
+            while(solutionIterator.hasNext()){
+                Long nextKey = solutionIterator.next();
+                writer.print(nextKey + "\t" + solInfo.get(nextKey));
             }
+
             writer.close();
             return true;
+
         } catch (FileNotFoundException f){
             System.out.printf("File not found.");
-            makeCSVFile(times);
+            makeCSVFile();
             return false;
         }
 
@@ -507,20 +510,17 @@ public class GridMetamodel {
 
     public static void evaluateSolutionPerformance(A4Solution solution, long times){
 
-            ArrayList<Long> timesList = new ArrayList<Long>((int)times);
             try {
-                long i = 0;
 
-                while (solution.satisfiable() && i < times) {
-                    long start = System.currentTimeMillis();
+                //while (solution.satisfiable()) {
 
-                    solution = solution.next();
-                    long end = System.currentTimeMillis();
-                    i++;
-                    timesList.add(end - start);
-                    System.out.printf("\nSolution: % d; Time between solutions: %d", i, (end - start));
-                }
-                makeCSVFile(timesList);
+                    while(!checkSpecificConstraints(solution) && numberOfSolutions < times){
+                        checkSpecificConstraints(solution.next());
+                        System.out.println(numberOfSolutions);
+                    }
+
+               // }
+                makeCSVFile();
 
             }catch (Err e){
                 e.printStackTrace();
@@ -543,21 +543,33 @@ public class GridMetamodel {
 
 
     public static void sendConstraints(ArrayList<OurSig> sigs){
-        constrainedSigs = sigs;
-        for(OurSig o : constrainedSigs){
-            namesOfConstrainedSigs.add(o.getLabel());
-            typesOfConstrainedSigs.add(o.getType());
-            namesToConstrainedOurSigs.putIfAbsent(o.getLabel(), o);
+        try {
+            ArrayList<OurSig> constrainedSigs = sigs;
+            for (OurSig o : constrainedSigs) {
+                String type = (o.getSubType() != null)? o.getSubType() : o.getType();
+                int occurrences = 1;
+                namesOfConstrainedSigs.add(o.getLabel());
+                if(!typesOfConstrainedSigs.contains(type)){
+                    typesOfConstrainedSigs.add(type);
+                }else{
+                    occurrences ++;
+                }
+                namesToConstrainedOurSigs.putIfAbsent(o.getLabel(), o);
+                //command = changeCommand(command, (namesToSig.get(o.getSubType() != null? o.getSubType() : o.getType())), true, occurrences);
+            }
+        }catch (NullPointerException e){
+            e.printStackTrace();
         }
+
     }
 
     public static A4Solution getNewInstance(A4Solution solution){
         try {
-            while (!checkConstraints(solution) && solution.satisfiable()) {
+            while (!checkSpecificConstraints(solution) && solution.satisfiable()) {
                 A4Solution temp = solution.next();
-                if(checkConstraints(temp)){
+                if(checkSpecificConstraints(temp)){
                     return temp;
-                }else if (temp.satisfiable() && !checkConstraints(temp)){
+                }else if (temp.satisfiable() && !checkSpecificConstraints(temp)){
                     getNewInstance(temp.next());
                 }else{
                     return null;
@@ -571,19 +583,43 @@ public class GridMetamodel {
 
     }
 
-    public static boolean checkSpecificConstraints(A4Solution solution){
+    public static boolean checkSpecificConstraints(A4Solution solutionInstance){
 
         boolean pass = true;
 
-        HashMap<String, OurSig> namesToInstanceOurSigs = new HashMap<>();
-        ArrayList<String> linesOfSolution = new ArrayList<>(Arrays.asList(testSolution.split("\n")));
-        ArrayList<String> hasRelationshipAndConstrained = new ArrayList<>();
+        HashMap<String, OurSig> namesToInstanceOurSigs = parseSolution(solutionInstance);
 
-        //ArrayList<String> linesOfSolution = new ArrayList<>(Arrays.asList(solution.toString().split("\n")));
+        Iterator<OurSig> sigsConstrainedEnumeration = namesToConstrainedOurSigs.values().iterator();
+
+        while(sigsConstrainedEnumeration.hasNext() && pass){
+            OurSig toCompareConstrained = sigsConstrainedEnumeration.next();
+
+            pass = namesToInstanceOurSigs.containsKey(toCompareConstrained.getLabel()) && namesToInstanceOurSigs.get(toCompareConstrained.getLabel()).isEqual(toCompareConstrained);
+
+        }
+
+        return pass;
+
+    }
+
+    private static HashMap<String, OurSig> parseSolution(A4Solution solution){
+
+        int numberOfRelationships = 0;
+        int numberOfSigInstances = 0;
+        int numberOfSigTypes = 0;
+        int numberOfConstrainedSigTypes = typesOfConstrainedSigs.size();
+
+        Long startTime = System.currentTimeMillis();
+        HashMap<String, OurSig> namesToInstanceOurSigs = new HashMap<>();
+        //ArrayList<String> linesOfSolution = new ArrayList<>(Arrays.asList(testSolution.split("\n")));
+        ArrayList<String> linesOfSolution = new ArrayList<>(Arrays.asList(solution.toString().split("\n")));
+
+        ArrayList<String> hasRelationshipAndConstrained = new ArrayList<>();
 
         //for every line of a solution instance, check for the sequence :> denoting a "has" relationship
         for(String s : linesOfSolution){
             if(s.contains("<:")){
+                numberOfSigTypes++;
                 for(String l : typesOfConstrainedSigs){
                     //now check the names of the constrained sigs. if the line is a "has" relationship for a constrained sig,
                     //put it aside in a special arraylist
@@ -607,7 +643,8 @@ public class GridMetamodel {
                 for (String[] p : specificSigsToWatts) {
                     String type = p[0].trim();
                     for (int i = 3; i < p.length - 2; i+= 3) {
-                        OurSig instanceSig = new OurSig(type, p[i].trim(), Integer.parseInt(p[i + 2].trim()));
+                        OurSig instanceSig = new OurSig(type, p[i].trim().replaceAll("$\\d", ""), p[i].trim(), Integer.parseInt(p[i + 2].trim()));
+                        numberOfSigInstances++;
                         namesToInstanceOurSigs.putIfAbsent(instanceSig.getLabel(), instanceSig);
                     }
                 }
@@ -617,125 +654,22 @@ public class GridMetamodel {
                 //TODO: handle relationships later
                 String[] relationships = s.split("[<:{\b\\->,?}]");
                 for(String relation : relationships){
-                    //System.out.printf(relation + "\n");
+                    numberOfRelationships++;
                 }
             }
         }
 
-        Iterator<OurSig> sigsConstrainedEnumeration = namesToConstrainedOurSigs.values().iterator();
-
-        while(sigsConstrainedEnumeration.hasNext() && pass){
-            OurSig toCompareConstrained = sigsConstrainedEnumeration.next();
-            OurSig toCompareInstance = namesToInstanceOurSigs.get(toCompareConstrained.getLabel());
-
-            pass = namesToInstanceOurSigs.containsKey(toCompareConstrained.getLabel()) && namesToInstanceOurSigs.get(toCompareConstrained.getLabel()).isEqual(toCompareConstrained);
-
-        }
-
-        System.out.printf("Result: %s\n", pass);
-
-        return pass;
-
+        StringBuilder solInfoString = new StringBuilder();
+        Long endTime = System.currentTimeMillis();
+        solInfoString.append((endTime - startTime) + "\t" + numberOfSigTypes + "\t" + numberOfSigInstances + "\t" + numberOfRelationships + "\t" + numberOfConstrainedSigTypes + "\n");
+        solInfo.put(numberOfSolutions, solInfoString.toString());
+        numberOfSolutions++;
+        return namesToInstanceOurSigs;
     }
 
-    public static boolean checkConstraints(A4Solution solution){
-        boolean pass = false;
-        ArrayList<OurSig> sigsFromSolution = new ArrayList<>();
+    public static void reset(){
 
 
-        //String[] templines = solution.toString().split("\n");
-
-        //splits the solution into single lines
-        String[] templines = testSolution.split("\n");
-        ArrayList<String> linesArrayList = new ArrayList<String>(templines.length);
-
-        //add lines to an array list
-        for(String s : templines){
-            linesArrayList.add(s);
-        }
-
-        //get all of the "<:" (has) relationships and store them in a single string
-        StringBuilder relationships = new StringBuilder();
-        for(String s : linesArrayList){
-            if(s.contains("<:")){
-                relationships.append(s + "\n");
-            }
-        }
-
-        //this is an overwritten array from earlier
-        templines = relationships.toString().split("\n");
-
-        ArrayList<ArrayList<String>> relations = new ArrayList<>();
-
-        for(String s : templines){
-            ArrayList<String> temp = new ArrayList<>();
-            //get the lines in which watts is assigned
-                if(s.contains("watts")){
-
-                    ArrayList<String[]> specificSigsToWatts = new ArrayList<>();
-
-                    specificSigsToWatts.add(s.split("[<:{\\->,\b}]"));
-
-                    for(String[] p : specificSigsToWatts){
-                        System.out.printf("\n");
-                        for(String ind : p){
-                            System.out.printf(ind + " ");
-                        }
-                    }
-                    //a print statement for testing
-                    //to stop null pointer problems here
-                    /*if(w.length() > 0){
-                       // Wind$0->8, Wind$1->8
-                        //splits Wind$0->8, Wind$1->8 into String[] {Wind$0->8, Wind$1->8}
-                    for(String q : w.split("[,\b]")){
-                        String[] info = q.split("[->]"); //String[] {Wind$1, "", 8}
-                        //name = Wind$1
-                        String name = info[0];
-                        //type = this/Wind
-                        String type = "this/" + name.split("[$\\d]")[0];
-                        //num = 8
-                        int num = Integer.parseInt(info[2]);
-                        //adds new simple sig to our temp hashtable
-                        sigsFromSolution.add(new OurSig(namesToSig.get(type), name, num));
-                    }}*/
-
-                }
-            //for every other line that does not contain watts, it's just a relationship
-            for(String s2 : (s.split("[<:=\\{,?\\}]"))){
-                temp.add(s2);
-            }
-            relations.add(temp);
-        }
-
-        for(ArrayList<String> lines : relations){
-            for(String word : lines){
-                if(word.contains("->")){
-                    //splits the arrow to get the parent and the child
-                    String ourSigName = word.split("->")[0];
-                    String childSigName = word.split("->")[1];
-
-                    for(OurSig p : sigsFromSolution){
-                        if(p.getLabel() == ourSigName){
-                            p.addRelation(childSigName);
-                        }
-                    }
-
-                }
-            }
-
-        }
-
-        for(OurSig l : sigsFromSolution){
-            System.out.printf(l.toString());
-        }
-
-        return pass;
 
     }
-
-
-
-
-
-
 }
