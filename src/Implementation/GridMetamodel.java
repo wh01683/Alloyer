@@ -53,7 +53,7 @@ public class GridMetamodel {
             setUp();
             command = makeCommand(4);
 
-            evaluateSolutionPerformance(run(command), 100003);
+            evaluateSolutionPerformance(run(command), 10003);
 
 
         }catch (Err e){
@@ -330,7 +330,7 @@ public class GridMetamodel {
         StringBuilder sigInfo = new StringBuilder();
 
         for(Sig.Field f : sig.getFields()){
-            sigInfo.append(solution.eval(f));
+            sigInfo.append(solution.eval(f) + "\n");
         }
 
         return sigInfo.toString();
