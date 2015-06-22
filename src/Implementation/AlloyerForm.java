@@ -209,6 +209,7 @@ public class AlloyerForm extends JFrame
         if(cb.isSelected() && !partner.isSelected())
         {
             btnRun.setEnabled(true);
+
         }
         else if(!cb.isSelected() && partner.isSelected())
         {
