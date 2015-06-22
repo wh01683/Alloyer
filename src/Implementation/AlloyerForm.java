@@ -35,6 +35,7 @@ public class AlloyerForm extends JFrame
     private JCheckBox cbTextSolution;
     private JCheckBox cbGraphSolution;
     private JScrollPane scrlList;
+    private JButton btnSigInfo;
     private JScrollPane scrlSolution;
 
 
@@ -93,6 +94,8 @@ public class AlloyerForm extends JFrame
        //Next Button
         btnNext.addActionListener(ae -> showNextSolution());
 
+        //SigInfo Button
+        btnSigInfo.addActionListener(ae -> showSigInfo());
     }
 
     public static void main(String[] args)
@@ -329,5 +332,11 @@ public class AlloyerForm extends JFrame
         {
             e.printStackTrace();
         }
+    }
+
+    public void showSigInfo()
+    {
+        String sigInfo = GridMetamodel.getSigInformation(solution, sigsFromMeta.get(4));
+        JOptionPane.showMessageDialog(mainPanel, sigInfo);
     }
 }
