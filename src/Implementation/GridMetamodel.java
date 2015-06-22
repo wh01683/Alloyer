@@ -82,10 +82,10 @@ public class GridMetamodel {
     private static A4Options options = new A4Options();
     //public static A4Solution solution;
 
-//    private static String dirPath = "C:/Users/Lindsey/AppData/Local/Temp/alloy4tmp40-Lindsey/";
-//    private static String alsDirPath = dirPath + "models/circuitry.als";
-    private static String dirPath = "/tmp/alloy4tmp40-robert/";
+    private static String dirPath = "C:/Users/Lindsey/AppData/Local/Temp/alloy4tmp40-Lindsey/";
     private static String alsDirPath = dirPath + "models/circuitry.als";
+//    private static String dirPath = "/tmp/alloy4tmp40-robert/";
+//    private static String alsDirPath = dirPath + "models/circuitry.als";
     private static Hashtable<String, Sig> namesToSig = new Hashtable<>(20); //will store a mapping of String type names to Signature objects
     private static ArrayList<OurSig> ourSigs;
 
