@@ -370,9 +370,9 @@ public class GridMetamodel {
      */
     private static boolean isDuplicate(long iteration, A4Solution solution){
         for(A4Solution sol : TEST_HASH_TABLE.values()){
-            if(iteration % 50000 == 0){
+            if(iteration % 5000 == 0){
                 printSolToFile((int)iteration, TEST_HASH_TABLE);
-                TEST_HASH_TABLE = new Hashtable<>(50000);
+                TEST_HASH_TABLE = new Hashtable<>(5000);
             }
             if(sol.toString().equalsIgnoreCase(solution.toString())){
                 System.out.println("Duplicate found. Iteration number: " + iteration);
