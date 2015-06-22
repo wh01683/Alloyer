@@ -88,7 +88,6 @@ public class GridMetamodel {
     private static String alsDirPath = dirPath + "models/circuitry.als";
     private static Hashtable<String, Sig> namesToSig = new Hashtable<>(20); //will store a mapping of String type names to Signature objects
     private static ArrayList<OurSig> ourSigs;
-    private static Long numberOfSolutions = new Long(0);
 
     private static Module world;
 
@@ -97,7 +96,6 @@ public class GridMetamodel {
             setUp();
             command = makeCommand(4);
 
-            A4Solution solution = run(command);
             testConstraints.add(load$0);
             testConstraints.add(load$1);
             testConstraints.add(load$2);
@@ -105,11 +103,8 @@ public class GridMetamodel {
             testConstraints.add(wind$1);
             sendConstraints(testConstraints);
 
-            for(Sig s : solution.getAllReachableSigs()){
-                for(Sig.Field f : s.getFields()){
-                    System.out.printf(f.toString() + " eval: " + solution.eval(f) + "\n");
-                }
-            }
+            evaluateSolutionPerformance(run(command), 100);
+
 
         }catch (Err e){
             e.printStackTrace();
@@ -159,10 +154,11 @@ public class GridMetamodel {
             PrintWriter writer = new PrintWriter(file);
             Iterator<Long> solutionIterator = solutionInformation.keySet().iterator();
 
-            writer.println("solNum\trunTime\tnumSigs\tnumSigInstances\tnumRelationships\tnumConstrainingSigs");
+            writer.println("iteration\t\\time\tuniqueTuples\ttotalTuples\tmaxArity");
+            Long index = (long)0;
             while(solutionIterator.hasNext()){
-                Long nextKey = solutionIterator.next();
-                writer.print(nextKey + "\t" + solutionInformation.get(nextKey));
+                writer.print(index + "\t" + solutionInformation.get(index));
+                index = solutionIterator.next();
             }
 
             writer.close();
@@ -174,6 +170,49 @@ public class GridMetamodel {
             return false;
         }
 
+    }
+
+    /**
+     * Local method used to populate the information table to print to a csv file using tab delimiters.
+     * @param solution solution to obtain information from
+     * @return StringBuilder containing some of the information to print to file. Returned in StringBuilder format so
+     * other methods can add information before printing to file.
+     */
+
+    private static StringBuilder getSolutionInformation(A4Solution solution){
+
+        StringBuilder solutionInformation = new StringBuilder();
+        Hashtable<A4Tuple, Integer> uniqueTuples = new Hashtable<>();
+        Vector<Integer> arities = new Vector<>(solution.getAllReachableSigs().size());
+
+        for(Sig s : solution.getAllReachableSigs()) {
+            for (Sig.Field f : s.getFields()) {
+                for (A4Tuple t : solution.eval(f)) {
+                    if (uniqueTuples.containsKey(t)) {
+                        int tupleVal = uniqueTuples.get(t);
+                        tupleVal++;
+                        uniqueTuples.put(t, tupleVal);
+                    } else {
+                        uniqueTuples.put(t, 1);
+                    }
+                }
+                arities.add(solution.eval(f).arity());
+            }
+        }
+
+        Integer totalTuples = 0;
+        for(Integer i : uniqueTuples.values()){
+            totalTuples+= i;
+        }
+        //number of unique tuples in the solution
+        solutionInformation.append(uniqueTuples.values().size() + "\t");
+        //total number of tuples
+        solutionInformation.append(totalTuples + "\t");
+        //maximum arity in the solution
+        solutionInformation.append(Collections.max(arities) + "\t");
+
+
+        return solutionInformation;
     }
 
     public static A4Solution run(Command cmd) throws Err {
@@ -226,18 +265,31 @@ public class GridMetamodel {
 
             try {
 
-                String headers = "time\tuniqueTuples\ttotalTuples\tmaxArity";
                 Hashtable<Long, String> solutionInfo = new Hashtable<>((int)times);
-
+                long outerStart = System.currentTimeMillis();
+                System.out.println("Start Time: " + outerStart / 60000);
                 for(long i = 0; i < times; i++){
+                    if(i%500 == 0){
+                        System.out.println("Iteration number " + i + " reached.");
+                    }
                     Long start = System.currentTimeMillis();
                     StringBuilder info = getSolutionInformation(solution);
                     solution = getNext(solution);
                     info.insert(0, System.currentTimeMillis() - start);
+                    info.append("\n");
                     solutionInfo.put(i, info.toString());
                 }
 
-            }catch (NullPointerException e){
+                makeCSVFile(solutionInfo);
+
+                long outerEnd = System.currentTimeMillis();
+                System.out.println("End Time: " + outerEnd / 60000);
+
+                System.out.println("Total Elapsed Time (Milliseconds): " + (outerEnd - outerStart));
+                System.out.println("Average time per solution: " + ((outerEnd - outerStart)/times));
+
+
+            }catch (Err e){
                 e.printStackTrace();
             }
     }
@@ -284,48 +336,7 @@ public class GridMetamodel {
         return sigInfo.toString();
     }
 
-    /**
-     * Local method used to populate the information table to print to a csv file using tab delimiters.
-     * @param solution solution to obtain information from
-     * @return StringBuilder containing some of the information to print to file. Returned in StringBuilder format so
-     * other methods can add information before printing to file.
-     */
 
-    private static StringBuilder getSolutionInformation(A4Solution solution){
-
-        StringBuilder solutionInformation = new StringBuilder();
-        Hashtable<A4Tuple, Integer> uniqueTuples = new Hashtable<>();
-        Vector<Integer> arities = new Vector<>(solution.getAllReachableSigs().size());
-
-        for(Sig s : solution.getAllReachableSigs()) {
-            for (Sig.Field f : s.getFields()) {
-                for (A4Tuple t : solution.eval(f)) {
-                    if (uniqueTuples.containsKey(t)) {
-                        int tupleVal = uniqueTuples.get(t);
-                        tupleVal++;
-                        uniqueTuples.put(t, tupleVal);
-                    } else {
-                        uniqueTuples.put(t, 1);
-                    }
-                }
-                arities.add(solution.eval(f).arity());
-            }
-        }
-
-        Integer totalTuples = 0;
-        for(Integer i : uniqueTuples.values()){
-            totalTuples+= i;
-        }
-        //number of unique tuples in the solution
-        solutionInformation.append(uniqueTuples.values().size() + "\t");
-        //total number of tuples
-        solutionInformation.append(totalTuples + "\t");
-        //maximum arity in the solution
-        solutionInformation.append(Collections.max(arities) + "\t");
-
-
-        return solutionInformation;
-    }
 
     /**
      * Updates the Grid Metamodel with constraints selected by the user through the GUI.
