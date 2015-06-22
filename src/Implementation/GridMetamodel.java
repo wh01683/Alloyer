@@ -14,6 +14,7 @@ import edu.mit.csail.sdg.alloy4compiler.ast.Sig;
 import edu.mit.csail.sdg.alloy4compiler.parser.CompUtil;
 import edu.mit.csail.sdg.alloy4compiler.translator.A4Options;
 import edu.mit.csail.sdg.alloy4compiler.translator.A4Solution;
+import edu.mit.csail.sdg.alloy4compiler.translator.A4Tuple;
 import edu.mit.csail.sdg.alloy4compiler.translator.TranslateAlloyToKodkod;
 import edu.mit.csail.sdg.alloy4viz.VizGUI;
 
@@ -85,13 +86,9 @@ public class GridMetamodel {
 //    private static String alsDirPath = dirPath + "models/circuitry.als";
     private static String dirPath = "/tmp/alloy4tmp40-robert/";
     private static String alsDirPath = dirPath + "models/circuitry.als";
-    private static ArrayList<String> namesOfConstrainedSigs = new ArrayList<>();
-    private static ArrayList<String> typesOfConstrainedSigs = new ArrayList<>();
     private static Hashtable<String, Sig> namesToSig = new Hashtable<>(20); //will store a mapping of String type names to Signature objects
-    private static HashMap<String, OurSig> namesToConstrainedOurSigs = new HashMap<>();
-    private static Hashtable<Long, String> solInfo = new Hashtable<>();
+    private static ArrayList<OurSig> ourSigs;
     private static Long numberOfSolutions = new Long(0);
-
 
     private static Module world;
 
@@ -108,8 +105,11 @@ public class GridMetamodel {
             testConstraints.add(wind$1);
             sendConstraints(testConstraints);
 
-            evaluateSolutionPerformance(solution, 10000);
-
+            for(Sig s : solution.getAllReachableSigs()){
+                for(Sig.Field f : s.getFields()){
+                    System.out.printf(f.toString() + " eval: " + solution.eval(f) + "\n");
+                }
+            }
 
         }catch (Err e){
             e.printStackTrace();
@@ -121,7 +121,6 @@ public class GridMetamodel {
             options.solverDirectory = dirPath + "binary";
             options.tempDirectory = dirPath + "tmp";
             options.solver = A4Options.SatSolver.SAT4J;
-
             world = CompUtil.parseEverything_fromFile(A4Reporter.NOP, null, alsDirPath);
 
             for(Sig s : world.getAllSigs()){
@@ -137,11 +136,13 @@ public class GridMetamodel {
 
     public static Command makeCommand(int forInt) throws Err{
         expression = world.getAllSigs().get(1).some();
-        return new Command(false, forInt, 8, 7, expression);
+        command = new Command(false, forInt, 8, 7, expression);
+        return command;
     }
 
     public static Command changeCommand(Command prev, Sig sig, boolean exact, int number) throws Err{
-        return prev.change(sig, exact, number);
+        command = prev.change(sig, exact, number);
+        return command;
     }
 
     public static SafeList<Sig> getSigs(){
@@ -152,16 +153,16 @@ public class GridMetamodel {
         return world.getAllCommands();
     }
 
-    public static boolean makeCSVFile() throws Err{
+    public static boolean makeCSVFile(Hashtable<Long, String> solutionInformation) throws Err{
 
         try {
             PrintWriter writer = new PrintWriter(file);
-            Iterator<Long> solutionIterator = solInfo.keySet().iterator();
+            Iterator<Long> solutionIterator = solutionInformation.keySet().iterator();
 
             writer.println("solNum\trunTime\tnumSigs\tnumSigInstances\tnumRelationships\tnumConstrainingSigs");
             while(solutionIterator.hasNext()){
                 Long nextKey = solutionIterator.next();
-                writer.print(nextKey + "\t" + solInfo.get(nextKey));
+                writer.print(nextKey + "\t" + solutionInformation.get(nextKey));
             }
 
             writer.close();
@@ -169,7 +170,7 @@ public class GridMetamodel {
 
         } catch (FileNotFoundException f){
             System.out.printf("File not found.");
-            makeCSVFile();
+            makeCSVFile(solutionInformation);
             return false;
         }
 
@@ -183,6 +184,10 @@ public class GridMetamodel {
 
     }
 
+    /**
+     * Uses the Alloy VizGUI class to create a graphical representation of the solution
+     * @param solution solution to visualize
+     */
     public static void visualize(A4Solution solution) {
         try{
 
@@ -195,10 +200,12 @@ public class GridMetamodel {
             e.printStackTrace();
         }
     }
+
+
     public static A4Solution visualizeNext(A4Solution solution, VizGUI visualizer) {
         try{
-            if(solution.satisfiable()){
-                A4Solution next = solution.next();
+
+                A4Solution next = getNext(solution);
                 next.writeXML("xmlCircuitry.xml");
                 //VizGUI visualizer = new VizGUI(true, "xmlCircuitry.xml", null);
                 visualizer.doClose();
@@ -206,9 +213,7 @@ public class GridMetamodel {
                 AlloyerForm.currentModelForm = visualizer;
                 visualizer.doShowViz();
                 return next;
-            }else{
-                return null;
-            }
+
         }catch (NullPointerException n){
             return null;
         } catch ( Err e){
@@ -221,21 +226,27 @@ public class GridMetamodel {
 
             try {
 
-                //while (solution.satisfiable()) {
+                String headers = "time\tuniqueTuples\ttotalTuples\tmaxArity";
+                Hashtable<Long, String> solutionInfo = new Hashtable<>((int)times);
 
-                    while(!checkSpecificConstraints(getNext(solution)) && numberOfSolutions < times){
-                        evaluateSolutionPerformance(solution.next(), times);
-                        System.out.println(numberOfSolutions);
-                    }
+                for(long i = 0; i < times; i++){
+                    Long start = System.currentTimeMillis();
+                    StringBuilder info = getSolutionInformation(solution);
+                    solution = getNext(solution);
+                    info.insert(0, System.currentTimeMillis() - start);
+                    solutionInfo.put(i, info.toString());
+                }
 
-               // }
-                makeCSVFile();
-
-            }catch (Err e){
+            }catch (NullPointerException e){
                 e.printStackTrace();
             }
     }
 
+    /**
+     * Returns the next iterable solution if the solution is satisfiable.
+     * @param solution Solution to iterate.
+     * @return Iterated solution. May be equal to the previous solution.
+     */
     public static A4Solution getNext(A4Solution solution){
         try{
             if(solution.satisfiable()){
@@ -250,135 +261,173 @@ public class GridMetamodel {
         }
     }
 
+    /**
+     * This method will return information specific to the specific Sig relative to a solution instance
+     * @param solution instance of the solution
+     * @param sig Sig object to evaluate
+     * @return String representation of an individual Sig's information
+     */
+    public String getSigInformation(A4Solution solution, Sig sig){
+        StringBuilder sigInfo = new StringBuilder();
 
+        int numberOfRelationships = 0;
+        int numberOfSigInstances = 0;
+
+        for(Sig s : solution.getAllReachableSigs()){
+            for(Sig.Field f : s.getFields()){
+                numberOfRelationships += solution.eval(f).size();
+            }
+        }
+
+        sigInfo.append(numberOfSigInstances + "\t" + numberOfRelationships);
+
+        return sigInfo.toString();
+    }
+
+    /**
+     * Local method used to populate the information table to print to a csv file using tab delimiters.
+     * @param solution solution to obtain information from
+     * @return StringBuilder containing some of the information to print to file. Returned in StringBuilder format so
+     * other methods can add information before printing to file.
+     */
+
+    private static StringBuilder getSolutionInformation(A4Solution solution){
+
+        StringBuilder solutionInformation = new StringBuilder();
+        Hashtable<A4Tuple, Integer> uniqueTuples = new Hashtable<>();
+        Vector<Integer> arities = new Vector<>(solution.getAllReachableSigs().size());
+
+        for(Sig s : solution.getAllReachableSigs()) {
+            for (Sig.Field f : s.getFields()) {
+                for (A4Tuple t : solution.eval(f)) {
+                    if (uniqueTuples.containsKey(t)) {
+                        int tupleVal = uniqueTuples.get(t);
+                        tupleVal++;
+                        uniqueTuples.put(t, tupleVal);
+                    } else {
+                        uniqueTuples.put(t, 1);
+                    }
+                }
+                arities.add(solution.eval(f).arity());
+            }
+        }
+
+        Integer totalTuples = 0;
+        for(Integer i : uniqueTuples.values()){
+            totalTuples+= i;
+        }
+        //number of unique tuples in the solution
+        solutionInformation.append(uniqueTuples.values().size() + "\t");
+        //total number of tuples
+        solutionInformation.append(totalTuples + "\t");
+        //maximum arity in the solution
+        solutionInformation.append(Collections.max(arities) + "\t");
+
+
+        return solutionInformation;
+    }
+
+    /**
+     * Updates the Grid Metamodel with constraints selected by the user through the GUI.
+     * @param sigs ArrayList of OurSig objects to represent the constraints desired by the user.
+     */
     public static void sendConstraints(ArrayList<OurSig> sigs){
         try {
-            ArrayList<OurSig> constrainedSigs = sigs;
-            for (OurSig o : constrainedSigs) {
-                String type = (o.getSubType() != null)? o.getSubType() : o.getType();
-                int occurrences = 1;
-                namesOfConstrainedSigs.add(o.getLabel());
-                if(!typesOfConstrainedSigs.contains(type)){
-                    typesOfConstrainedSigs.add(type);
-                }else{
-                    occurrences ++;
-                }
-                namesToConstrainedOurSigs.putIfAbsent(o.getLabel(), o);
-                //command = changeCommand(command, (namesToSig.get(o.getSubType() != null? o.getSubType() : o.getType())), true, occurrences);
-            }
+            setOurSigs(sigs);
         }catch (NullPointerException e){
             e.printStackTrace();
         }
 
     }
 
-    public static A4Solution getNewInstance(A4Solution solution){
-        try {
-            while (!checkSpecificConstraints(solution) && solution.satisfiable()) {
-                A4Solution temp = solution.next();
-                if(checkSpecificConstraints(temp)){
-                    return temp;
-                }else if (temp.satisfiable() && !checkSpecificConstraints(temp)){
-                    getNewInstance(temp.next());
-                }else{
-                    return null;
-                }
-            }
-            return null; //shouldn't get here unless there are no more satisfying instances
-        }catch (Err e ){
-            e.printStackTrace();
-            return null;
-        }
-
+    public static void setOurSigs(ArrayList<OurSig> ourSigs) {
+        GridMetamodel.ourSigs = ourSigs;
     }
+    //    public static boolean checkSpecificConstraints(A4Solution solution){
+//
+//        boolean pass = true;
+//
+//        HashMap<String, OurSig> namesToInstanceOurSigs = parseSolution(solution);
+//
+//        Iterator<OurSig> sigsConstrainedEnumeration = namesToConstrainedOurSigs.values().iterator();
+//
+//        while(sigsConstrainedEnumeration.hasNext() && pass){
+//            OurSig toCompareConstrained = sigsConstrainedEnumeration.next();
+//
+//            pass = namesToInstanceOurSigs.containsKey(toCompareConstrained.getLabel()) && namesToInstanceOurSigs.get(toCompareConstrained.getLabel()).isEqual(toCompareConstrained);
+//
+//        }
+//
+//        return pass;
+//
+//    }
 
-    public static boolean checkSpecificConstraints(A4Solution solutionInstance){
-
-        boolean pass = true;
-
-        HashMap<String, OurSig> namesToInstanceOurSigs = parseSolution(solutionInstance);
-
-        Iterator<OurSig> sigsConstrainedEnumeration = namesToConstrainedOurSigs.values().iterator();
-
-        while(sigsConstrainedEnumeration.hasNext() && pass){
-            OurSig toCompareConstrained = sigsConstrainedEnumeration.next();
-
-            pass = namesToInstanceOurSigs.containsKey(toCompareConstrained.getLabel()) && namesToInstanceOurSigs.get(toCompareConstrained.getLabel()).isEqual(toCompareConstrained);
-
-        }
-
-        return pass;
-
-    }
-
-    private static HashMap<String, OurSig> parseSolution(A4Solution solution){
-
-        int numberOfRelationships = 0;
-        int numberOfSigInstances = 0;
-        int numberOfSigTypes = 0;
-        int numberOfConstrainedSigTypes = typesOfConstrainedSigs.size();
-
-        Long startTime = System.currentTimeMillis();
-        HashMap<String, OurSig> namesToInstanceOurSigs = new HashMap<>();
-        //ArrayList<String> linesOfSolution = new ArrayList<>(Arrays.asList(testSolution.split("\n")));
-        ArrayList<String> linesOfSolution = new ArrayList<>(Arrays.asList(solution.toString().split("\n")));
-
-        ArrayList<String> hasRelationshipAndConstrained = new ArrayList<>();
-
-        //for every line of a solution instance, check for the sequence :> denoting a "has" relationship
-        for(String s : linesOfSolution){
-            if(s.contains("<:")){
-                numberOfSigTypes++;
-                for(String l : typesOfConstrainedSigs){
-                    //now check the names of the constrained sigs. if the line is a "has" relationship for a constrained sig,
-                    //put it aside in a special arraylist
-                    if(s.contains(l+"<:")){
-                        hasRelationshipAndConstrained.add(s);
-                    }
-                }
-            }
-        }
-        //now for each of these lines, we're going to grab the integer values associated with the signature. in our case,
-        //these are wattages
-        for(String s : hasRelationshipAndConstrained){
-            //if the line specifies wattage
-            if(s.contains("watts")) {
-
-                ArrayList<String[]> specificSigsToWatts = new ArrayList<>();
-
-                //get the array of watt relationships to establish the values
-                specificSigsToWatts.add(s.split("[<:{\b\\->,?\b}]"));
-
-                for (String[] p : specificSigsToWatts) {
-                    String type = p[0].trim();
-                    for (int i = 3; i < p.length - 2; i+= 3) {
-                        OurSig instanceSig = new OurSig(type, p[i].trim().replaceAll("$\\d", ""), p[i].trim(), (p[i + 2].trim().equals(""))? 0 : Integer.parseInt(p[i + 2].trim()));
-                        numberOfSigInstances++;
-                        namesToInstanceOurSigs.putIfAbsent(instanceSig.getLabel(), instanceSig);
-                    }
-                }
-            }else{
-                //otherwise, the line does not contain a wattage relationship
-                //         this/Load<:supply={Load$0->Wind$1, Load$1->Wind$1, Load$2->Wind$1}
-                //TODO: handle relationships later
-                String[] relationships = s.split("[<:{\b\\->,?}]");
-                for(String relation : relationships){
-                    numberOfRelationships++;
-                }
-            }
-        }
-
-        StringBuilder solInfoString = new StringBuilder();
-        Long endTime = System.currentTimeMillis();
-        solInfoString.append((endTime - startTime) + "\t" + numberOfSigTypes + "\t" + numberOfSigInstances + "\t" + numberOfRelationships + "\t" + numberOfConstrainedSigTypes + "\n");
-        solInfo.put(numberOfSolutions, solInfoString.toString());
-        numberOfSolutions++;
-        return namesToInstanceOurSigs;
-    }
-
-    public static void reset(){
+//    private static HashMap<String, OurSig> parseSolution(A4Solution solution){
+//
+//        int numberOfRelationships = 0;
+//        int numberOfSigInstances = 0;
+//        int numberOfSigTypes = 0;
+//        int numberOfConstrainedSigTypes = typesOfConstrainedSigs.size();
+//
+//        Long startTime = System.currentTimeMillis();
+//        HashMap<String, OurSig> namesToInstanceOurSigs = new HashMap<>();
+//        //ArrayList<String> linesOfSolution = new ArrayList<>(Arrays.asList(testSolution.split("\n")));
+//        ArrayList<String> linesOfSolution = new ArrayList<>(Arrays.asList(solution.toString().split("\n")));
+//
+//        ArrayList<String> hasRelationshipAndConstrained = new ArrayList<>();
+//
+//        //for every line of a solution instance, check for the sequence :> denoting a "has" relationship
+//        for(String s : linesOfSolution){
+//            if(s.contains("<:")){
+//                numberOfSigTypes++;
+//                for(String l : typesOfConstrainedSigs){
+//                    //now check the names of the constrained sigs. if the line is a "has" relationship for a constrained sig,
+//                    //put it aside in a special arraylist
+//                    if(s.contains(l+"<:")){
+//                        hasRelationshipAndConstrained.add(s);
+//                    }
+//                }
+//            }
+//        }
+//        //now for each of these lines, we're going to grab the integer values associated with the signature. in our case,
+//        //these are wattages
+//        for(String s : hasRelationshipAndConstrained){
+//            //if the line specifies wattage
+//            if(s.contains("watts")) {
+//
+//                ArrayList<String[]> specificSigsToWatts = new ArrayList<>();
+//
+//                //get the array of watt relationships to establish the values
+//                specificSigsToWatts.add(s.split("[<:{\b\\->,?\b}]"));
+//
+//                for (String[] p : specificSigsToWatts) {
+//                    String type = p[0].trim();
+//                    for (int i = 3; i < p.length - 2; i+= 3) {
+//                        OurSig instanceSig = new OurSig(type, p[i].trim().replaceAll("$\\d", ""), p[i].trim(), (p[i + 2].trim().equals(""))? 0 : Integer.parseInt(p[i + 2].trim()));
+//                        numberOfSigInstances++;
+//                        namesToInstanceOurSigs.putIfAbsent(instanceSig.getLabel(), instanceSig);
+//                    }
+//                }
+//            }else{
+//                //otherwise, the line does not contain a wattage relationship
+//                //         this/Load<:supply={Load$0->Wind$1, Load$1->Wind$1, Load$2->Wind$1}
+//                //TODO: handle relationships later
+//                String[] relationships = s.split("[<:{\b\\->,?}]");
+//                for(String relation : relationships){
+//                    numberOfRelationships++;
+//                }
+//            }
+//        }
+//
+//        StringBuilder solInfoString = new StringBuilder();
+//        Long endTime = System.currentTimeMillis();
+//        solInfoString.append((endTime - startTime) + "\t" + numberOfSigTypes + "\t" + numberOfSigInstances + "\t" + numberOfRelationships + "\t" + numberOfConstrainedSigTypes + "\n");
+//        solInfo.put(numberOfSolutions, solInfoString.toString());
+//        numberOfSolutions++;
+//        return namesToInstanceOurSigs;
+//    }
 
 
 
-    }
+
 }

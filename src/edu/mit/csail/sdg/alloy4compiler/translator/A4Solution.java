@@ -956,6 +956,7 @@ public final class A4Solution {
         }
         sb.append("}\n");
         try {
+
             for(Sig s:sigs) {
                 sb.append(s.label).append("=").append(eval(s)).append("\n");
                 for(Field f:s.getFields()) sb.append(s.label).append("<:").append(f.label).append("=").append(eval(f)).append("\n");
