@@ -103,7 +103,7 @@ public class GridMetamodel {
             testConstraints.add(wind$1);
             sendConstraints(testConstraints);
 
-            evaluateSolutionPerformance(run(command), 100);
+            evaluateSolutionPerformance(run(command), 10000);
 
 
         }catch (Err e){
@@ -267,7 +267,7 @@ public class GridMetamodel {
 
                 Hashtable<Long, String> solutionInfo = new Hashtable<>((int)times);
                 long outerStart = System.currentTimeMillis();
-                System.out.println("Start Time: " + outerStart / 60000);
+                System.out.println("Start Time: " + outerStart);
                 for(long i = 0; i < times; i++){
                     if(i%500 == 0){
                         System.out.println("Iteration number " + i + " reached.");
@@ -283,10 +283,8 @@ public class GridMetamodel {
                 makeCSVFile(solutionInfo);
 
                 long outerEnd = System.currentTimeMillis();
-                System.out.println("End Time: " + outerEnd / 60000);
+                System.out.println("End Time: " + outerEnd);
 
-                System.out.println("Total Elapsed Time (Milliseconds): " + (outerEnd - outerStart));
-                System.out.println("Average time per solution: " + ((outerEnd - outerStart)/times));
 
 
             }catch (Err e){
