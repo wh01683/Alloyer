@@ -325,7 +325,7 @@ public class GridMetamodel {
      * @param sig Sig object to evaluate
      * @return String representation of an individual Sig's information
      */
-    public String getSigInformation(A4Solution solution, Sig sig){
+    public static String getSigInformation(A4Solution solution, Sig sig){
 
         StringBuilder sigInfo = new StringBuilder();
 
@@ -370,9 +370,9 @@ public class GridMetamodel {
      */
     private static boolean isDuplicate(long iteration, A4Solution solution){
         for(A4Solution sol : TEST_HASH_TABLE.values()){
-            if(iteration % 50000 == 0){
+            if(iteration % 5000 == 0){
                 printSolToFile((int)iteration, TEST_HASH_TABLE);
-                TEST_HASH_TABLE = new Hashtable<>(50000);
+                TEST_HASH_TABLE = new Hashtable<>(5000);
             }
             if(sol.toString().equalsIgnoreCase(solution.toString())){
                 System.out.println("Duplicate found. Iteration number: " + iteration);
