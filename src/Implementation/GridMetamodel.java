@@ -35,7 +35,7 @@ public class GridMetamodel {
     private static OurSig load$0 = new OurSig("this/Load", "this/Wind", "Load$0", 0);
     private static OurSig load$1 = new OurSig("this/Load", null, "Load$1", 2);
     private static OurSig load$2 = new OurSig("this/Load", null, "Load$2", 1);
-    public static ArrayList<OurSig> testConstraints = new ArrayList<>();
+    private static ArrayList<OurSig> testConstraints = new ArrayList<>();
 
 
     public static String testSolution = "---INSTANCE---\n" +
@@ -76,10 +76,10 @@ public class GridMetamodel {
             "ord/Ord<:First={ord/Ord$0->Supply_Circuit$0}\n" +
             "ord/Ord<:Next={ord/Ord$0->Load_Circuit$0->Load_Circuit$1, ord/Ord$0->Load_Circuit$2->Load_Circuit$0, ord/Ord$0->Supply_Circuit$0->Load_Circuit$2}\n";
 
-    public static File file = new File(System.getProperty("user.dir") + "/timesData.csv");
-    public static Expr expression;
-    public static Command command;
-    public static A4Options options = new A4Options();
+    private static File file = new File(System.getProperty("user.dir") + "/timesData.csv");
+    private static Expr expression;
+    private static Command command;
+    private static A4Options options = new A4Options();
     //public static A4Solution solution;
 
 //    private static String dirPath = "C:/Users/Lindsey/AppData/Local/Temp/alloy4tmp40-Lindsey/";
@@ -148,7 +148,7 @@ public class GridMetamodel {
         return world.getAllCommands();
     }
 
-    public static boolean makeCSVFile(Hashtable<Long, String> solutionInformation) throws Err{
+    private static void makeCSVFile(Hashtable<Long, String> solutionInformation){
 
         try {
             PrintWriter writer = new PrintWriter(file);
@@ -162,12 +162,10 @@ public class GridMetamodel {
             }
 
             writer.close();
-            return true;
 
         } catch (FileNotFoundException f){
             System.out.printf("File not found.");
             makeCSVFile(solutionInformation);
-            return false;
         }
 
     }
@@ -218,8 +216,7 @@ public class GridMetamodel {
     public static A4Solution run(Command cmd) throws Err {
 
         List<Sig> sigs = world.getAllReachableSigs();
-        A4Solution solution = (TranslateAlloyToKodkod.execute_command(A4Reporter.NOP, sigs, cmd, options));
-        return solution;
+        return TranslateAlloyToKodkod.execute_command(A4Reporter.NOP, sigs, cmd, options);
 
     }
 
@@ -241,6 +238,12 @@ public class GridMetamodel {
     }
 
 
+    /**
+     * Visualizes the next solution instance in the current solution's iteration set.
+     * @param solution Current solution to iterate.
+     * @param visualizer Current VizGUI to use.
+     * @return returns the newly iterated solution and produces a visualization of the new solution.
+     */
     public static A4Solution visualizeNext(A4Solution solution, VizGUI visualizer) {
         try{
 
@@ -261,9 +264,14 @@ public class GridMetamodel {
         }
     }
 
-    public static void evaluateSolutionPerformance(A4Solution solution, long times){
-
-            try {
+    /**
+     * Evaluates the performance of a solution by recording execution information about the solution including the time
+     * required per solution iteration and solution complexity information. After execution, the information is written
+     * to a .csv file for analyzation using R or a spreadsheet program.
+     * @param solution Solution to be analyzed (method will iterate through solutions starting from this one)
+     * @param times Number of times to run through the solution.
+     */
+    private static void evaluateSolutionPerformance(A4Solution solution, long times){
 
                 Hashtable<Long, String> solutionInfo = new Hashtable<>((int)times);
                 long outerStart = System.currentTimeMillis();
@@ -285,11 +293,6 @@ public class GridMetamodel {
                 long outerEnd = System.currentTimeMillis();
                 System.out.println("End Time: " + outerEnd);
 
-
-
-            }catch (Err e){
-                e.printStackTrace();
-            }
     }
 
     /**
@@ -323,10 +326,8 @@ public class GridMetamodel {
         int numberOfRelationships = 0;
         int numberOfSigInstances = 0;
 
-        for(Sig s : solution.getAllReachableSigs()){
-            for(Sig.Field f : s.getFields()){
-                numberOfRelationships += solution.eval(f).size();
-            }
+        for(Sig.Field f : sig.getFields()){
+            numberOfRelationships += solution.eval(f).size();
         }
 
         sigInfo.append(numberOfSigInstances + "\t" + numberOfRelationships);
@@ -340,7 +341,7 @@ public class GridMetamodel {
      * Updates the Grid Metamodel with constraints selected by the user through the GUI.
      * @param sigs ArrayList of OurSig objects to represent the constraints desired by the user.
      */
-    public static void sendConstraints(ArrayList<OurSig> sigs){
+    private static void sendConstraints(ArrayList<OurSig> sigs){
         try {
             setOurSigs(sigs);
         }catch (NullPointerException e){
@@ -349,7 +350,11 @@ public class GridMetamodel {
 
     }
 
-    public static void setOurSigs(ArrayList<OurSig> ourSigs) {
+    /**
+     * Sets the current list of simple Sig objects to the new one.
+     * @param ourSigs Current ArrayList of OurSig objects.
+     */
+    private static void setOurSigs(ArrayList<OurSig> ourSigs) {
         GridMetamodel.ourSigs = ourSigs;
     }
     //    public static boolean checkSpecificConstraints(A4Solution solution){
