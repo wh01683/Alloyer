@@ -325,7 +325,7 @@ public class GridMetamodel {
      * @param sig Sig object to evaluate
      * @return String representation of an individual Sig's information
      */
-    public String getSigInformation(A4Solution solution, Sig sig){
+    public static String getSigInformation(A4Solution solution, Sig sig){
 
         StringBuilder sigInfo = new StringBuilder();
 
