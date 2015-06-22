@@ -35,13 +35,13 @@ public class GridMetamodel {
     private static Command command;
     private static A4Options options = new A4Options();
 
-    private static String dirPath = "C:/Users/Lindsey/AppData/Local/Temp/alloy4tmp40-Lindsey/";
-//    private static String alsDirPath = dirPath + "models/circuitry.als";
- //   private static String dirPath = "/tmp/alloy4tmp40-robert/";
+    //private static String dirPath = "C:/Users/Lindsey/AppData/Local/Temp/alloy4tmp40-Lindsey/";
+    //private static String alsDirPath = dirPath + "models/circuitry.als";
+    private static String dirPath = "/tmp/alloy4tmp40-robert/";
     private static String alsDirPath = dirPath + "models/circuitry.als";
     private static Hashtable<String, Sig> namesToSig = new Hashtable<>(20); //will store a mapping of String type names to Signature objects
     private static ArrayList<OurSig> ourSigs;
-    public static Hashtable<Long, A4Solution> TEST_HASH_TABLE = new Hashtable<>(10);
+    public static Hashtable<Long, A4Solution> TEST_HASH_TABLE = new Hashtable<>(50000);
     private static Module world;
 
     /**
@@ -53,7 +53,7 @@ public class GridMetamodel {
             setUp();
             command = makeCommand(4);
 
-            evaluateSolutionPerformance(run(command), 10003);
+            evaluateSolutionPerformance(run(command), 100003);
 
 
         }catch (Err e){
@@ -370,8 +370,9 @@ public class GridMetamodel {
      */
     private static boolean isDuplicate(long iteration, A4Solution solution){
         for(A4Solution sol : TEST_HASH_TABLE.values()){
-            if(iteration % 5000 == 0){
+            if(iteration % 50000 == 0){
                 printSolToFile((int)iteration, TEST_HASH_TABLE);
+                TEST_HASH_TABLE = new Hashtable<>(50000);
             }
             if(sol.toString().equalsIgnoreCase(solution.toString())){
                 System.out.println("Duplicate found. Iteration number: " + iteration);
@@ -391,7 +392,7 @@ public class GridMetamodel {
             PrintWriter writer = new PrintWriter(new File(System.getProperty("user.dir") + "/solutions" + num + ".txt"));
 
             for(A4Solution solution : solutions.values()){
-                writer.print(solution.toString());
+                writer.print(solution.toString() + "\n");
             }
 
             writer.close();
