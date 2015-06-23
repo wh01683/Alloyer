@@ -41,8 +41,9 @@ public class GridMetamodel {
     private static String alsDirPath = dirPath + "models/circuitry.als";
     private static Hashtable<String, Sig> namesToSig = new Hashtable<>(20); //will store a mapping of String type names to Signature objects
     private static ArrayList<OurSig> ourSigs;
-    public static Hashtable<Long, A4Solution> TEST_HASH_TABLE = new Hashtable<>(50000);
+    public static Hashtable<Long, String> TEST_HASH_TABLE = new Hashtable<>(5000);
     private static Module world;
+    private static String[] debugTestRelationships = {"Supply_Circuit$0->Wind$0"};
 
     /**
      * main method to initialize the GridMetamodel class.
@@ -53,7 +54,10 @@ public class GridMetamodel {
             setUp();
             command = makeCommand(4);
 
-            evaluateSolutionPerformance(run(command), 10003);
+            //evaluateSolutionPerformance(run(command), 10003);
+
+            System.out.println(findSolution(run(command).next(), debugTestRelationships));
+
 
 
         }catch (Err e){
@@ -99,7 +103,7 @@ public class GridMetamodel {
      */
     public static Command makeCommand(int forInt) throws Err{
         expression = world.getAllSigs().get(1).some();
-        command = new Command(false, forInt, 8, 7, expression);
+        command = new Command(false, forInt, 4, 3, expression);
         return command;
     }
 
@@ -369,30 +373,30 @@ public class GridMetamodel {
      * If the passed solution matches one in the hashtable, the method will terminate the program.
      */
     private static boolean isDuplicate(long iteration, A4Solution solution){
-        for(A4Solution sol : TEST_HASH_TABLE.values()){
+        for(String sigInfo : TEST_HASH_TABLE.values()){
             if(iteration % 5000 == 0){
                 printSolToFile((int)iteration, TEST_HASH_TABLE);
                 TEST_HASH_TABLE = new Hashtable<>(5000);
             }
-            if(sol.toString().equalsIgnoreCase(solution.toString())){
+            if(sigInfo.equalsIgnoreCase(getAllSigInfo(solution))){
                 System.out.println("Duplicate found. Iteration number: " + iteration);
                 System.exit(10);
             }
             else{
-                TEST_HASH_TABLE.put(iteration, solution);
+                TEST_HASH_TABLE.put(iteration, getAllSigInfo(solution));
                 return false;
             }
         }
-        TEST_HASH_TABLE.put(iteration, solution);
+        TEST_HASH_TABLE.put(iteration, getAllSigInfo(solution));
         return false;
     }
 
-    private static void printSolToFile(int num, Hashtable<Long, A4Solution> solutions){
+    private static void printSolToFile(int num, Hashtable<Long, String> solutions){
         try {
             PrintWriter writer = new PrintWriter(new File(System.getProperty("user.dir") + "/solutions" + num + ".txt"));
 
-            for(A4Solution solution : solutions.values()){
-                writer.print(solution.toString() + "\n");
+            for(String s : solutions.values()){
+                writer.print(s + "\n");
             }
 
             writer.close();
@@ -402,6 +406,56 @@ public class GridMetamodel {
             printSolToFile(num, solutions);
         }
     }
+
+    private static String getAllSigInfo(A4Solution solution){
+        StringBuilder info = new StringBuilder();
+        for(Sig s : solution.getAllReachableSigs()){
+            for(Sig.Field f : s.getFields()){
+                info.append(solution.eval(f) + "\n");
+            }
+        }
+
+        return info.toString();
+    }
+
+    public static String findSolution(A4Solution solution, String[] relationships){
+        HashSet<String> relationHash = new HashSet<>(Arrays.asList(relationships));
+        A4Solution localSolution = solution;
+        boolean pass = false;
+        int i = 0;
+
+        while(!pass){
+            i++;
+            if(i%500 == 0) {
+                System.out.println("Iteration " + i);
+            }
+            HashSet<String> tuples = new HashSet<>();
+            for(Sig s : solution.getAllReachableSigs()){
+                for(Sig.Field f : s.getFields()){
+                    for(A4Tuple t : solution.eval(f)){
+                    tuples.add(t.toString());
+                    }
+                }
+            }
+            if(tuples.containsAll(relationHash)){
+                pass = true;
+                StringBuilder ans = new StringBuilder();
+                for(Sig s : solution.getAllReachableSigs()){
+                    for(Sig.Field f : s.getFields()){
+                        ans.append(solution.eval(f).toString() + "\n");
+                    }
+                }
+                return ans.toString();
+            }else{
+                pass = false;
+                localSolution = getNext(localSolution);
+            }
+        }
+
+        //if we get here, no viable solution was found.
+        return null;
+    }
+
     //    public static boolean checkSpecificConstraints(A4Solution solution){
 //
 //        boolean pass = true;
