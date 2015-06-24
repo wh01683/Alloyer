@@ -19,14 +19,13 @@ import java.util.List;
  */
 public class AlloyerForm extends JFrame
 {
-
-    private JLabel lblTitle;
-    private JButton btnRun;
-    private JComboBox cmbSig;
+    private static JFrame frame;
     private JTextField txtValue;
+    private JButton btnRun;
+    private JComboBox cmbSigPref;
     private JList lstSigValues;
-    private JButton btnAdd;
-    private JCheckBox exactCheckBox;
+    private JButton btnAddPref;
+    private JCheckBox cbExact;
     private JLabel lblNumCircuits;
     private JComboBox cmbCircuits;
     private JPanel mainPanel;
@@ -36,10 +35,26 @@ public class AlloyerForm extends JFrame
     private JCheckBox cbGraphSolution;
     private JScrollPane scrlList;
     private JButton btnSigInfo;
+    private JComboBox cmbRelateWatt1;
+    private JComboBox cmbSigRelate2;
+    private JComboBox cmbRelateWatt2;
+    private JButton btnAddRel;
+    private JComboBox cmbPrefVal;
+    private JPanel pnlCircuits;
+    private JPanel pnlPref;
+    private JPanel pnlRelationships;
+    private JPanel pnlRun;
+    private JList lstRelationships;
+    private JComboBox cmbSigRelate1;
+    private JLabel lblWatts1;
+    private JLabel lblArrow;
+    private JLabel lblWatts2;
+    private JPanel pnlNext;
     private JScrollPane scrlSolution;
 
 
     DefaultListModel lstSigValuesModel;
+    DefaultListModel lstRelationshipsModel;
     SafeList<Sig> sigsFromMeta;
     Hashtable<String, Sig> sigsDict;
     List<String> availableSigs;
@@ -50,18 +65,29 @@ public class AlloyerForm extends JFrame
 
     public AlloyerForm()
     {
-
         this.setContentPane(mainPanel);
+        this.getContentPane().setBackground(Color.gray);
+        pnlCircuits.setBackground(Color.gray);
+        pnlPref.setBackground(Color.gray);
+        pnlRelationships.setBackground(Color.gray);
+        pnlRelationships.setVisible(false);
+        pnlRun.setBackground(Color.gray);
+        pnlNext.setBackground(Color.gray);
+        pnlNext.setVisible(false);
+
         GridMetamodel.setUp();
         sigsFromMeta = GridMetamodel.getSigs();
         sigsDict = new Hashtable<>();
         availableSigs = new ArrayList<>();
         loadSigCombo(sigsFromMeta);
+
         lstSigValues.setModel(new DefaultListModel());
         lstSigValuesModel = (DefaultListModel)lstSigValues.getModel();
+        lstRelationships.setModel(new DefaultListModel());
+        lstRelationshipsModel = (DefaultListModel)lstRelationships.getModel();
 
-        //Add Button
-        btnAdd.addActionListener(ae -> addToList());
+        //Add Preference Button
+        btnAddPref.addActionListener(ae -> addToList(btnAddPref));
 
         //Delete Key
         lstSigValues.addKeyListener(new KeyListener()
@@ -84,9 +110,12 @@ public class AlloyerForm extends JFrame
             }
         });
 
-        //Text and Graph Radiobuttons
+        //Add Relationship Button
+        btnAddRel.addActionListener(ae->addToList(btnAddRel));
+
+        //Text and Graph checkboxes
         cbTextSolution.addActionListener(ae -> cbSelected(cbTextSolution, cbGraphSolution));
-        cbGraphSolution.addActionListener(ae -> cbSelected(cbGraphSolution, cbTextSolution));
+        cbGraphSolution.addActionListener(ae -> cbSelected(cbGraphSolution, cbGraphSolution));
 
         //Run Button
         btnRun.addActionListener(ae -> runCommand());
@@ -101,12 +130,13 @@ public class AlloyerForm extends JFrame
     public static void main(String[] args)
     {
         //Form Setup
-        JFrame frame = new JFrame("AlloyerForm");
+        frame = new JFrame("Alloyer");
+        //frame.setSize(240, frame.getHeight());
         frame.setContentPane(new AlloyerForm().getContentPane());
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
         frame.setVisible(true);
         frame.pack();
-        //AlloyerForm af = new AlloyerForm();
     }
 
     public void loadSigCombo(SafeList<Sig> sigs)
@@ -114,194 +144,188 @@ public class AlloyerForm extends JFrame
         String sigLabel;
         if(sigs != null)
         {
-            cmbSig.addItem("");
+            cmbSigPref.addItem("");
             for(Sig s : sigs)
             {
                 sigLabel = s.label.replace("this/", "");
                 if(!sigLabel.equals("Grid") && !sigLabel.equals("Circuit"))
                 {
-                    cmbSig.addItem(sigLabel);
+                    cmbSigPref.addItem(sigLabel);
                     availableSigs.add(sigLabel);
                     sigsDict.put(sigLabel, s);
                 }
             }
         }
-        cmbSig.updateUI();
+        cmbSigPref.updateUI();
     }
 
     public void updateSigCombo(List<String> sigs)
     {
         if(sigs != null)
         {
-            cmbSig.removeAllItems();
-            cmbSig.addItem("");
+            cmbSigPref.removeAllItems();
+            cmbSigPref.addItem("");
             for(String s : sigs)
             {
-                cmbSig.addItem(s);
+                cmbSigPref.addItem(s);
             }
         }
-        cmbSig.updateUI();
+        cmbSigPref.updateUI();
     }
 
-    public void addToList()
+    public void addToList(JButton button)
     {
-        String sig = (String)cmbSig.getSelectedItem();
-        String amount = txtValue.getText();
-        boolean boolExact = exactCheckBox.isSelected();
-        String exact;
+        if(button == btnAddPref)
+        {
+            String sig = (String) cmbSigPref.getSelectedItem();
+            String val = (String) cmbPrefVal.getSelectedItem();
+            boolean boolExact = cbExact.isSelected();
+            String exact;
 
-        if(boolExact)
-        {
-            exact = "exact";
-        }
-        else
-        {
-            exact = "";
-        }
+            if (boolExact) exact = "exact";
+            else exact = "";
 
-        try
-        {
-            int amt = Integer.parseInt(amount);
-            if(amt >= -128 && amt <= 127)
+            if (!sig.equals("") && !val.equals(""))
             {
+                int amt = Integer.parseInt(val);
+
                 int removeIndex = -1;
                 lstSigValuesModel.addElement(sig + "  " + amt + "  " + exact);
 
                 int i = 0;
-                for(String s : availableSigs)
+                for (String s : availableSigs)
                 {
-                    if(s.equals(sig))
-                    {
-                        removeIndex = i;
-                    }
+                    if (s.equals(sig)) removeIndex = i;
                     i++;
                 }
-                if(removeIndex>=0)
-                {
-                    availableSigs.remove(removeIndex);
-                }
+                if (removeIndex >= 0) availableSigs.remove(removeIndex);
             }
-            else
-            {
-                JOptionPane.showMessageDialog(mainPanel, "Please enter a valid number between -128 and 127");
-            }
+            else JOptionPane.showMessageDialog(mainPanel, "Please choose a signature and value");
+
+            updateSigCombo(availableSigs);
+            cmbPrefVal.setSelectedIndex(0);
+            cbExact.setSelected(false);
         }
-        catch(Exception e)
+        else if(button == btnAddRel)
         {
-            JOptionPane.showMessageDialog(mainPanel, "Please enter a valid number between -128 and 127");
+            //TODO
         }
-        txtValue.setText("");
-        updateSigCombo(availableSigs);
-        exactCheckBox.setSelected(false);
     }
 
     public void deleteFromList()
     {
-        String selectedLine = lstSigValues.getSelectedValue().toString();
-        String[] line = selectedLine.split("  ");
-        String selectedSig = line[0];
-        availableSigs.add(selectedSig);
-        updateSigCombo(availableSigs);
+        String selectedLine;
+        String[] line;
+        if(getFocusOwner() == lstSigValues)
+        {
+            selectedLine = lstSigValues.getSelectedValue().toString();
+            line = selectedLine.split("  ");
+            String selectedSig = line[0];
+            availableSigs.add(selectedSig);
+            updateSigCombo(availableSigs);
+            lstSigValuesModel.remove(lstSigValues.getSelectedIndex());
+        }
+        else if(getFocusOwner() == lstRelationships)
+        {
+            selectedLine = lstRelationships.getSelectedValue().toString();
+            line = selectedLine.split("");
 
-        lstSigValuesModel.remove(lstSigValues.getSelectedIndex());
-        lstSigValues.updateUI();
+        }
     }
 
     public void cbSelected(JCheckBox cb, JCheckBox partner)
     {
-        if(cb.isSelected() && !partner.isSelected())
-        {
-            btnRun.setEnabled(true);
-
-        }
-        else if(!cb.isSelected() && partner.isSelected())
-        {
-            btnRun.setEnabled(true);
-        }
-        else if(cb.isSelected() && partner.isSelected())
-        {
-            btnRun.setEnabled(true);
-        }
-        else
-        {
-            btnRun.setEnabled(false);
-        }
+        if(cb.isSelected() && !partner.isSelected()) btnRun.setEnabled(true);
+        else if(!cb.isSelected() && partner.isSelected()) btnRun.setEnabled(true);
+        else if(cb.isSelected() && partner.isSelected()) btnRun.setEnabled(true);
+        else btnRun.setEnabled(false);
     }
 
     public void runCommand()
     {
-
-        int numCircuits = Integer.parseInt((String) cmbCircuits.getSelectedItem());
-
-        try
+        if(!cmbCircuits.getSelectedItem().equals(""))
         {
-            cmd = GridMetamodel.makeCommand(numCircuits);
-        }
-        catch (Err err)
-        {
-            err.printStackTrace();
-        }
-
-        if(!lstSigValuesModel.isEmpty())
-        {
-            String[] listContents;
-            String listModel = lstSigValuesModel.toString();
-            listModel = listModel.replace("[", "");
-            listModel = listModel.replace("]", "");
-            listContents = listModel.split(", ");
-
-            boolean boolExact = false;
-
-            for (String s : listContents)
+            int numCircuits = Integer.parseInt((String) cmbCircuits.getSelectedItem());
+            try
             {
-                String[] current = s.split("  ");
-                String sigLabel = current[0];
-                String amt = current[1];
+                cmd = GridMetamodel.makeCommand(numCircuits);
+            }
+            catch (Err err)
+            {
+                err.printStackTrace();
+            }
+            if (!lstSigValuesModel.isEmpty())
+            {
+                String[] listContents;
+                String listModel = lstSigValuesModel.toString();
+                listModel = listModel.replace("[", "");
+                listModel = listModel.replace("]", "");
+                listContents = listModel.split(", ");
 
-                if (current.length == 3)
+                boolean boolExact = false;
+
+                for (String s : listContents)
                 {
-                    boolExact = true;
+                    String[] current = s.split("  ");
+                    String sigLabel = current[0];
+                    String amt = current[1];
+
+                    if (current.length == 3)
+                    {
+                        boolExact = true;
+                    }
+                    if (sigsDict.containsKey(sigLabel))
+                    {
+                        Sig sig = sigsDict.get(sigLabel);
+                        int amount = Integer.parseInt(amt);
+                        try
+                        {
+                            cmd = GridMetamodel.changeCommand(cmd, sig, boolExact, amount);
+                        }
+                        catch (Err err)
+                        {
+                            err.printStackTrace();
+                        }
+                    }
                 }
-                if (sigsDict.containsKey(sigLabel))
+            }
+
+            try
+            {
+                solution = GridMetamodel.run(cmd);
+                if (cbTextSolution.isSelected() && !cbGraphSolution.isSelected())
                 {
-                    Sig sig = sigsDict.get(sigLabel);
-                    int amount = Integer.parseInt(amt);
-
-                    try
-                    {
-                        cmd = GridMetamodel.changeCommand(cmd, sig, boolExact, amount);
-                    }
-                    catch (Err err)
-                    {
-                        err.printStackTrace();
-                    }
+                    System.out.print(solution.toString());
+                }
+                else if (!cbTextSolution.isSelected() && cbGraphSolution.isSelected())
+                {
+                    GridMetamodel.visualize(solution);
+                }
+                else if (cbTextSolution.isSelected() && cbGraphSolution.isSelected())
+                {
+                    System.out.print(solution.toString());
+                    GridMetamodel.visualize(solution);
                 }
             }
-        }
+            catch (Err err)
+            {
+                err.printStackTrace();
+            }
 
-        try
-        {
-            solution = GridMetamodel.run(cmd);
-            if(cbTextSolution.isSelected() && !cbGraphSolution.isSelected())
-            {
-                txtSolution.setText(solution.toString());
-                scrlSolution.updateUI();
-            }
-            else if(!cbTextSolution.isSelected() && cbGraphSolution.isSelected())
-            {
-                GridMetamodel.visualize(solution);
-                txtSolution.setText("");
-            }
-            else if(cbTextSolution.isSelected() && cbGraphSolution.isSelected())
-            {
-                txtSolution.setText(solution.toString());
-                GridMetamodel.visualize(solution);
-            }
+            pnlRelationships.setVisible(true);
+            pnlNext.setVisible(true);
+            populateTuples();
+            frame.pack();
         }
-        catch (Err err)
+        else
         {
-            err.printStackTrace();
+            JOptionPane.showMessageDialog(mainPanel, "Please select number of circuits");
         }
+    }
+
+    public void populateTuples()
+    {
+        //TODO
     }
 
     public void showNextSolution()
@@ -336,7 +360,8 @@ public class AlloyerForm extends JFrame
 
     public void showSigInfo()
     {
-        String sigInfo = GridMetamodel.getSigInformation(solution, sigsFromMeta.get(4));
-        JOptionPane.showMessageDialog(mainPanel, sigInfo);
+        //String sigInfo = GridMetamodel.getSigInformation(solution, );
+        //JOptionPane.showMessageDialog(mainPanel, sigInfo);
     }
+
 }
