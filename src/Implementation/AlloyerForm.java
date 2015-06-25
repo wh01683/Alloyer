@@ -148,7 +148,7 @@ public class AlloyerForm extends JFrame
             for(Sig s : sigs)
             {
                 sigLabel = s.label.replace("this/", "");
-                if(!sigLabel.equals("Grid")) //TODO: remove circuit from cmb
+                if(!sigLabel.equals("Grid") && !sigLabel.equals("Circuit"))
                 {
                     cmbSigPref.addItem(sigLabel);
                     availableSigs.add(sigLabel);
@@ -216,21 +216,34 @@ public class AlloyerForm extends JFrame
     {
         String selectedLine;
         String[] line;
-        //if(getFocusOwner() == lstSigValues){
+
+        if(lstSigValues.getSelectedValue()!= null && lstRelationships.getSelectedValue() == null)
+        {
             selectedLine = lstSigValues.getSelectedValue().toString();
             line = selectedLine.split("  ");
             String selectedSig = line[0];
             availableSigs.add(selectedSig);
             updateSigCombo(availableSigs);
             lstSigValuesModel.remove(lstSigValues.getSelectedIndex());
-        /*}
-        else if(getFocusOwner() == lstRelationships)
+        }
+        else if(lstRelationships.getSelectedValue() != null && lstSigValues.getSelectedValue()==null)
         {
             selectedLine = lstRelationships.getSelectedValue().toString();
-            line = selectedLine.split("");
+            line = selectedLine.split(" ");
+            // /TODO: Parse Line
+            updateRelationCombos();
+            lstRelationshipsModel.remove(lstRelationships.getSelectedIndex());
+        }
 
-        }*/
+        //TODO: make sure all possibilities covered
+
     }
+
+    public void updateRelationCombos()
+    {
+        //TODO
+    }
+
 
     public void cbSelected(JCheckBox cb, JCheckBox partner)
     {
@@ -315,8 +328,6 @@ public class AlloyerForm extends JFrame
             pnlNext.setVisible(true);
             populateTuples();
             frame.pack();
-
-
         }
         else
         {
@@ -351,7 +362,6 @@ public class AlloyerForm extends JFrame
             {
 
             }
-
         }
         catch(Exception e)
         {
