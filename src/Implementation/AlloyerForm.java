@@ -6,6 +6,7 @@ import edu.mit.csail.sdg.alloy4compiler.ast.Command;
 import edu.mit.csail.sdg.alloy4compiler.ast.Sig;
 import edu.mit.csail.sdg.alloy4compiler.translator.A4Solution;
 import edu.mit.csail.sdg.alloy4viz.VizGUI;
+import kodkod.engine.Solution;
 
 import javax.swing.*;
 import java.awt.*;
@@ -26,7 +27,6 @@ public class AlloyerForm extends JFrame
     private JList lstSigValues;
     private JButton btnAddPref;
     private JCheckBox cbExact;
-    private JLabel lblNumCircuits;
     private JComboBox cmbCircuits;
     private JPanel mainPanel;
     private JTextArea txtSolution;
@@ -148,7 +148,7 @@ public class AlloyerForm extends JFrame
             for(Sig s : sigs)
             {
                 sigLabel = s.label.replace("this/", "");
-                if(!sigLabel.equals("Grid") && !sigLabel.equals("Circuit"))
+                if(!sigLabel.equals("Grid")) //TODO: remove circuit from cmb
                 {
                     cmbSigPref.addItem(sigLabel);
                     availableSigs.add(sigLabel);
@@ -216,21 +216,20 @@ public class AlloyerForm extends JFrame
     {
         String selectedLine;
         String[] line;
-        if(getFocusOwner() == lstSigValues)
-        {
+        //if(getFocusOwner() == lstSigValues){
             selectedLine = lstSigValues.getSelectedValue().toString();
             line = selectedLine.split("  ");
             String selectedSig = line[0];
             availableSigs.add(selectedSig);
             updateSigCombo(availableSigs);
             lstSigValuesModel.remove(lstSigValues.getSelectedIndex());
-        }
+        /*}
         else if(getFocusOwner() == lstRelationships)
         {
             selectedLine = lstRelationships.getSelectedValue().toString();
             line = selectedLine.split("");
 
-        }
+        }*/
     }
 
     public void cbSelected(JCheckBox cb, JCheckBox partner)
@@ -316,6 +315,8 @@ public class AlloyerForm extends JFrame
             pnlNext.setVisible(true);
             populateTuples();
             frame.pack();
+
+
         }
         else
         {
@@ -335,7 +336,7 @@ public class AlloyerForm extends JFrame
             if(cbTextSolution.isSelected() && !cbGraphSolution.isSelected())
             {
                 solution = GridMetamodel.getNext(solution);
-                txtSolution.setText(solution.toString());
+                System.out.println(solution.toString());
             }
             else if(!cbTextSolution.isSelected() && cbGraphSolution.isSelected())
             {
@@ -344,7 +345,7 @@ public class AlloyerForm extends JFrame
             else if(cbTextSolution.isSelected() && cbGraphSolution.isSelected())
             {
                 solution = GridMetamodel.visualizeNext(solution, currentModelForm);
-                txtSolution.setText(solution.toString());
+                System.out.println(solution.toString());
             }
             else
             {

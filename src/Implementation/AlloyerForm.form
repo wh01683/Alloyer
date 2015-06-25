@@ -12,13 +12,15 @@
     <rowspec value="center:d:noGrow"/>
     <colspec value="fill:max(d;0px):noGrow"/>
     <colspec value="left:20dlu:noGrow"/>
+    <colspec value="fill:p:grow"/>
+    <colspec value="left:4dlu:noGrow"/>
     <colspec value="fill:200dlu:grow"/>
     <colspec value="left:10dlu:noGrow"/>
     <colspec value="fill:max(m;0dlu):grow"/>
     <colspec value="left:20dlu:noGrow"/>
     <colspec value="fill:d:noGrow"/>
     <constraints>
-      <xy x="20" y="20" width="1192" height="625"/>
+      <xy x="20" y="20" width="1285" height="625"/>
     </constraints>
     <properties>
       <font name="Century Gothic" style="0"/>
@@ -34,7 +36,7 @@
         <colspec value="left:5dlu:noGrow"/>
         <colspec value="fill:100dlu:grow"/>
         <constraints>
-          <grid row="6" column="2" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <grid row="6" column="2" row-span="1" col-span="3" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
           <forms/>
         </constraints>
         <properties>
@@ -86,24 +88,23 @@
       </grid>
       <grid id="5ff44" binding="pnlCircuits" layout-manager="FormLayout">
         <rowspec value="center:p:grow"/>
-        <colspec value="fill:15px:grow"/>
-        <colspec value="left:4dlu:noGrow"/>
-        <colspec value="fill:33px:grow"/>
+        <colspec value="fill:143px:noGrow"/>
         <constraints>
-          <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-          <forms top="5" left="0" bottom="0" right="0"/>
+          <grid row="2" column="4" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="4" fill="2" indent="0" use-parent-layout="false"/>
+          <forms top="5" left="0" bottom="0" right="0" defaultalign-horz="false"/>
         </constraints>
         <properties>
           <foreground color="-12828863"/>
         </properties>
-        <border type="line" title="">
-          <title-color color="-4473925"/>
+        <border type="line" title="Circuits">
+          <font name="Century Gothic" size="14" style="0"/>
+          <title-color color="-1181441"/>
           <color color="-5063744"/>
         </border>
         <children>
           <component id="917a2" class="javax.swing.JComboBox" binding="cmbCircuits">
             <constraints>
-              <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
               <forms defaultalign-horz="false" defaultalign-vert="false"/>
             </constraints>
             <properties>
@@ -121,20 +122,6 @@
                 <item value="9"/>
                 <item value="10"/>
               </model>
-            </properties>
-          </component>
-          <component id="1350a" class="javax.swing.JLabel" binding="lblNumCircuits">
-            <constraints>
-              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-              <forms defaultalign-horz="false" defaultalign-vert="false"/>
-            </constraints>
-            <properties>
-              <background color="-5063744"/>
-              <enabled value="true"/>
-              <font name="Century Gothic" size="14" style="0"/>
-              <foreground color="-1181441"/>
-              <horizontalAlignment value="0"/>
-              <text value="Circuits:"/>
             </properties>
           </component>
         </children>
@@ -163,7 +150,7 @@
         <colspec value="left:4dlu:noGrow"/>
         <colspec value="fill:30dlu:grow"/>
         <constraints>
-          <grid row="2" column="4" row-span="3" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <grid row="2" column="6" row-span="3" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
           <forms/>
         </constraints>
         <properties>
@@ -328,7 +315,7 @@
         <colspec value="left:4dlu:noGrow"/>
         <colspec value="fill:30dlu:grow"/>
         <constraints>
-          <grid row="4" column="2" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <grid row="4" column="2" row-span="1" col-span="3" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
           <forms/>
         </constraints>
         <properties/>
@@ -427,7 +414,7 @@
         <colspec value="left:4dlu:noGrow"/>
         <colspec value="fill:p:grow"/>
         <constraints>
-          <grid row="6" column="4" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <grid row="6" column="6" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
           <forms/>
         </constraints>
         <properties>
@@ -461,6 +448,19 @@
           </component>
         </children>
       </grid>
+      <component id="82e41" class="javax.swing.JLabel">
+        <constraints>
+          <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="2" indent="0" use-parent-layout="false"/>
+          <forms defaultalign-vert="false"/>
+        </constraints>
+        <properties>
+          <enabled value="true"/>
+          <font name="Geoma Thin Demo" size="36" style="0"/>
+          <foreground color="-1181441"/>
+          <horizontalAlignment value="0"/>
+          <text value="Meowlloy"/>
+        </properties>
+      </component>
     </children>
   </grid>
   <buttonGroups>
