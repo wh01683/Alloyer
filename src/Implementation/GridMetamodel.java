@@ -42,7 +42,7 @@ public class GridMetamodel {
     private static Hashtable<String, Sig> namesToSig = new Hashtable<>(20); //will store a mapping of String type names to Signature objects
     public static Hashtable<Long, String> TEST_HASH_TABLE = new Hashtable<>(5000);
     private static Module world;
-    private static String[] debugTestRelationships = {"Supply_Circuit->Wind", "GP->Load"};
+    private static String[] debugTestRelationships = {"Supply_Circuit->Wind"};
     private static Hashtable<String[], A4Solution> successfulSolutions = new Hashtable<>();
 
     /**

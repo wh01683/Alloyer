@@ -518,7 +518,7 @@ public class AlloyerForm extends JFrame
 
         relationships[0] = relations.get(0);
 
-        String match = GridMetamodel.findSolution(solution, relationships, false, );
+        A4Solution match = GridMetamodel.findSolution(solution, relationships, false, 85000);
         JOptionPane.showMessageDialog(frame,match);
     }
 
