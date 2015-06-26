@@ -10,7 +10,6 @@ import edu.mit.csail.sdg.alloy4viz.VizGUI;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.*;
@@ -35,7 +34,7 @@ public class AlloyerForm extends JFrame
     private JCheckBox cbTextSolution;
     private JCheckBox cbGraphSolution;
     private JScrollPane scrlList;
-    private JButton btnSigInfo;
+    private JButton btnFindMatches;
     private JComboBox cmbSig1Watts;
     private JComboBox cmbSigRelate2;
     private JComboBox cmbSig2Watts;
@@ -64,6 +63,7 @@ public class AlloyerForm extends JFrame
     Command cmd;
     static A4Solution solution;
     static VizGUI currentModelForm;
+    String sig1sig2Rel;
 
 
     public AlloyerForm()
@@ -130,7 +130,7 @@ public class AlloyerForm extends JFrame
         btnNext.addActionListener(ae -> showNextSolution());
 
         //SigInfo Button
-        btnSigInfo.addActionListener(ae -> showSigInfo());
+        btnFindMatches.addActionListener(ae -> findMatches());
     }
 
     public static void main(String[] args)
@@ -221,7 +221,10 @@ public class AlloyerForm extends JFrame
             int watts2 = cmbSig2Watts.getSelectedIndex();
             String sig1WattsRel;
             String sig2WattsRel;
-            String sig1sig2Rel;
+
+            sig2 = sig2.replace(sig2.substring(0), (sig2.charAt(0) + "").toUpperCase());
+
+            sig1sig2Rel = sig1 + "->" + sig2;
 
             if(watts1 > -1 && watts2 > -1)
             {
@@ -229,23 +232,29 @@ public class AlloyerForm extends JFrame
 
                 sig1WattsRel = sig1 + "->" + watts1;
                 sig2WattsRel = sig2 + "->" + watts2;
-                sig1sig2Rel = sig1 + "->" + sig2;
+
             }
             else if(watts1 == -1 && watts2 > -1)
             {
                 lstRelationshipsModel.addElement(sig1Name + " \u2192 " + sig2Name + ", " + watts2 + " watts");
                 sig1WattsRel = null;
                 sig2WattsRel = sig2 + "->" + watts2;
-                sig1sig2Rel = sig1 + "->" + sig2;
+
             }
             else if(watts1 > -1 && watts2 == -1)
             {
                 lstRelationshipsModel.addElement(sig1Name + ", " + watts1 + " watts" + " \u2192 " + sig2Name);
+                sig1WattsRel = sig1 + "->"+ watts1;
+                sig2WattsRel = null;
             }
             else
             {
                 lstRelationshipsModel.addElement(sig1Name + " \u2192 " + sig2Name);
+                sig1WattsRel = null;
+                sig2WattsRel = null;
             }
+
+
 
 
             cmbSigRelate1.setSelectedIndex(-1);
@@ -501,10 +510,12 @@ public class AlloyerForm extends JFrame
         }
     }
 
-    public void showSigInfo()
+    public void findMatches()
     {
-        //String sigInfo = GridMetamodel.getSigInformation(solution, );
-        //JOptionPane.showMessageDialog(mainPanel, sigInfo);
+        String[] relationships = new String[1];
+        relationships[0] = sig1sig2Rel;
+        String match = GridMetamodel.findSolution(solution, relationships, false);
+        JOptionPane.showMessageDialog(frame,match);
     }
 
 }

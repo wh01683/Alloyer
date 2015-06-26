@@ -138,7 +138,7 @@
         <colspec value="left:4dlu:noGrow"/>
         <colspec value="fill:50dlu:grow"/>
         <colspec value="left:4dlu:noGrow"/>
-        <colspec value="fill:20dlu:grow"/>
+        <colspec value="fill:30dlu:grow"/>
         <colspec value="left:4dlu:noGrow"/>
         <colspec value="fill:max(d;4px):noGrow"/>
         <colspec value="left:4dlu:noGrow"/>
@@ -148,7 +148,7 @@
         <colspec value="left:4dlu:noGrow"/>
         <colspec value="left:50dlu:grow"/>
         <colspec value="fill:max(d;4px):noGrow"/>
-        <colspec value="fill:20dlu:grow"/>
+        <colspec value="fill:30dlu:grow"/>
         <colspec value="left:4dlu:noGrow"/>
         <colspec value="fill:max(d;4px):noGrow"/>
         <colspec value="left:4dlu:noGrow"/>
@@ -457,14 +457,14 @@
           <color color="-5063744"/>
         </border>
         <children>
-          <component id="5076c" class="javax.swing.JButton" binding="btnSigInfo">
+          <component id="5076c" class="javax.swing.JButton" binding="btnFindMatches">
             <constraints>
               <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
               <forms top="0" left="0" bottom="0" right="10" defaultalign-horz="false" defaultalign-vert="false"/>
             </constraints>
             <properties>
               <font name="Century Gothic" size="14" style="0"/>
-              <text value="SigInfo"/>
+              <text value="Find Matches"/>
             </properties>
           </component>
           <component id="43898" class="javax.swing.JButton" binding="btnNext">
