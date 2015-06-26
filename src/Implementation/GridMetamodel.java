@@ -35,15 +35,15 @@ public class GridMetamodel {
     private static Command command;
     private static A4Options options = new A4Options();
 
-    private static String dirPath = "C:/Users/Lindsey/AppData/Local/Temp/alloy4tmp40-Lindsey/";
-    private static String alsDirPath = dirPath + "models/circuitry.als";
-//   private static String dirPath = "/tmp/alloy4tmp40-robert/";
-//   private static String alsDirPath = dirPath + "models/circuitry.als";
+//    private static String dirPath = "C:/Users/Lindsey/AppData/Local/Temp/alloy4tmp40-Lindsey/";
+//    private static String alsDirPath = dirPath + "models/circuitry.als";
+   private static String dirPath = "/tmp/alloy4tmp40-robert/";
+   private static String alsDirPath = dirPath + "models/circuitry.als";
     private static Hashtable<String, Sig> namesToSig = new Hashtable<>(20); //will store a mapping of String type names to Signature objects
-    private static ArrayList<OurSig> ourSigs;
     public static Hashtable<Long, String> TEST_HASH_TABLE = new Hashtable<>(5000);
     private static Module world;
-    private static String[] debugTestRelationships = {"Supply_Circuit->Wind", "SP->7"};
+    private static String[] debugTestRelationships = {"Supply_Circuit->Wind"};
+    private static Hashtable<String[], A4Solution> successfulSolutions = new Hashtable<>();
 
     /**
      * main method to initialize the GridMetamodel class.
@@ -56,7 +56,7 @@ public class GridMetamodel {
 
             //evaluateSolutionPerformance(run(command), 10003);
 
-            System.out.println(findSolution(run(command).next(), debugTestRelationships, false));
+            System.out.println(findSolution(run(command).next(), debugTestRelationships, false, 70000));
 
 
 
@@ -141,6 +141,14 @@ public class GridMetamodel {
      */
     public static List<Command> getCommands (){
         return world.getAllCommands();
+    }
+
+    public Hashtable<String[], A4Solution> getSuccessfulSolutions() {
+        return successfulSolutions;
+    }
+
+    public void setSuccessfulSolutions(Hashtable<String[], A4Solution> successfulSolutions) {
+        this.successfulSolutions = successfulSolutions;
     }
 
     /**
@@ -340,28 +348,6 @@ public class GridMetamodel {
     }
 
 
-
-    /**
-     * Updates the Grid Metamodel with constraints selected by the user through the GUI.
-     * @param sigs ArrayList of OurSig objects to represent the constraints desired by the user.
-     */
-    private static void sendConstraints(ArrayList<OurSig> sigs){
-        try {
-            setOurSigs(sigs);
-        }catch (NullPointerException e){
-            e.printStackTrace();
-        }
-
-    }
-
-    /**
-     * Sets the current list of simple Sig objects to the new one.
-     * @param ourSigs Current ArrayList of OurSig objects.
-     */
-    private static void setOurSigs(ArrayList<OurSig> ourSigs) {
-        GridMetamodel.ourSigs = ourSigs;
-    }
-
     /**
      * Currently, this method ONLY existed to check whether or not the solution iterator is producing duplicate solutions.
      * Keep in mind that this method uses a brute force search method, cycling through each previously constructed
@@ -406,7 +392,7 @@ public class GridMetamodel {
         }
     }
 
-    private static String getAllSigInfo(A4Solution solution){
+    public static String getAllSigInfo(A4Solution solution){
         StringBuilder info = new StringBuilder();
         for(Sig s : solution.getAllReachableSigs()){
             for(Sig.Field f : s.getFields()){
@@ -417,119 +403,80 @@ public class GridMetamodel {
         return info.toString();
     }
 
-    public static String findSolution(A4Solution solution, String[] relationships, boolean isExact) {
+    public static A4Solution findSolution(A4Solution solution, String[] relationships, boolean useSpecificNames, int iterationCap) {
 
-        Hashtable<Long, String> debugTuplesHashtable = new Hashtable<>(200000);
         Long l = new Long(0);
-        int i = 0;
         A4Solution localSolution = solution;
+        int cap = (iterationCap == 0)? 85000 : iterationCap;
+        int iteration = 0;
 
-
-
-
-        if (isExact) {
+        if (useSpecificNames) {
 
             HashSet<String> relationHash = new HashSet<>(Arrays.asList(relationships));
 
             boolean pass = false;
 
-            while (!pass) {
-                i++;
-                if (i % 500 == 0) {
-                    System.out.println("Iteration " + i);
-                }
+            while (!pass && localSolution != null && iteration < cap) {
+
                 StringBuilder tupe = new StringBuilder();
                 HashSet<String> tuples = new HashSet<>();
 
-                for (Sig s : localSolution.getAllReachableSigs()) {
-                    for (Sig.Field f : s.getFields()) {
-                        for (A4Tuple t : localSolution.eval(f)) {
-                            tupe.append(t.toString());
-                            tuples.add(t.toString());
+                    for (Sig s : localSolution.getAllReachableSigs()) {
+                        for (Sig.Field f : s.getFields()) {
+                            for (A4Tuple t : localSolution.eval(f)) {
+                                tupe.append(t.toString());
+                                tuples.add(t.toString());
+                            }
                         }
                     }
-                }
 
                 if (tuples.containsAll(relationHash)) {
                     pass = true;
-                    StringBuilder ans = new StringBuilder();
-                    for (Sig s : localSolution.getAllReachableSigs()) {
-
-                        for (Sig.Field f : s.getFields()) {
-                            ans.append(localSolution.eval(f).toString() + "\n");
-                        }
-                    }
-                    return ans.toString();
+                    return localSolution;
                 } else {
                     pass = false;
+                    successfulSolutions.put(relationships, localSolution);
                     localSolution = getNext(localSolution);
                 }
+                iteration ++;
             }
 
             //if we get here, no viable solution was found.
             return null;
-        }
+        } else {
 
-//        for (String s : relationships) {
-//            System.out.println("Array: " + s);
-//        }
-//        for (String st : relationHash) {
-//            System.out.println("HashSet: " + st);
-//        }
+            HashSet<String> relationHash = new HashSet<>();
 
-        HashSet<String> relationHash = new HashSet<>();
-
-        for(String s : relationships){
-            relationHash.add(ignoreLabels(s));
-        }
-
-
-
-        boolean pass = false;
-
-        while (!pass) {
-            i++;
-            l++;
-            System.out.println("Iteration " + i);
-            if (i % 500 == 0) {
-                System.out.println("Iteration " + i);
-            }if(i%20000 == 0){
-
-                printSolToFile(666, debugTuplesHashtable);
-                System.exit(0);
+            for (String s : relationships) {
+                relationHash.add(ignoreLabels(s));
             }
-            HashSet<String> tuples = new HashSet<>();
-            StringBuilder tupe = new StringBuilder();
-            for (Sig s : localSolution.getAllReachableSigs()) {
-                for (Sig.Field f : s.getFields()) {
-                    for (A4Tuple t : localSolution.eval(f)) {
-                        tupe.append(t.toString());
-                        tuples.add(ignoreLabels(t.toString()));
-                        debugTuplesHashtable.put(l++, ignoreLabels(tupe.toString())+"\n");
-                    }
-                }
-            }
-            if (tuples.containsAll(relationHash)) {
-                pass = true;
-                StringBuilder ans = new StringBuilder();
+
+
+            boolean pass = false;
+
+            while (!pass && localSolution != null && iteration < cap) {
+
+                HashSet<String> tuples = new HashSet<>();
                 for (Sig s : localSolution.getAllReachableSigs()) {
-
                     for (Sig.Field f : s.getFields()) {
-                        ans.append(localSolution.eval(f).toString() + "\n");
+                        for (A4Tuple t : localSolution.eval(f)) {
+                            tuples.add(ignoreLabels(t.toString()));
+                        }
                     }
                 }
-                return ans.toString();
-            } else {
-                pass = false;
-                localSolution = getNext(localSolution);
+                if (tuples.containsAll(relationHash)) {
+
+                    return localSolution;
+                } else {
+                    pass = false;
+                    successfulSolutions.put(relationships, localSolution);
+                    localSolution = getNext(localSolution);
+                }
+                iteration++;
             }
+            //if we get here, no viable solution was found.
+            return null;
         }
-
-
-
-        //if we get here, no viable solution was found.
-        return null;
-
     }
 
     private static String ignoreLabels(String labeledRelationship){
