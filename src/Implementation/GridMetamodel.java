@@ -35,15 +35,15 @@ public class GridMetamodel {
     private static Command command;
     private static A4Options options = new A4Options();
 
-    private static String dirPath = "C:/Users/Lindsey/AppData/Local/Temp/alloy4tmp40-Lindsey/";
-    private static String alsDirPath = dirPath + "models/circuitry.als";
-//   private static String dirPath = "/tmp/alloy4tmp40-robert/";
-//   private static String alsDirPath = dirPath + "models/circuitry.als";
+//    private static String dirPath = "C:/Users/Lindsey/AppData/Local/Temp/alloy4tmp40-Lindsey/";
+//    private static String alsDirPath = dirPath + "models/circuitry.als";
+   private static String dirPath = "/tmp/alloy4tmp40-robert/";
+   private static String alsDirPath = dirPath + "models/circuitry.als";
     private static Hashtable<String, Sig> namesToSig = new Hashtable<>(20); //will store a mapping of String type names to Signature objects
     private static ArrayList<OurSig> ourSigs;
     public static Hashtable<Long, String> TEST_HASH_TABLE = new Hashtable<>(5000);
     private static Module world;
-    private static String[] debugTestRelationships = {"Supply_Circuit->Wind", "Load_Circuit->SP"};
+    private static String[] debugTestRelationships = {"Supply_Circuit->Wind", "SP->7"};
 
     /**
      * main method to initialize the GridMetamodel class.

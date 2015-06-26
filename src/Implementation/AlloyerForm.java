@@ -53,7 +53,7 @@ public class AlloyerForm extends JFrame
     private JTextField txtName1;
     private JTextField txtName2;
     private JScrollPane scrlSolution;
-
+    private ArrayList<String> relations = new ArrayList<>();
 
     DefaultListModel lstSigValuesModel;
     DefaultListModel lstRelationshipsModel;
@@ -222,9 +222,10 @@ public class AlloyerForm extends JFrame
             String sig1WattsRel;
             String sig2WattsRel;
 
-            sig2 = sig2.replace(sig2.substring(0), (sig2.charAt(0) + "").toUpperCase());
-
-            sig1sig2Rel = sig1 + "->" + sig2;
+            //sig2 = sig2.replace(sig2.substring(0), (sig2.charAt(0) + "").toUpperCase());
+            String l = sig2.substring(0,0).toUpperCase();
+            sig2 = sig2.substring(1, sig2.length());
+            relations.add(sig1 + "->" + l+sig2);
 
             if(watts1 > -1 && watts2 > -1)
             {
@@ -513,7 +514,10 @@ public class AlloyerForm extends JFrame
     public void findMatches()
     {
         String[] relationships = new String[1];
-        relationships[0] = sig1sig2Rel;
+//        relationships = (String[])relations.toArray();
+
+        relationships[0] = relations.get(0);
+
         String match = GridMetamodel.findSolution(solution, relationships, false);
         JOptionPane.showMessageDialog(frame,match);
     }
