@@ -110,7 +110,6 @@
             <properties>
               <font name="Century Gothic" size="14" style="0"/>
               <model>
-                <item value=""/>
                 <item value="1"/>
                 <item value="2"/>
                 <item value="3"/>
@@ -122,6 +121,7 @@
                 <item value="9"/>
                 <item value="10"/>
               </model>
+              <selectedIndex value="-1"/>
             </properties>
           </component>
         </children>
@@ -136,6 +136,8 @@
         <colspec value="left:4dlu:noGrow"/>
         <colspec value="fill:50dlu:grow"/>
         <colspec value="left:4dlu:noGrow"/>
+        <colspec value="fill:50dlu:grow"/>
+        <colspec value="left:4dlu:noGrow"/>
         <colspec value="fill:20dlu:grow"/>
         <colspec value="left:4dlu:noGrow"/>
         <colspec value="fill:max(d;4px):noGrow"/>
@@ -144,6 +146,8 @@
         <colspec value="left:4dlu:noGrow"/>
         <colspec value="fill:50dlu:grow"/>
         <colspec value="left:4dlu:noGrow"/>
+        <colspec value="left:50dlu:grow"/>
+        <colspec value="fill:max(d;4px):noGrow"/>
         <colspec value="fill:20dlu:grow"/>
         <colspec value="left:4dlu:noGrow"/>
         <colspec value="fill:max(d;4px):noGrow"/>
@@ -166,7 +170,7 @@
         <children>
           <scrollpane id="41272">
             <constraints>
-              <grid row="2" column="2" row-span="3" col-span="15" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+              <grid row="2" column="2" row-span="3" col-span="19" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
               <forms top="5" left="0" bottom="10" right="10" defaultalign-horz="false" defaultalign-vert="false"/>
             </constraints>
             <properties>
@@ -196,9 +200,9 @@
               <foreground color="-16777216"/>
             </properties>
           </component>
-          <component id="e5b32" class="javax.swing.JComboBox" binding="cmbRelateWatt1">
+          <component id="e5b32" class="javax.swing.JComboBox" binding="cmbSig1Watts">
             <constraints>
-              <grid row="0" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+              <grid row="0" column="6" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
               <forms defaultalign-vert="false"/>
             </constraints>
             <properties>
@@ -206,7 +210,8 @@
               <font name="Century Gothic" size="14" style="0"/>
               <foreground color="-16777216"/>
               <model>
-                <item value=""/>
+                <item value="any"/>
+                <item value="0"/>
                 <item value="1"/>
                 <item value="2"/>
                 <item value="3"/>
@@ -215,11 +220,12 @@
                 <item value="6"/>
                 <item value="7"/>
               </model>
+              <selectedIndex value="-1"/>
             </properties>
           </component>
           <component id="22800" class="javax.swing.JLabel" binding="lblArrow">
             <constraints>
-              <grid row="0" column="8" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+              <grid row="0" column="10" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
               <forms defaultalign-horz="false" defaultalign-vert="false"/>
             </constraints>
             <properties>
@@ -232,7 +238,7 @@
           </component>
           <component id="ac10d" class="javax.swing.JComboBox" binding="cmbSigRelate2">
             <constraints>
-              <grid row="0" column="10" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+              <grid row="0" column="12" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
               <forms defaultalign-vert="false"/>
             </constraints>
             <properties>
@@ -241,9 +247,9 @@
               <foreground color="-16777216"/>
             </properties>
           </component>
-          <component id="db41e" class="javax.swing.JComboBox" binding="cmbRelateWatt2">
+          <component id="db41e" class="javax.swing.JComboBox" binding="cmbSig2Watts">
             <constraints>
-              <grid row="0" column="12" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+              <grid row="0" column="16" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
               <forms defaultalign-vert="false"/>
             </constraints>
             <properties>
@@ -252,6 +258,7 @@
               <foreground color="-16777216"/>
               <model>
                 <item value=""/>
+                <item value="0"/>
                 <item value="1"/>
                 <item value="2"/>
                 <item value="3"/>
@@ -259,13 +266,13 @@
                 <item value="5"/>
                 <item value="6"/>
                 <item value="7"/>
-                <item value="8"/>
               </model>
+              <selectedIndex value="-1"/>
             </properties>
           </component>
           <component id="3b2a4" class="javax.swing.JButton" binding="btnAddRel">
             <constraints>
-              <grid row="0" column="16" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+              <grid row="0" column="20" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
               <forms top="0" left="0" bottom="0" right="5" defaultalign-horz="false" defaultalign-vert="false"/>
             </constraints>
             <properties>
@@ -277,7 +284,7 @@
           </component>
           <component id="463cc" class="javax.swing.JLabel" binding="lblWatts1">
             <constraints>
-              <grid row="0" column="6" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <grid row="0" column="8" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
               <forms/>
             </constraints>
             <properties>
@@ -289,7 +296,7 @@
           </component>
           <component id="86ee0" class="javax.swing.JLabel" binding="lblWatts2">
             <constraints>
-              <grid row="0" column="14" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <grid row="0" column="18" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
               <forms/>
             </constraints>
             <properties>
@@ -297,6 +304,30 @@
               <font name="Century Gothic" size="14" style="0"/>
               <foreground color="-1181441"/>
               <text value="watts"/>
+            </properties>
+          </component>
+          <component id="b9d38" class="javax.swing.JTextField" binding="txtName1">
+            <constraints>
+              <grid row="0" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                <preferred-size width="150" height="-1"/>
+              </grid>
+              <forms defaultalign-horz="false" defaultalign-vert="false"/>
+            </constraints>
+            <properties>
+              <background color="-2302756"/>
+              <font name="Century Gothic" size="14" style="0"/>
+            </properties>
+          </component>
+          <component id="ac77c" class="javax.swing.JTextField" binding="txtName2">
+            <constraints>
+              <grid row="0" column="14" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                <preferred-size width="150" height="-1"/>
+              </grid>
+              <forms defaultalign-horz="false" defaultalign-vert="false"/>
+            </constraints>
+            <properties>
+              <background color="-2302756"/>
+              <font name="Century Gothic" size="14" style="0"/>
             </properties>
           </component>
         </children>
@@ -395,7 +426,6 @@
               <font name="Century Gothic" size="14" style="0"/>
               <foreground color="-16777216"/>
               <model>
-                <item value=""/>
                 <item value="1"/>
                 <item value="2"/>
                 <item value="3"/>
@@ -405,6 +435,7 @@
                 <item value="7"/>
                 <item value="8"/>
               </model>
+              <selectedIndex value="-1"/>
             </properties>
           </component>
         </children>

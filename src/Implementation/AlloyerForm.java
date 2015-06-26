@@ -6,10 +6,11 @@ import edu.mit.csail.sdg.alloy4compiler.ast.Command;
 import edu.mit.csail.sdg.alloy4compiler.ast.Sig;
 import edu.mit.csail.sdg.alloy4compiler.translator.A4Solution;
 import edu.mit.csail.sdg.alloy4viz.VizGUI;
-import kodkod.engine.Solution;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.*;
@@ -35,9 +36,9 @@ public class AlloyerForm extends JFrame
     private JCheckBox cbGraphSolution;
     private JScrollPane scrlList;
     private JButton btnSigInfo;
-    private JComboBox cmbRelateWatt1;
+    private JComboBox cmbSig1Watts;
     private JComboBox cmbSigRelate2;
-    private JComboBox cmbRelateWatt2;
+    private JComboBox cmbSig2Watts;
     private JButton btnAddRel;
     private JComboBox cmbPrefVal;
     private JPanel pnlCircuits;
@@ -50,6 +51,8 @@ public class AlloyerForm extends JFrame
     private JLabel lblArrow;
     private JLabel lblWatts2;
     private JPanel pnlNext;
+    private JTextField txtName1;
+    private JTextField txtName2;
     private JScrollPane scrlSolution;
 
 
@@ -113,6 +116,9 @@ public class AlloyerForm extends JFrame
         //Add Relationship Button
         btnAddRel.addActionListener(ae->addToList(btnAddRel));
 
+        //Combobox for relation sig1
+        cmbSigRelate1.addItemListener(ie -> loadSig2Cmb(ie));
+
         //Text and Graph checkboxes
         cbTextSolution.addActionListener(ae -> cbSelected(cbTextSolution, cbGraphSolution));
         cbGraphSolution.addActionListener(ae -> cbSelected(cbGraphSolution, cbGraphSolution));
@@ -144,19 +150,18 @@ public class AlloyerForm extends JFrame
         String sigLabel;
         if(sigs != null)
         {
-            cmbSigPref.addItem("");
             for(Sig s : sigs)
             {
                 sigLabel = s.label.replace("this/", "");
+                sigsDict.put(sigLabel, s);
                 if(!sigLabel.equals("Grid") && !sigLabel.equals("Circuit"))
                 {
                     cmbSigPref.addItem(sigLabel);
                     availableSigs.add(sigLabel);
-                    sigsDict.put(sigLabel, s);
                 }
             }
         }
-        cmbSigPref.updateUI();
+        cmbSigPref.setSelectedIndex(-1);
     }
 
     public void updateSigCombo(List<String> sigs)
@@ -164,33 +169,30 @@ public class AlloyerForm extends JFrame
         if(sigs != null)
         {
             cmbSigPref.removeAllItems();
-            cmbSigPref.addItem("");
             for(String s : sigs)
             {
                 cmbSigPref.addItem(s);
             }
         }
-        cmbSigPref.updateUI();
+        cmbSigPref.setSelectedIndex(-1);
     }
 
     public void addToList(JButton button)
     {
         if(button == btnAddPref)
         {
-            String sig = (String) cmbSigPref.getSelectedItem();
-            String val = (String) cmbPrefVal.getSelectedItem();
-            boolean boolExact = cbExact.isSelected();
-            String exact;
-
-            if (boolExact) exact = "exact";
-            else exact = "";
-
-            if (!sig.equals("") && !val.equals(""))
+            if(cmbSigPref.getSelectedIndex()>-1 && cmbPrefVal.getSelectedIndex() >-1)
             {
-                int amt = Integer.parseInt(val);
+                String sig = (String) cmbSigPref.getSelectedItem();
+                int val = Integer.parseInt((String) cmbPrefVal.getSelectedItem());
+                boolean boolExact = cbExact.isSelected();
+                String exact;
+
+                if (boolExact) exact = "exact";
+                else exact = "";
 
                 int removeIndex = -1;
-                lstSigValuesModel.addElement(sig + "  " + amt + "  " + exact);
+                lstSigValuesModel.addElement(sig + "  " + val + "  " + exact);
 
                 int i = 0;
                 for (String s : availableSigs)
@@ -198,17 +200,64 @@ public class AlloyerForm extends JFrame
                     if (s.equals(sig)) removeIndex = i;
                     i++;
                 }
-                if (removeIndex >= 0) availableSigs.remove(removeIndex);
+                availableSigs.remove(removeIndex);
             }
             else JOptionPane.showMessageDialog(mainPanel, "Please choose a signature and value");
 
             updateSigCombo(availableSigs);
-            cmbPrefVal.setSelectedIndex(0);
-            cbExact.setSelected(false);
+            cmbPrefVal.setSelectedIndex(-1);
+            //cbExact.setSelected(false);
         }
+
+
+
         else if(button == btnAddRel)
         {
-            //TODO
+            String sig1 = (String)cmbSigRelate1.getSelectedItem();
+            String sig2 = (String)cmbSigRelate2.getSelectedItem();
+            String sig1Name = txtName1.getText();
+            String sig2Name = txtName2.getText();
+            int watts1 = cmbSig1Watts.getSelectedIndex();
+            int watts2 = cmbSig2Watts.getSelectedIndex();
+            String sig1WattsRel;
+            String sig2WattsRel;
+            String sig1sig2Rel;
+
+            if(watts1 > -1 && watts2 > -1)
+            {
+                lstRelationshipsModel.addElement(sig1Name + ", " + watts1 + " watts" + " \u2192 " + sig2Name + ", " + watts2 + " watts");
+
+                sig1WattsRel = sig1 + "->" + watts1;
+                sig2WattsRel = sig2 + "->" + watts2;
+                sig1sig2Rel = sig1 + "->" + sig2;
+            }
+            else if(watts1 == -1 && watts2 > -1)
+            {
+                lstRelationshipsModel.addElement(sig1Name + " \u2192 " + sig2Name + ", " + watts2 + " watts");
+                sig1WattsRel = null;
+                sig2WattsRel = sig2 + "->" + watts2;
+                sig1sig2Rel = sig1 + "->" + sig2;
+            }
+            else if(watts1 > -1 && watts2 == -1)
+            {
+                lstRelationshipsModel.addElement(sig1Name + ", " + watts1 + " watts" + " \u2192 " + sig2Name);
+            }
+            else
+            {
+                lstRelationshipsModel.addElement(sig1Name + " \u2192 " + sig2Name);
+            }
+
+
+            cmbSigRelate1.setSelectedIndex(-1);
+            cmbSigRelate2.setSelectedIndex(-1);
+            txtName1.setText("");
+            txtName2.setText("");
+            cmbSig1Watts.setSelectedIndex(-1);
+            cmbSig2Watts.setSelectedIndex(-1);
+
+
+
+
         }
     }
 
@@ -255,7 +304,7 @@ public class AlloyerForm extends JFrame
 
     public void runCommand()
     {
-        if(!cmbCircuits.getSelectedItem().equals(""))
+        if(cmbCircuits.getSelectedIndex()>-1)
         {
             int numCircuits = Integer.parseInt((String) cmbCircuits.getSelectedItem());
             try
@@ -326,7 +375,11 @@ public class AlloyerForm extends JFrame
 
             pnlRelationships.setVisible(true);
             pnlNext.setVisible(true);
-            populateTuples();
+            try
+            {
+                loadRelationshipCmb();
+            }
+            catch(Err err) {}
             frame.pack();
         }
         else
@@ -335,11 +388,90 @@ public class AlloyerForm extends JFrame
         }
     }
 
-    public void populateTuples()
+    public void loadRelationshipCmb() throws Err
     {
-        //TODO
+        cmbSigRelate1.removeAllItems();
+        cmbSigRelate2.removeAllItems();
+        Object[] prefList = lstSigValuesModel.toArray();
+        for(Object o : prefList)
+        {
+            String s = (String)o;
+            String[] line = s.split("  ");
+            String sigName = line[0];
+            if(sigsDict.containsKey(sigName))
+            {
+                Sig.PrimSig sig = (Sig.PrimSig)sigsDict.get(sigName);
+                if(sig.isAbstract == null)
+                {
+                    cmbSigRelate1.addItem(sig.toString().replace("this/", ""));
+
+                }
+
+                if (sig.isAbstract != null && sig.children() != null)
+                {
+                    for (Sig.Field f : sig.getFields())
+                    {
+                        if (!f.label.equals("watts"))
+                        {
+                            //cmbSigRelate2.addItem(f.label);
+                        }
+                    }
+                    for (Sig child : sig.children())
+                    {
+                        cmbSigRelate1.addItem(child.toString().replace("this/", ""));
+                        for (Sig.Field f : child.getFields())
+                        {
+                            if (!f.label.equals("watts"))
+                            {
+                                //cmbSigRelate2.addItem(f.label);
+                            }
+                        }
+                    }
+
+                }
+            }
+
+        }
+
     }
 
+    public void loadSig2Cmb(ItemEvent ie)
+    {
+        if(ie.getStateChange() == ItemEvent.SELECTED)
+        {
+            cmbSigRelate2.removeAllItems();
+            if(cmbSigRelate1.getSelectedIndex()>-1)
+            {
+                String strSig1 = (String)cmbSigRelate1.getSelectedItem();
+                if(sigsDict.containsKey(strSig1))
+                {
+                    Sig.PrimSig sig1 = (Sig.PrimSig)sigsDict.get(strSig1);
+                    if(sig1.getFields().size() > 0)
+                    {
+                        for (Sig.Field f : sig1.getFields())
+                        {
+                            if (!f.label.equals("watts"))
+                            {
+                                cmbSigRelate2.addItem(f.label);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        Sig.PrimSig parent = sig1.parent;
+                        for (Sig.Field f : parent.getFields())
+                        {
+                            if (!f.label.equals("watts"))
+                            {
+                                cmbSigRelate2.addItem(f.label);
+                            }
+                        }
+                    }
+                }
+
+            }
+        }
+    }
     public void showNextSolution()
     {
         try
