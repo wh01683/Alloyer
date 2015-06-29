@@ -257,7 +257,7 @@
               <font name="Century Gothic" size="14" style="0"/>
               <foreground color="-16777216"/>
               <model>
-                <item value=""/>
+                <item value="any"/>
                 <item value="0"/>
                 <item value="1"/>
                 <item value="2"/>
@@ -366,6 +366,7 @@
               <font name="Century Gothic" size="14" style="0"/>
               <foreground color="-16777216"/>
               <model/>
+              <requestFocusEnabled value="false"/>
               <visible value="true"/>
             </properties>
           </component>
