@@ -91,8 +91,11 @@ public class AlloyerForm extends JFrame
         lstRelationships.setModel(new DefaultListModel());
         lstRelationshipsModel = (DefaultListModel)lstRelationships.getModel();
 
+        setBitwidth();
+
         //Bitwidth combobox
-        cmbBitwidth.addItemListener(ie->setBitwidth(ie));
+        cmbBitwidth.addItemListener(ie-> {if(ie.getStateChange() == ItemEvent.SELECTED)
+        {setBitwidth();}});
 
         //Add Preference Button
         btnAddPref.addActionListener(ae -> addToList(btnAddPref));
@@ -125,7 +128,7 @@ public class AlloyerForm extends JFrame
         btnAddRel.addActionListener(ae->addToList(btnAddRel));
 
         //Combobox for relation sig1
-        cmbRelate1.addItemListener(ie -> loadSig2Cmb(ie));
+        cmbRelate1.addItemListener(ie -> loadRelate2(ie));
 
         //Text and Graph checkboxes
         cbTextSolution.addActionListener(ae -> cbSelected(cbTextSolution, cbGraphSolution));
@@ -152,10 +155,9 @@ public class AlloyerForm extends JFrame
         frame.pack();
     }
 
-    public void setBitwidth(ItemEvent ie)
+    public void setBitwidth()
     {
-        if(ie.getStateChange() == ItemEvent.SELECTED)
-        {
+
             cmbPreferenceValue.removeAllItems();
             cmbWatts1.removeAllItems();
             cmbWatts1.removeAllItems();
@@ -169,7 +171,7 @@ public class AlloyerForm extends JFrame
                 cmbWatts1.addItem(i);
                 cmbWatts2.addItem(i);
             }
-        }
+
     }
     public void loadAvailableSigs(SafeList<Sig> sigs)
     {
@@ -211,7 +213,7 @@ public class AlloyerForm extends JFrame
             if(cmbPreferenceSignature.getSelectedIndex()>-1 && cmbPreferenceValue.getSelectedIndex() >-1)
             {
                 String sig = (String) cmbPreferenceSignature.getSelectedItem();
-                int val = Integer.parseInt((String) cmbPreferenceValue.getSelectedItem());
+                int val = (int)cmbPreferenceValue.getSelectedItem();
                 boolean boolExact = cbExact.isSelected();
                 String exact;
 
@@ -240,45 +242,43 @@ public class AlloyerForm extends JFrame
         {
             if(!txtName1.getText().equals(null) && !txtName2.getText().equals(null))
             {
-                String sig1 = (String) cmbRelate1.getSelectedItem();
-                String sig2 = (String) cmbRelate2.getSelectedItem();
-                String sig1Name = txtName1.getText();
-                String sig2Name = txtName2.getText();
-                int watts1 = Integer.parseInt((String) cmbWatts1.getSelectedItem());
-                int watts2 = Integer.parseInt((String) cmbWatts2.getSelectedItem());
+                String relate1 = (String) cmbRelate1.getSelectedItem();
+                String relate2 = (String) cmbRelate2.getSelectedItem();
+                String relateName1 = txtName1.getText();
+                String relateName2 = txtName2.getText();
+                int watts1 = (int) cmbWatts1.getSelectedItem();
+                int watts2 = (int) cmbWatts2.getSelectedItem();
                 String sig1WattsRel;
                 String sig2WattsRel;
 
-
-
-                //Capitalizes the first letter of sig2 so that it can be checked against the text version of the solution
-                sig2 = sig2.substring(0, 1) + sig2.substring(1);
+                //Capitalizes the first letter of relate2 so that it can be checked against the text version of the solution
+                relate2 = relate2.substring(0, 1) + relate2.substring(1);
 
                 if (watts1 > -1 && watts2 > -1)
                 {
 
-                    lstRelationshipsModel.addElement(sig1Name + ", " + watts1 + " watts" + " \u2192 " + sig2Name + ", " + watts2 + " watts");
+                    lstRelationshipsModel.addElement(relateName1 + ", " + watts1 + " watts" + " \u2192 " + relateName2 + ", " + watts2 + " watts");
 
-                    sig1WattsRel = sig1 + "->" + watts1;
-                    sig2WattsRel = sig2 + "->" + watts2;
+                    sig1WattsRel = relate1 + "->" + watts1;
+                    sig2WattsRel = relate2 + "->" + watts2;
 
                 }
                 else if (watts1 == -1 && watts2 > -1)
                 {
-                    lstRelationshipsModel.addElement(sig1Name + " \u2192 " + sig2Name + ", " + watts2 + " watts");
+                    lstRelationshipsModel.addElement(relateName1 + " \u2192 " + relateName2 + ", " + watts2 + " watts");
                     sig1WattsRel = null;
-                    sig2WattsRel = sig2 + "->" + watts2;
+                    sig2WattsRel = relate2 + "->" + watts2;
 
                 }
                 else if (watts1 > -1 && watts2 == -1)
                 {
-                    lstRelationshipsModel.addElement(sig1Name + ", " + watts1 + " watts" + " \u2192 " + sig2Name);
-                    sig1WattsRel = sig1 + "->" + watts1;
+                    lstRelationshipsModel.addElement(relateName1 + ", " + watts1 + " watts" + " \u2192 " + relateName2);
+                    sig1WattsRel = relate1 + "->" + watts1;
                     sig2WattsRel = null;
                 }
                 else
                 {
-                    lstRelationshipsModel.addElement(sig1Name + " \u2192 " + sig2Name);
+                    lstRelationshipsModel.addElement(relateName1 + " \u2192 " + relateName2);
                     sig1WattsRel = null;
                     sig2WattsRel = null;
                 }
@@ -415,6 +415,7 @@ public class AlloyerForm extends JFrame
             try
             {
                 loadRelationshipCmb();
+                loadRelationships();
             }
             catch(Err err) {}
             frame.pack();
@@ -427,7 +428,7 @@ public class AlloyerForm extends JFrame
 
     public void loadRelationshipCmb() throws Err
     {
-        cmbRelate1.removeAllItems();
+        /*cmbRelate1.removeAllItems();
         cmbRelate2.removeAllItems();
         Object[] prefList = lstSigValuesModel.toArray();
         for(Object o : prefList)
@@ -441,7 +442,6 @@ public class AlloyerForm extends JFrame
                 if(sig.isAbstract == null)
                 {
                     cmbRelate1.addItem(sig.toString().replace("this/", ""));
-
                 }
 
                 if (sig.isAbstract != null && sig.children() != null)
@@ -468,11 +468,24 @@ public class AlloyerForm extends JFrame
                 }
             }
 
-        }
+        }*/
 
     }
 
-    public void loadSig2Cmb(ItemEvent ie)
+
+    public void loadRelationships()
+    {
+         for(Sig s: sigsFromMeta)
+         {
+             if(s.isAbstract == null && !s.label.equals("this/Grid"))
+             {
+                 cmbRelate1.addItem(s.label.replace("this/", ""));
+             }
+         }
+
+    }
+
+    public void loadRelate2(ItemEvent ie)
     {
         if(ie.getStateChange() == ItemEvent.SELECTED)
         {
@@ -489,7 +502,17 @@ public class AlloyerForm extends JFrame
                         {
                             if (!f.label.equals("watts"))
                             {
-                                cmbRelate2.addItem(f.label);
+                                String label = f.label;
+                                String[] capitalize = label.split("_");
+                                if(capitalize.length == 2)
+                                {
+                                    label = capitalize[0].substring(0, 1).toUpperCase() + capitalize[0].substring(1);
+                                    label += "_";
+                                    label += capitalize[1].substring(0, 1).toUpperCase() + capitalize[1].substring(1);
+                                }
+
+                                cmbRelate2.addItem(label);
+
                             }
                         }
                     }
@@ -500,7 +523,16 @@ public class AlloyerForm extends JFrame
                         {
                             if (!f.label.equals("watts"))
                             {
-                                cmbRelate2.addItem(f.label);
+                                String label = f.label;
+                                label = label.substring(0, 1).toUpperCase() + label.substring(1);
+                                String[] capitalize = label.split("_");
+                                if(capitalize.length == 2)
+                                {
+                                    label += "_";
+                                    label += capitalize[1].substring(0, 1).toUpperCase() + capitalize[1].substring(1);
+                                }
+                                cmbRelate2.addItem(label);
+
                             }
                         }
                     }
@@ -509,6 +541,7 @@ public class AlloyerForm extends JFrame
             }
         }
     }
+
     public void showNextSolution()
     {
         try
