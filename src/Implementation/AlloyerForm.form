@@ -14,7 +14,9 @@
     <colspec value="left:20dlu:noGrow"/>
     <colspec value="fill:p:grow"/>
     <colspec value="left:4dlu:noGrow"/>
-    <colspec value="fill:200dlu:grow"/>
+    <colspec value="fill:100dlu:grow"/>
+    <colspec value="left:5dlu:noGrow"/>
+    <colspec value="fill:100dlu:grow"/>
     <colspec value="left:10dlu:noGrow"/>
     <colspec value="fill:max(m;0dlu):grow"/>
     <colspec value="left:20dlu:noGrow"/>
@@ -36,7 +38,7 @@
         <colspec value="left:5dlu:noGrow"/>
         <colspec value="fill:100dlu:grow"/>
         <constraints>
-          <grid row="6" column="2" row-span="1" col-span="3" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <grid row="6" column="2" row-span="1" col-span="5" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
           <forms/>
         </constraints>
         <properties>
@@ -90,7 +92,7 @@
         <rowspec value="center:p:grow"/>
         <colspec value="fill:143px:noGrow"/>
         <constraints>
-          <grid row="2" column="4" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="4" fill="2" indent="0" use-parent-layout="false"/>
+          <grid row="2" column="6" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="4" fill="2" indent="0" use-parent-layout="false"/>
           <forms top="5" left="0" bottom="0" right="0" defaultalign-horz="false"/>
         </constraints>
         <properties>
@@ -154,7 +156,7 @@
         <colspec value="left:4dlu:noGrow"/>
         <colspec value="fill:30dlu:grow"/>
         <constraints>
-          <grid row="2" column="6" row-span="3" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <grid row="2" column="8" row-span="3" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
           <forms/>
         </constraints>
         <properties>
@@ -189,7 +191,7 @@
               </component>
             </children>
           </scrollpane>
-          <component id="802a0" class="javax.swing.JComboBox" binding="cmbSigRelate1">
+          <component id="802a0" class="javax.swing.JComboBox" binding="cmbRelate1">
             <constraints>
               <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
               <forms defaultalign-vert="false"/>
@@ -200,7 +202,7 @@
               <foreground color="-16777216"/>
             </properties>
           </component>
-          <component id="e5b32" class="javax.swing.JComboBox" binding="cmbSig1Watts">
+          <component id="e5b32" class="javax.swing.JComboBox" binding="cmbWatts1">
             <constraints>
               <grid row="0" column="6" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
               <forms defaultalign-vert="false"/>
@@ -209,17 +211,7 @@
               <background color="-2302756"/>
               <font name="Century Gothic" size="14" style="0"/>
               <foreground color="-16777216"/>
-              <model>
-                <item value="any"/>
-                <item value="0"/>
-                <item value="1"/>
-                <item value="2"/>
-                <item value="3"/>
-                <item value="4"/>
-                <item value="5"/>
-                <item value="6"/>
-                <item value="7"/>
-              </model>
+              <model/>
               <selectedIndex value="-1"/>
             </properties>
           </component>
@@ -236,7 +228,7 @@
               <text value="→"/>
             </properties>
           </component>
-          <component id="ac10d" class="javax.swing.JComboBox" binding="cmbSigRelate2">
+          <component id="ac10d" class="javax.swing.JComboBox" binding="cmbRelate2">
             <constraints>
               <grid row="0" column="12" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
               <forms defaultalign-vert="false"/>
@@ -247,7 +239,7 @@
               <foreground color="-16777216"/>
             </properties>
           </component>
-          <component id="db41e" class="javax.swing.JComboBox" binding="cmbSig2Watts">
+          <component id="db41e" class="javax.swing.JComboBox" binding="cmbWatts2">
             <constraints>
               <grid row="0" column="16" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
               <forms defaultalign-vert="false"/>
@@ -256,17 +248,7 @@
               <background color="-2302756"/>
               <font name="Century Gothic" size="14" style="0"/>
               <foreground color="-16777216"/>
-              <model>
-                <item value="any"/>
-                <item value="0"/>
-                <item value="1"/>
-                <item value="2"/>
-                <item value="3"/>
-                <item value="4"/>
-                <item value="5"/>
-                <item value="6"/>
-                <item value="7"/>
-              </model>
+              <model/>
               <selectedIndex value="-1"/>
             </properties>
           </component>
@@ -346,7 +328,7 @@
         <colspec value="left:4dlu:noGrow"/>
         <colspec value="fill:30dlu:grow"/>
         <constraints>
-          <grid row="4" column="2" row-span="1" col-span="3" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <grid row="4" column="2" row-span="1" col-span="5" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
           <forms/>
         </constraints>
         <properties/>
@@ -356,7 +338,7 @@
           <color color="-5063744"/>
         </border>
         <children>
-          <component id="e0798" class="javax.swing.JComboBox" binding="cmbSigPref">
+          <component id="e0798" class="javax.swing.JComboBox" binding="cmbPreferenceSignature">
             <constraints>
               <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
               <forms defaultalign-vert="false"/>
@@ -380,7 +362,7 @@
             </properties>
             <border type="none"/>
             <children>
-              <component id="7882f" class="javax.swing.JList" binding="lstSigValues">
+              <component id="7882f" class="javax.swing.JList" binding="lstPreferences">
                 <constraints/>
                 <properties>
                   <background color="-2302756"/>
@@ -417,7 +399,7 @@
               <visible value="true"/>
             </properties>
           </component>
-          <component id="45fd" class="javax.swing.JComboBox" binding="cmbPrefVal">
+          <component id="45fd" class="javax.swing.JComboBox" binding="cmbPreferenceValue">
             <constraints>
               <grid row="0" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
               <forms defaultalign-vert="false"/>
@@ -426,16 +408,7 @@
               <background color="-2302756"/>
               <font name="Century Gothic" size="14" style="0"/>
               <foreground color="-16777216"/>
-              <model>
-                <item value="1"/>
-                <item value="2"/>
-                <item value="3"/>
-                <item value="4"/>
-                <item value="5"/>
-                <item value="6"/>
-                <item value="7"/>
-                <item value="8"/>
-              </model>
+              <model/>
               <selectedIndex value="-1"/>
             </properties>
           </component>
@@ -447,7 +420,7 @@
         <colspec value="left:4dlu:noGrow"/>
         <colspec value="fill:p:grow"/>
         <constraints>
-          <grid row="6" column="6" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <grid row="6" column="8" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
           <forms/>
         </constraints>
         <properties>
@@ -494,6 +467,43 @@
           <text value="alloyer"/>
         </properties>
       </component>
+      <grid id="76578" binding="pnlBitwidth" layout-manager="FormLayout">
+        <rowspec value="center:p:grow"/>
+        <colspec value="fill:143px:noGrow"/>
+        <constraints>
+          <grid row="2" column="4" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="4" fill="2" indent="0" use-parent-layout="false"/>
+          <forms top="5" left="0" bottom="0" right="0" defaultalign-horz="false"/>
+        </constraints>
+        <properties>
+          <foreground color="-12828863"/>
+        </properties>
+        <border type="line" title="Bitwidth">
+          <font name="Century Gothic" size="14" style="0"/>
+          <title-color color="-1181441"/>
+          <color color="-5063744"/>
+        </border>
+        <children>
+          <component id="4b3c9" class="javax.swing.JComboBox" binding="cmbBitwidth">
+            <constraints>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+              <forms defaultalign-horz="false" defaultalign-vert="false"/>
+            </constraints>
+            <properties>
+              <font name="Century Gothic" size="14" style="0"/>
+              <model>
+                <item value="2"/>
+                <item value="3"/>
+                <item value="4"/>
+                <item value="5"/>
+                <item value="6"/>
+                <item value="7"/>
+                <item value="8"/>
+              </model>
+              <selectedIndex value="-1"/>
+            </properties>
+          </component>
+        </children>
+      </grid>
     </children>
   </grid>
   <buttonGroups>
