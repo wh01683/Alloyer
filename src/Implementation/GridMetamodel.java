@@ -42,7 +42,7 @@ public class GridMetamodel {
     private static Hashtable<String, Sig> namesToSig = new Hashtable<>(20); //will store a mapping of String type names to Signature objects
     public static Hashtable<Long, String> TEST_HASH_TABLE = new Hashtable<>(5000);
     private static Module world;
-    private static String[] debugTestRelationships = {"Supply_Circuit->Wind"};
+    private static String[] debugTestRelationships = {"Supply_Circuit->Wind", "Switch->Supply_Circuit"};
     private static Hashtable<String[], A4Solution> successfulSolutions = new Hashtable<>();
 
     /**
@@ -145,10 +145,6 @@ public class GridMetamodel {
 
     public Hashtable<String[], A4Solution> getSuccessfulSolutions() {
         return successfulSolutions;
-    }
-
-    public void setSuccessfulSolutions(Hashtable<String[], A4Solution> successfulSolutions) {
-        this.successfulSolutions = successfulSolutions;
     }
 
     /**
@@ -376,6 +372,12 @@ public class GridMetamodel {
         return false;
     }
 
+    /**
+     * Prints prints a hashtable of String solutions mapped to Long values. These strings can be the entire A4Solution to
+     * String or just desired relationships.
+     * @param num number to append to the end of the file name. format: solutions+num+.txt
+     * @param solutions Hashtable to print to file.
+     */
     private static void printSolToFile(int num, Hashtable<Long, String> solutions){
         try {
             PrintWriter writer = new PrintWriter(new File(System.getProperty("user.dir") + "/solutions" + num + ".txt"));
@@ -392,6 +394,13 @@ public class GridMetamodel {
         }
     }
 
+
+    /**
+     * Returns String representation of a specific solution's evaluated fields on separate lines. These are essentially
+     * the "have" relationships of the solution, denoted in the A4Solution.toString() as " :> "
+     * @param solution Solution to get the relationships from
+     * @return returns a String representation of all relationships in the given solution.
+     */
     public static String getAllSigInfo(A4Solution solution){
         StringBuilder info = new StringBuilder();
         for(Sig s : solution.getAllReachableSigs()){
@@ -403,6 +412,18 @@ public class GridMetamodel {
         return info.toString();
     }
 
+    /**
+     * Finds a solution matching the given String array of relationships by iterating through the solutions, storing
+     * the new solution's relationships in a Hashset, and checking the new Hashset to see if it contains all the String
+     * relationships in the array. If param useSpecificNames is false, the method will ignore labels such as Wind$0,
+     * focusing only on "Wind". If specific label matching is required, useSpecificNames must be true.
+     * @param solution Initial solution to iterate through
+     * @param relationships String array of relationships to check for, in the format, String[1] = {Wind$0->Load$2} and etc.
+     * @param useSpecificNames If false, method will ignore specific labels (like Wind$0->Load$2 and will instead look for Wind->Load)
+     * @param iterationCap Limit on number of iterations to cycle through before giving up. Default is 85000, as Java runs
+     *                     out of memory at 85500 due to Tuple set cloning.
+     * @return returns the Solution containing the relationships requested.
+     */
     public static A4Solution findSolution(A4Solution solution, String[] relationships, boolean useSpecificNames, int iterationCap) {
 
         Long l = new Long(0);
@@ -479,6 +500,12 @@ public class GridMetamodel {
         }
     }
 
+    /**
+     * Private utility function to get rid of the $n label attachments on the String relationship. Used by the findSolution
+     * method if usesSpecificNames is set to false.
+     * @param labeledRelationship Single string representation of a relationship, or one index of the Relationships array. (Wind$0->Load$2)
+     * @return returns the trimmed String (Wind->Load)
+     */
     private static String ignoreLabels(String labeledRelationship){
 
         String[] pieces = labeledRelationship.split("[$\\d]");
@@ -492,92 +519,4 @@ public class GridMetamodel {
 
 
     }
-
-    //    public static boolean checkSpecificConstraints(A4Solution solution){
-//
-//        boolean pass = true;
-//
-//        HashMap<String, OurSig> namesToInstanceOurSigs = parseSolution(solution);
-//
-//        Iterator<OurSig> sigsConstrainedEnumeration = namesToConstrainedOurSigs.values().iterator();
-//
-//        while(sigsConstrainedEnumeration.hasNext() && pass){
-//            OurSig toCompareConstrained = sigsConstrainedEnumeration.next();
-//
-//            pass = namesToInstanceOurSigs.containsKey(toCompareConstrained.getLabel()) && namesToInstanceOurSigs.get(toCompareConstrained.getLabel()).isEqual(toCompareConstrained);
-//
-//        }
-//
-//        return pass;
-//
-//    }
-
-//    private static HashMap<String, OurSig> parseSolution(A4Solution solution){
-//
-//        int numberOfRelationships = 0;
-//        int numberOfSigInstances = 0;
-//        int numberOfSigTypes = 0;
-//        int numberOfConstrainedSigTypes = typesOfConstrainedSigs.size();
-//
-//        Long startTime = System.currentTimeMillis();
-//        HashMap<String, OurSig> namesToInstanceOurSigs = new HashMap<>();
-//        //ArrayList<String> linesOfSolution = new ArrayList<>(Arrays.asList(testSolution.split("\n")));
-//        ArrayList<String> linesOfSolution = new ArrayList<>(Arrays.asList(solution.toString().split("\n")));
-//
-//        ArrayList<String> hasRelationshipAndConstrained = new ArrayList<>();
-//
-//        //for every line of a solution instance, check for the sequence :> denoting a "has" relationship
-//        for(String s : linesOfSolution){
-//            if(s.contains("<:")){
-//                numberOfSigTypes++;
-//                for(String l : typesOfConstrainedSigs){
-//                    //now check the names of the constrained sigs. if the line is a "has" relationship for a constrained sig,
-//                    //put it aside in a special arraylist
-//                    if(s.contains(l+"<:")){
-//                        hasRelationshipAndConstrained.add(s);
-//                    }
-//                }
-//            }
-//        }
-//        //now for each of these lines, we're going to grab the integer values associated with the signature. in our case,
-//        //these are wattages
-//        for(String s : hasRelationshipAndConstrained){
-//            //if the line specifies wattage
-//            if(s.contains("watts")) {
-//
-//                ArrayList<String[]> specificSigsToWatts = new ArrayList<>();
-//
-//                //get the array of watt relationships to establish the values
-//                specificSigsToWatts.add(s.split("[<:{\b\\->,?\b}]"));
-//
-//                for (String[] p : specificSigsToWatts) {
-//                    String type = p[0].trim();
-//                    for (int i = 3; i < p.length - 2; i+= 3) {
-//                        OurSig instanceSig = new OurSig(type, p[i].trim().replaceAll("$\\d", ""), p[i].trim(), (p[i + 2].trim().equals(""))? 0 : Integer.parseInt(p[i + 2].trim()));
-//                        numberOfSigInstances++;
-//                        namesToInstanceOurSigs.putIfAbsent(instanceSig.getLabel(), instanceSig);
-//                    }
-//                }
-//            }else{
-//                //otherwise, the line does not contain a wattage relationship
-//                //         this/Load<:supply={Load$0->Wind$1, Load$1->Wind$1, Load$2->Wind$1}
-//                //TODO: handle relationships later
-//                String[] relationships = s.split("[<:{\b\\->,?}]");
-//                for(String relation : relationships){
-//                    numberOfRelationships++;
-//                }
-//            }
-//        }
-//
-//        StringBuilder solInfoString = new StringBuilder();
-//        Long endTime = System.currentTimeMillis();
-//        solInfoString.append((endTime - startTime) + "\t" + numberOfSigTypes + "\t" + numberOfSigInstances + "\t" + numberOfRelationships + "\t" + numberOfConstrainedSigTypes + "\n");
-//        solInfo.put(numberOfSolutions, solInfoString.toString());
-//        numberOfSolutions++;
-//        return namesToInstanceOurSigs;
-//    }
-
-
-
-
 }
