@@ -53,6 +53,7 @@ public class AlloyerForm extends JFrame
     private JTextField txtName2;
     private JPanel pnlBitwidth;
     private JComboBox cmbBitwidth;
+    private JButton viewModelButton;
     private JScrollPane scrlSolution;
 
     DefaultListModel lstSigValuesModel;
@@ -65,6 +66,9 @@ public class AlloyerForm extends JFrame
     Command cmd;
     static A4Solution solution;
     static VizGUI currentModelForm;
+    static Hashtable<String, Integer> occurrences = new Hashtable<>();
+    static Hashtable<String, String> customNames = new Hashtable<>();
+    static ArrayList<String> relationships = new ArrayList<>();
 
     public AlloyerForm()
     {
@@ -240,61 +244,41 @@ public class AlloyerForm extends JFrame
 
         else if(button == btnAddRel)
         {
-            if(!txtName1.getText().equals(null) && !txtName2.getText().equals(null))
-            {
-                String relate1 = (String) cmbRelate1.getSelectedItem();
-                String relate2 = (String) cmbRelate2.getSelectedItem();
-                String relateName1 = txtName1.getText();
-                String relateName2 = txtName2.getText();
-                int watts1 = (int) cmbWatts1.getSelectedItem();
-                int watts2 = (int) cmbWatts2.getSelectedItem();
-                String sig1WattsRel;
-                String sig2WattsRel;
+            String relate1 = (String) cmbRelate1.getSelectedItem();
+            String relate2 = (String) cmbRelate2.getSelectedItem();
+            String relateName1 = txtName1.getText();
+            String relateName2 = txtName2.getText();
+            int watts1 = (int) cmbWatts1.getSelectedItem();
+            int watts2 = (int) cmbWatts2.getSelectedItem();
+            String wattRelate1;
+            String wattRelate2;
 
-                //Capitalizes the first letter of relate2 so that it can be checked against the text version of the solution
-                relate2 = relate2.substring(0, 1) + relate2.substring(1);
+            String defaultName1 = relate1+"$"+ occurrences.get(relate1);
+            String defaultName2 = relate2+"$"+ occurrences.get(relate2);
+            int def1 = occurrences.get(relate1);
+            int def2 = occurrences.get(relate2);
+            def1++;
+            def2++;
 
-                if (watts1 > -1 && watts2 > -1)
-                {
+            String entry = relate1 + "   " + (!relateName1.equals("") ? relateName1 : defaultName1) + ",  " + watts1 + " watts" + "   \u2192   " +
+                           relate2 + "   " + (!relateName2.equals("") ? relateName2 : defaultName2) + ",  " + watts2 + " watts";
 
-                    lstRelationshipsModel.addElement(relateName1 + ", " + watts1 + " watts" + " \u2192 " + relateName2 + ", " + watts2 + " watts");
+            relationships.add(defaultName1 + "->" + defaultName2);
+            lstRelationshipsModel.addElement(entry);
 
-                    sig1WattsRel = relate1 + "->" + watts1;
-                    sig2WattsRel = relate2 + "->" + watts2;
+            customNames.put(defaultName1,(!relateName1.equals("") ? relateName1 : defaultName1));
+            customNames.put(defaultName2,(!relateName2.equals("") ? relateName2 : defaultName2));
+            occurrences.remove(relate1);
+            occurrences.remove(relate2);
+            occurrences.put(relate1, def1);
+            occurrences.put(relate2, def2);
 
-                }
-                else if (watts1 == -1 && watts2 > -1)
-                {
-                    lstRelationshipsModel.addElement(relateName1 + " \u2192 " + relateName2 + ", " + watts2 + " watts");
-                    sig1WattsRel = null;
-                    sig2WattsRel = relate2 + "->" + watts2;
-
-                }
-                else if (watts1 > -1 && watts2 == -1)
-                {
-                    lstRelationshipsModel.addElement(relateName1 + ", " + watts1 + " watts" + " \u2192 " + relateName2);
-                    sig1WattsRel = relate1 + "->" + watts1;
-                    sig2WattsRel = null;
-                }
-                else
-                {
-                    lstRelationshipsModel.addElement(relateName1 + " \u2192 " + relateName2);
-                    sig1WattsRel = null;
-                    sig2WattsRel = null;
-                }
-
-                cmbRelate1.setSelectedIndex(-1);
-                cmbRelate2.setSelectedIndex(-1);
-                txtName1.setText("");
-                txtName2.setText("");
-                cmbWatts1.setSelectedIndex(-1);
-                cmbWatts2.setSelectedIndex(-1);
-            }
-            else
-            {
-                JOptionPane.showMessageDialog(frame, "Please enter a name for both members of the relationship being defined.");
-            }
-
+            cmbRelate1.setSelectedIndex(-1);
+            cmbRelate2.setSelectedIndex(-1);
+            txtName1.setText("");
+            txtName2.setText("");
+            cmbWatts1.setSelectedIndex(-1);
+            cmbWatts2.setSelectedIndex(-1);
         }
     }
 
@@ -410,14 +394,10 @@ public class AlloyerForm extends JFrame
                 err.printStackTrace();
             }
 
+            loadRelationships();
+
             pnlRelationships.setVisible(true);
             pnlNext.setVisible(true);
-            try
-            {
-                loadRelationshipCmb();
-                loadRelationships();
-            }
-            catch(Err err) {}
             frame.pack();
         }
         else
@@ -426,53 +406,6 @@ public class AlloyerForm extends JFrame
         }
     }
 
-    public void loadRelationshipCmb() throws Err
-    {
-        /*cmbRelate1.removeAllItems();
-        cmbRelate2.removeAllItems();
-        Object[] prefList = lstSigValuesModel.toArray();
-        for(Object o : prefList)
-        {
-            String s = (String)o;
-            String[] line = s.split("  ");
-            String sigName = line[0];
-            if(sigsDict.containsKey(sigName))
-            {
-                Sig.PrimSig sig = (Sig.PrimSig)sigsDict.get(sigName);
-                if(sig.isAbstract == null)
-                {
-                    cmbRelate1.addItem(sig.toString().replace("this/", ""));
-                }
-
-                if (sig.isAbstract != null && sig.children() != null)
-                {
-                    for (Sig.Field f : sig.getFields())
-                    {
-                        if (!f.label.equals("watts"))
-                        {
-                            //cmbRelate2.addItem(f.label);
-                        }
-                    }
-                    for (Sig child : sig.children())
-                    {
-                        cmbRelate1.addItem(child.toString().replace("this/", ""));
-                        for (Sig.Field f : child.getFields())
-                        {
-                            if (!f.label.equals("watts"))
-                            {
-                                //cmbRelate2.addItem(f.label);
-                            }
-                        }
-                    }
-
-                }
-            }
-
-        }*/
-
-    }
-
-
     public void loadRelationships()
     {
          for(Sig s: sigsFromMeta)
@@ -480,6 +413,7 @@ public class AlloyerForm extends JFrame
              if(s.isAbstract == null && !s.label.equals("this/Grid"))
              {
                  cmbRelate1.addItem(s.label.replace("this/", ""));
+                 occurrences.put(s.label.replace("this/", ""), 0);
              }
          }
 
@@ -503,6 +437,7 @@ public class AlloyerForm extends JFrame
                             if (!f.label.equals("watts"))
                             {
                                 String label = f.label;
+                                label = label.substring(0, 1).toUpperCase() + label.substring(1);
                                 String[] capitalize = label.split("_");
                                 if(capitalize.length == 2)
                                 {
@@ -512,7 +447,6 @@ public class AlloyerForm extends JFrame
                                 }
 
                                 cmbRelate2.addItem(label);
-
                             }
                         }
                     }
@@ -548,7 +482,7 @@ public class AlloyerForm extends JFrame
         {
             if(cbTextSolution.isSelected() && !cbGraphSolution.isSelected())
             {
-                solution = GridMetamodel.getNext(solution);
+                solution = GridMetamodel.findSolution(solution, (String[])relationships.toArray(),true, 0);
                 System.out.println(solution.toString());
             }
             else if(!cbTextSolution.isSelected() && cbGraphSolution.isSelected())
