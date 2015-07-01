@@ -280,8 +280,7 @@ public class AlloyerForm extends JFrame
 
                     lstRelationshipsModel.addElement(entry);
 
-                    watts.put(defaultName1, watts1);
-                    watts.put(defaultName2, watts2);
+
                     mappedRelations.put(defaultName1, defaultName2);
 
                     //incrementing values here
@@ -321,22 +320,6 @@ public class AlloyerForm extends JFrame
         {
             String selectedLine = lstRelationships.getSelectedValue().toString();
             String[] lines = selectedLine.split("→");
-
-            String line1 = lines[0];
-            String[] line1Arr = line1.split("[\\s|,]");
-            String relate1 = line1Arr[0];
-            String custom1 = line1Arr[1];
-            String watts1 = line1Arr[2];
-
-            String line2 = lines[1];
-            String[] line2Arr = line2.split("[\\s|,]");
-            String relate2 = line2Arr[0];
-            String custom2 = line2Arr[1];
-            String watts2 = line2Arr[2];
-
-
-
-
 
         }
 
