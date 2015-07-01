@@ -431,7 +431,7 @@
           <color color="-5063744"/>
         </border>
         <children>
-          <component id="43898" class="javax.swing.JButton" binding="btnNext">
+          <component id="43898" class="javax.swing.JButton" binding="btnFindMatches_Next">
             <constraints>
               <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
               <forms top="0" left="0" bottom="0" right="5" defaultalign-horz="false" defaultalign-vert="false"/>
@@ -442,7 +442,7 @@
               <visible value="true"/>
             </properties>
           </component>
-          <component id="8bb7" class="javax.swing.JButton" binding="viewModelButton" default-binding="true">
+          <component id="8bb7" class="javax.swing.JButton" binding="btnViewButton">
             <constraints>
               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
               <forms top="0" left="0" bottom="0" right="5" defaultalign-horz="false" defaultalign-vert="false"/>

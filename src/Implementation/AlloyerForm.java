@@ -29,7 +29,7 @@ public class AlloyerForm extends JFrame
     private JCheckBox cbExact;
     private JComboBox cmbCircuits;
     private JPanel mainPanel;
-    private JButton btnNext;
+    private JButton btnFindMatches_Next;
     private JCheckBox cbTextSolution;
     private JCheckBox cbGraphSolution;
     private JScrollPane scrlList;
@@ -53,7 +53,7 @@ public class AlloyerForm extends JFrame
     private JTextField txtName2;
     private JPanel pnlBitwidth;
     private JComboBox cmbBitwidth;
-    private JButton viewModelButton;
+    private JButton btnViewButton;
     private JScrollPane scrlSolution;
 
     DefaultListModel lstSigValuesModel;
@@ -142,7 +142,7 @@ public class AlloyerForm extends JFrame
         btnRun.addActionListener(ae -> runCommand());
 
        //Next Button
-        btnNext.addActionListener(ae -> showNextSolution());
+        btnFindMatches_Next.addActionListener(ae -> showNextSolution());
 
         //SigInfo Button
         btnFindMatches.addActionListener(ae -> findMatches());
