@@ -9,9 +9,7 @@ import edu.mit.csail.sdg.alloy4viz.VizGUI;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ItemEvent;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.event.*;
 import java.util.*;
 import java.util.List;
 
@@ -55,6 +53,7 @@ public class AlloyerForm extends JFrame
     private JComboBox cmbBitwidth;
     private JButton btnViewButton;
     private JScrollPane scrlSolution;
+    private boolean hasBeenPressed;
 
     DefaultListModel lstSigValuesModel;
     DefaultListModel lstRelationshipsModel;
@@ -69,6 +68,7 @@ public class AlloyerForm extends JFrame
     static Hashtable<String, Integer> occurrences = new Hashtable<>();
     static Hashtable<String, String> customNames = new Hashtable<>();
     static ArrayList<String> relationships = new ArrayList<>();
+    static String[] relationshipArr;
 
     public AlloyerForm()
     {
@@ -98,35 +98,38 @@ public class AlloyerForm extends JFrame
         setBitwidth();
 
         //Bitwidth combobox
-        cmbBitwidth.addItemListener(ie-> {if(ie.getStateChange() == ItemEvent.SELECTED)
-        {setBitwidth();}});
+        cmbBitwidth.addItemListener(ie -> {
+            if (ie.getStateChange() == ItemEvent.SELECTED) {
+                setBitwidth();
+            }
+        });
 
         //Add Preference Button
         btnAddPref.addActionListener(ae -> addToList(btnAddPref));
 
         //Delete Key
-        lstPreferences.addKeyListener(new KeyListener()
-        {
+        lstPreferences.addKeyListener(new KeyListener() {
             @Override
-            public void keyPressed(KeyEvent e)
-            {
+            public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_DELETE) deleteFromList();
             }
 
             //other KeyEvents
             @Override
-            public void keyTyped(KeyEvent e)
-            {
+            public void keyTyped(KeyEvent e) {
 
             }
 
             @Override
-            public void keyReleased(KeyEvent e)
-            {
+            public void keyReleased(KeyEvent e) {
 
             }
         });
 
+
+        btnViewButton.addActionListener(ae->{
+                GridMetamodel.visualize(solution);
+            });
 
         //Add Relationship Button
         btnAddRel.addActionListener(ae->addToList(btnAddRel));
@@ -142,10 +145,17 @@ public class AlloyerForm extends JFrame
         btnRun.addActionListener(ae -> runCommand());
 
        //Next Button
-        btnFindMatches_Next.addActionListener(ae -> showNextSolution());
+        btnFindMatches_Next.addActionListener(ae ->{
+                    findMatches(hasBeenPressed);
+            if(!hasBeenPressed) {
+                btnFindMatches_Next.setText("Find Next Match");
+                hasBeenPressed = true;
+            }
 
-        //SigInfo Button
-        btnFindMatches.addActionListener(ae -> findMatches());
+    }
+        );
+
+
     }
 
     public static void main(String[] args)
@@ -503,14 +513,37 @@ public class AlloyerForm extends JFrame
         }
     }
 
-    public void findMatches()
+    public void findMatches(boolean hasBeenPressed)
     {
-        solution = GridMetamodel.findSolution(solution, (String[]) relationships.toArray(), true, 0);
-        if(cbTextSolution.isSelected()){
-            System.out.println(solution.toString());
-        }if(cbGraphSolution.isSelected()){
-        GridMetamodel.visualize(solution);
-    }
+
+        if(relationshipArr == null){
+            relationshipArr = new String[relationships.size()];
+            int i = 0;
+            for(String s : relationships){
+                relationshipArr[i]=s;
+                i++;
+            }
+        }
+
+
+
+        if(!hasBeenPressed) {
+            solution = GridMetamodel.findSolution(solution, relationshipArr, true, 0);
+            if (cbTextSolution.isSelected()) {
+                System.out.println(solution.toString());
+            }
+            if (cbGraphSolution.isSelected()) {
+                GridMetamodel.visualize(solution);
+            }
+        }else{
+            solution = GridMetamodel.findSolution(GridMetamodel.getNext(solution), relationshipArr, true, 0);
+            if (cbTextSolution.isSelected()) {
+                System.out.println(solution.toString());
+            }
+            if (cbGraphSolution.isSelected()) {
+                GridMetamodel.visualize(solution);
+            }
+        }
     }
 
 }
