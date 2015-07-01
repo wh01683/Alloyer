@@ -304,9 +304,7 @@ public class AlloyerForm extends JFrame
             updateRelationCombos();
             lstRelationshipsModel.remove(lstRelationships.getSelectedIndex());
         }
-
         //TODO: make sure all possibilities covered
-
     }
 
     public void updateRelationCombos()
@@ -482,7 +480,7 @@ public class AlloyerForm extends JFrame
         {
             if(cbTextSolution.isSelected() && !cbGraphSolution.isSelected())
             {
-                solution = GridMetamodel.findSolution(solution, (String[])relationships.toArray(),true, 0);
+                solution = GridMetamodel.findSolution(solution, (String[]) relationships.toArray(), true, 0);
                 System.out.println(solution.toString());
             }
             else if(!cbTextSolution.isSelected() && cbGraphSolution.isSelected())
@@ -507,7 +505,12 @@ public class AlloyerForm extends JFrame
 
     public void findMatches()
     {
-
+        solution = GridMetamodel.findSolution(solution, (String[]) relationships.toArray(), true, 0);
+        if(cbTextSolution.isSelected()){
+            System.out.println(solution.toString());
+        }if(cbGraphSolution.isSelected()){
+        GridMetamodel.visualize(solution);
+    }
     }
 
 }
