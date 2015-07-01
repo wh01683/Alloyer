@@ -55,7 +55,7 @@ public class AlloyerForm extends JFrame
     private JScrollPane scrlSolution;
     private boolean hasBeenPressed;
 
-    DefaultListModel lstSigValuesModel;
+    DefaultListModel lstPreferencesModel;
     DefaultListModel lstRelationshipsModel;
     int bitwidth;
     int maxInts;
@@ -66,9 +66,12 @@ public class AlloyerForm extends JFrame
     static A4Solution solution;
     static VizGUI currentModelForm;
     static Hashtable<String, Integer> occurrences = new Hashtable<>();
-    static Hashtable<String, String> customNames = new Hashtable<>();
+    static HashSet<String> customNames = new HashSet<>();
+    static Hashtable<String, String> watts = new Hashtable<>();
+    static Hashtable<String, String> mappedRelations = new Hashtable<>();
     static ArrayList<String> relationships = new ArrayList<>();
     static String[] relationshipArr;
+
 
     public AlloyerForm()
     {
@@ -87,15 +90,21 @@ public class AlloyerForm extends JFrame
         sigsFromMeta = GridMetamodel.getSigs();
         sigsDict = new Hashtable<>();
         availableSigs = new ArrayList<>();
-
         loadAvailableSigs(sigsFromMeta);
-
         lstPreferences.setModel(new DefaultListModel());
-        lstSigValuesModel = (DefaultListModel) lstPreferences.getModel();
+        lstPreferencesModel = (DefaultListModel) lstPreferences.getModel();
         lstRelationships.setModel(new DefaultListModel());
         lstRelationshipsModel = (DefaultListModel)lstRelationships.getModel();
 
-        setBitwidth();
+        cmbBitwidth.setSelectedIndex(-1);
+        cmbCircuits.setSelectedIndex(-1);
+        cmbPreferenceSignature.setSelectedIndex(-1);
+        cmbPreferenceValue.setSelectedIndex(-1);
+        cmbRelate1.setSelectedIndex(-1);
+        cmbRelate2.setSelectedIndex(-1);
+        cmbWatts1.setSelectedIndex(-1);
+        cmbWatts2.setSelectedIndex(-1);
+
 
         //Bitwidth combobox
         cmbBitwidth.addItemListener(ie -> {
@@ -127,9 +136,7 @@ public class AlloyerForm extends JFrame
         });
 
 
-        btnViewButton.addActionListener(ae->{
-                GridMetamodel.visualize(solution);
-            });
+        btnViewButton.addActionListener(ae->GridMetamodel.visualize(solution));
 
         //Add Relationship Button
         btnAddRel.addActionListener(ae->addToList(btnAddRel));
@@ -137,25 +144,19 @@ public class AlloyerForm extends JFrame
         //Combobox for relation sig1
         cmbRelate1.addItemListener(ie -> loadRelate2(ie));
 
-        //Text and Graph checkboxes
-        cbTextSolution.addActionListener(ae -> cbSelected(cbTextSolution, cbGraphSolution));
-        cbGraphSolution.addActionListener(ae -> cbSelected(cbGraphSolution, cbGraphSolution));
-
         //Run Button
         btnRun.addActionListener(ae -> runCommand());
 
        //Next Button
-        btnFindMatches_Next.addActionListener(ae ->{
-                    findMatches(hasBeenPressed);
-            if(!hasBeenPressed) {
+        btnFindMatches_Next.addActionListener(ae ->
+        {
+            findMatches(hasBeenPressed);
+            if (!hasBeenPressed)
+            {
                 btnFindMatches_Next.setText("Find Next Match");
                 hasBeenPressed = true;
             }
-
-    }
-        );
-
-
+        });
     }
 
     public static void main(String[] args)
@@ -164,17 +165,15 @@ public class AlloyerForm extends JFrame
         frame = new JFrame("Alloyer");
         frame.setContentPane(new AlloyerForm().getContentPane());
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
         frame.setVisible(true);
         frame.pack();
     }
 
     public void setBitwidth()
     {
-
             cmbPreferenceValue.removeAllItems();
             cmbWatts1.removeAllItems();
-            cmbWatts1.removeAllItems();
+            cmbWatts2.removeAllItems();
 
             bitwidth = Integer.parseInt((String) cmbBitwidth.getSelectedItem());
             maxInts = (int) (Math.pow(2, bitwidth) / 2) - 1;
@@ -185,8 +184,8 @@ public class AlloyerForm extends JFrame
                 cmbWatts1.addItem(i);
                 cmbWatts2.addItem(i);
             }
-
     }
+
     public void loadAvailableSigs(SafeList<Sig> sigs)
     {
         String sigLabel;
@@ -203,8 +202,6 @@ public class AlloyerForm extends JFrame
                 }
             }
         }
-        cmbPreferenceSignature.setSelectedIndex(-1);
-
     }
 
     public void updateSigCombo(List<String> sigs)
@@ -217,7 +214,6 @@ public class AlloyerForm extends JFrame
                 cmbPreferenceSignature.addItem(s);
             }
         }
-        cmbPreferenceSignature.setSelectedIndex(-1);
     }
 
     public void addToList(JButton button)
@@ -235,7 +231,7 @@ public class AlloyerForm extends JFrame
                 else exact = "";
 
                 int removeIndex = -1;
-                lstSigValuesModel.addElement(sig + "  " + val + "  " + exact);
+                lstPreferencesModel.addElement(sig + "  " + val + "  " + exact);
 
                 int i = 0;
                 for (String s : availableSigs)
@@ -248,79 +244,104 @@ public class AlloyerForm extends JFrame
             else JOptionPane.showMessageDialog(mainPanel, "Please choose a signature and value");
 
             updateSigCombo(availableSigs);
-            cmbPreferenceValue.setSelectedIndex(-1);
-            //cbExact.setSelected(false);
+
         }
 
         else if(button == btnAddRel)
         {
-            String relate1 = (String) cmbRelate1.getSelectedItem();
-            String relate2 = (String) cmbRelate2.getSelectedItem();
-            String relateName1 = txtName1.getText();
-            String relateName2 = txtName2.getText();
-            int watts1 = (int) cmbWatts1.getSelectedItem();
-            int watts2 = (int) cmbWatts2.getSelectedItem();
-            String wattRelate1;
-            String wattRelate2;
+            if(!txtName1.getText().equals("") && !txtName2.getText().equals("") && cmbRelate1.getSelectedIndex()>-1 && cmbRelate2.getSelectedIndex()>-1)
+            {
+                String customName1 = txtName1.getText();
+                String customName2 = txtName2.getText();
 
-            String defaultName1 = relate1+"$"+ occurrences.get(relate1);
-            String defaultName2 = relate2+"$"+ occurrences.get(relate2);
-            int def1 = occurrences.get(relate1);
-            int def2 = occurrences.get(relate2);
-            def1++;
-            def2++;
+                if(!customNames.contains(customName1) && !customNames.contains(customName2))
+                {
+                    customNames.add(customName1);
+                    customNames.add(customName2);
 
-            String entry = relate1 + "   " + (!relateName1.equals("") ? relateName1 : defaultName1) + ",  " + watts1 + " watts" + "   \u2192   " +
-                           relate2 + "   " + (!relateName2.equals("") ? relateName2 : defaultName2) + ",  " + watts2 + " watts";
+                    String relate1 = (String) cmbRelate1.getSelectedItem();
+                    String relate2 = (String) cmbRelate2.getSelectedItem();
 
-            relationships.add(defaultName1 + "->" + defaultName2);
-            lstRelationshipsModel.addElement(entry);
+                    //get occurences of sig name to put into default name.
+                    int def1 = occurrences.get(relate1);
+                    int def2 = occurrences.get(relate2);
 
-            customNames.put(defaultName1,(!relateName1.equals("") ? relateName1 : defaultName1));
-            customNames.put(defaultName2,(!relateName2.equals("") ? relateName2 : defaultName2));
-            occurrences.remove(relate1);
-            occurrences.remove(relate2);
-            occurrences.put(relate1, def1);
-            occurrences.put(relate2, def2);
+                    String defaultName1 = relate1 + "$" + def1;
+                    String defaultName2 = relate2 + "$" + def2;
 
-            cmbRelate1.setSelectedIndex(-1);
-            cmbRelate2.setSelectedIndex(-1);
-            txtName1.setText("");
-            txtName2.setText("");
-            cmbWatts1.setSelectedIndex(-1);
-            cmbWatts2.setSelectedIndex(-1);
+                    def1++;
+                    def2++;
+
+                    String watts1 = cmbWatts1.getSelectedItem() + "";
+                    String watts2 = cmbWatts2.getSelectedItem() + "";
+
+                    String entry = relate1 + "   " + customName1 + ",  " + watts1 + " watts" + "   \u2192   " +
+                                   relate2 + "   " + customName2 + ",  " + watts2 + " watts";
+
+                    lstRelationshipsModel.addElement(entry);
+
+                    watts.put(defaultName1, watts1);
+                    watts.put(defaultName2, watts2);
+                    mappedRelations.put(defaultName1, defaultName2);
+
+                    //incrementing values here
+                    occurrences.remove(relate1);
+                    occurrences.remove(relate2);
+                    occurrences.put(relate1, def1);
+                    occurrences.put(relate2, def2);
+
+                    txtName1.setText("");
+                    txtName2.setText("");
+                }
+                else
+                {
+                    JOptionPane.showMessageDialog(frame, "All member names must be unique.");
+                }
+            }
+            else
+            {
+                JOptionPane.showMessageDialog(frame, "Please choose types and provide a name for each member of the relationship.");
+            }
         }
     }
 
     public void deleteFromList()
     {
-        String selectedLine;
-        String[] line;
 
-        if(lstPreferences.getSelectedValue()!= null && lstRelationships.getSelectedValue() == null)
+        if(frame.getFocusOwner() == lstPreferences)
         {
-            selectedLine = lstPreferences.getSelectedValue().toString();
-            line = selectedLine.split("  ");
+            String selectedLine = lstPreferences.getSelectedValue().toString();
+            String[] line = selectedLine.split("  ");
             String selectedSig = line[0];
             availableSigs.add(selectedSig);
             updateSigCombo(availableSigs);
-            lstSigValuesModel.remove(lstPreferences.getSelectedIndex());
+            lstPreferencesModel.remove(lstPreferences.getSelectedIndex());
         }
-        else if(lstRelationships.getSelectedValue() != null && lstPreferences.getSelectedValue()==null)
+        else if(frame.getFocusOwner() == lstRelationships)
         {
-            selectedLine = lstRelationships.getSelectedValue().toString();
-            line = selectedLine.split(" ");
-            // /TODO: Parse Line
-            updateRelationCombos();
-            lstRelationshipsModel.remove(lstRelationships.getSelectedIndex());
+            String selectedLine = lstRelationships.getSelectedValue().toString();
+            String[] lines = selectedLine.split("→");
+
+            String line1 = lines[0];
+            String[] line1Arr = line1.split("[\\s|,]");
+            String relate1 = line1Arr[0];
+            String custom1 = line1Arr[1];
+            String watts1 = line1Arr[2];
+
+            String line2 = lines[1];
+            String[] line2Arr = line2.split("[\\s|,]");
+            String relate2 = line2Arr[0];
+            String custom2 = line2Arr[1];
+            String watts2 = line2Arr[2];
+
+
+
+
+
         }
-        //TODO: make sure all possibilities covered
+
     }
 
-    public void updateRelationCombos()
-    {
-        //TODO
-    }
 
 
     public void cbSelected(JCheckBox cb, JCheckBox partner)
@@ -333,84 +354,91 @@ public class AlloyerForm extends JFrame
 
     public void runCommand()
     {
-        if(cmbCircuits.getSelectedIndex()>-1)
+        if(cmbBitwidth.getSelectedIndex()>-1)
         {
-            int numCircuits = Integer.parseInt((String) cmbCircuits.getSelectedItem());
-            try
+            if (cmbCircuits.getSelectedIndex() > -1)
             {
-                cmd = GridMetamodel.makeCommand(numCircuits);
-            }
-            catch (Err err)
-            {
-                err.printStackTrace();
-            }
-            if (!lstSigValuesModel.isEmpty())
-            {
-                String[] listContents;
-                String listModel = lstSigValuesModel.toString();
-                listModel = listModel.replace("[", "");
-                listModel = listModel.replace("]", "");
-                listContents = listModel.split(", ");
+                //Number of circuits from combobox
+                int numCircuits = Integer.parseInt((String) cmbCircuits.getSelectedItem());
 
-                boolean boolExact = false;
-
-                for (String s : listContents)
+                //Make base command using number of circuits and bitwidth
+                try
                 {
-                    String[] current = s.split("  ");
-                    String sigLabel = current[0];
-                    String amt = current[1];
+                    cmd = GridMetamodel.makeCommand(numCircuits, bitwidth);
+                }
+                catch (Err err)
+                {
+                    err.printStackTrace();
+                }
 
-                    if (current.length == 3)
+                //If preferences list is not empty, parse the contents to get information that will be
+                //used to modify the base command
+                if (!lstPreferencesModel.isEmpty())
+                {
+                    String[] listContents;
+                    String listModel = lstPreferencesModel.toString();
+                    listModel = listModel.replace("[", "");
+                    listModel = listModel.replace("]", "");
+                    listContents = listModel.split(", ");
+
+                    boolean boolExact = false;
+
+                    for (String s : listContents)
                     {
-                        boolExact = true;
-                    }
-                    if (sigsDict.containsKey(sigLabel))
-                    {
-                        Sig sig = sigsDict.get(sigLabel);
-                        int amount = Integer.parseInt(amt);
-                        try
+                        String[] current = s.split("  ");
+                        String sigLabel = current[0];
+                        String amt = current[1];
+
+                        if (current.length == 3)
                         {
-                            cmd = GridMetamodel.changeCommand(cmd, sig, boolExact, amount);
+                            boolExact = true;
                         }
-                        catch (Err err)
+                        if (sigsDict.containsKey(sigLabel))
                         {
-                            err.printStackTrace();
+                            Sig sig = sigsDict.get(sigLabel);
+                            int amount = Integer.parseInt(amt);
+                            try
+                            {
+                                cmd = GridMetamodel.changeCommand(cmd, sig, boolExact, amount);
+                            }
+                            catch (Err err)
+                            {
+                                err.printStackTrace();
+                            }
                         }
                     }
                 }
-            }
 
-            try
-            {
-                solution = GridMetamodel.run(cmd);
-                if (cbTextSolution.isSelected() && !cbGraphSolution.isSelected())
+                //solution is
+                try
                 {
+                    solution = GridMetamodel.run(cmd);
                     System.out.print(solution.toString());
                 }
-                else if (!cbTextSolution.isSelected() && cbGraphSolution.isSelected())
+                catch (NullPointerException n)
                 {
-                    GridMetamodel.visualize(solution);
+                    JOptionPane.showMessageDialog(frame, "No solutions found with current preferences.");
                 }
-                else if (cbTextSolution.isSelected() && cbGraphSolution.isSelected())
+                catch (Err err)
                 {
-                    System.out.print(solution.toString());
-                    GridMetamodel.visualize(solution);
+                    err.printStackTrace();
+
                 }
+
+                loadRelationships();
+
+                pnlRelationships.setVisible(true);
+                pnlNext.setVisible(true);
+                frame.pack();
             }
-            catch (Err err)
+            else
             {
-                err.printStackTrace();
+                JOptionPane.showMessageDialog(mainPanel, "Please select number of circuits");
             }
-
-            loadRelationships();
-
-            pnlRelationships.setVisible(true);
-            pnlNext.setVisible(true);
-            frame.pack();
         }
         else
         {
-            JOptionPane.showMessageDialog(mainPanel, "Please select number of circuits");
+            JOptionPane.showMessageDialog(mainPanel, "Please select bitwidth");
         }
     }
 
@@ -424,7 +452,6 @@ public class AlloyerForm extends JFrame
                  occurrences.put(s.label.replace("this/", ""), 0);
              }
          }
-
     }
 
     public void loadRelate2(ItemEvent ie)
@@ -484,65 +511,51 @@ public class AlloyerForm extends JFrame
         }
     }
 
-    public void showNextSolution()
-    {
-        try
-        {
-            if(cbTextSolution.isSelected() && !cbGraphSolution.isSelected())
-            {
-                solution = GridMetamodel.findSolution(solution, (String[]) relationships.toArray(), true, 0);
-                System.out.println(solution.toString());
-            }
-            else if(!cbTextSolution.isSelected() && cbGraphSolution.isSelected())
-            {
-                solution = GridMetamodel.visualizeNext(solution, currentModelForm);
-            }
-            else if(cbTextSolution.isSelected() && cbGraphSolution.isSelected())
-            {
-                solution = GridMetamodel.visualizeNext(solution, currentModelForm);
-                System.out.println(solution.toString());
-            }
-            else
-            {
-
-            }
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-        }
-    }
-
     public void findMatches(boolean hasBeenPressed)
     {
 
         if(relationshipArr == null){
             relationshipArr = new String[relationships.size()];
             int i = 0;
-            for(String s : relationships){
+            for(String s : relationships)
+            {
                 relationshipArr[i]=s;
                 i++;
             }
         }
 
-
-
-        if(!hasBeenPressed) {
-            solution = GridMetamodel.findSolution(solution, relationshipArr, true, 0);
-            if (cbTextSolution.isSelected()) {
+        try
+        {
+            if (!hasBeenPressed)
+            {
+                solution = GridMetamodel.findSolution(solution, relationshipArr, true, 20000);
                 System.out.println(solution.toString());
+
+                JTextArea textArea = new JTextArea(solution.toString());
+                JScrollPane scrollPane = new JScrollPane(textArea);
+                textArea.setLineWrap(true);
+                textArea.setWrapStyleWord(true);
+                scrollPane.setPreferredSize(new Dimension(500,500));
+                JOptionPane.showMessageDialog(null, scrollPane, "Solution", JOptionPane.CLOSED_OPTION);
+                //GridMetamodel.visualize(solution);
             }
-            if (cbGraphSolution.isSelected()) {
-                GridMetamodel.visualize(solution);
-            }
-        }else{
-            solution = GridMetamodel.findSolution(GridMetamodel.getNext(solution), relationshipArr, true, 0);
-            if (cbTextSolution.isSelected()) {
+            else
+            {
+                solution = GridMetamodel.findSolution(GridMetamodel.getNext(solution), relationshipArr, true, 0);
                 System.out.println(solution.toString());
+                JTextArea textArea = new JTextArea(solution.toString());
+                JScrollPane scrollPane = new JScrollPane(textArea);
+                textArea.setLineWrap(true);
+                textArea.setWrapStyleWord(true);
+                scrollPane.setPreferredSize(new Dimension(500, 500));
+                JOptionPane.showMessageDialog(null, scrollPane, "Solution", JOptionPane.CLOSED_OPTION);
+
+                //GridMetamodel.visualize(solution);
             }
-            if (cbGraphSolution.isSelected()) {
-                GridMetamodel.visualize(solution);
-            }
+        }
+        catch(NullPointerException e)
+        {
+            JOptionPane.showMessageDialog(frame,"No solutions found with current preferences/relationships.");
         }
     }
 

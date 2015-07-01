@@ -35,10 +35,10 @@ public class GridMetamodel {
     private static Command command;
     private static A4Options options = new A4Options();
 
-    //private static String dirPath = "C:/Users/Lindsey/AppData/Local/Temp/alloy4tmp40-Lindsey/";
-    //private static String alsDirPath = dirPath + "models/circuitry.als";
-    private static String dirPath = "/tmp/alloy4tmp40-robert/";
+    private static String dirPath = "C:/Users/Lindsey/AppData/Local/Temp/alloy4tmp40-Lindsey/";
     private static String alsDirPath = dirPath + "models/circuitry.als";
+    //private static String dirPath = "/tmp/alloy4tmp40-robert/";
+    //private static String alsDirPath = dirPath + "models/circuitry.als";
     private static Hashtable<String, Sig> namesToSig = new Hashtable<>(20); //will store a mapping of String type names to Signature objects
     public static Hashtable<Long, String> TEST_HASH_TABLE = new Hashtable<>(5000);
     private static Module world;
@@ -50,19 +50,19 @@ public class GridMetamodel {
      * @param args nullable, does nothing.
      */
     public static void main(String[] args){
-        try {
+        /*try {
             setUp();
-            command = makeCommand(4);
+            //command = makeCommand(4);
 
             //evaluateSolutionPerformance(run(command), 10003);
 
-            System.out.println(findSolution(run(command).next(), debugTestRelationships, false, 70000));
+            //System.out.println(findSolution(run(command).next(), debugTestRelationships, false, 70000));
 
 
 
         }catch (Err e){
             e.printStackTrace();
-        }
+        }*/
     }
 
     /**
@@ -101,9 +101,9 @@ public class GridMetamodel {
      * @return returns the newly created command
      * @throws Err thrown by Alloy API
      */
-    public static Command makeCommand(int forInt) throws Err{
+    public static Command makeCommand(int forInt, int bitwidth) throws Err{
         expression = world.getAllSigs().get(1).some();
-        command = new Command(false, forInt, 4, 3, expression);
+        command = new Command(false, forInt, bitwidth, bitwidth-1, expression);
         return command;
     }
 
