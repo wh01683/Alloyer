@@ -3,7 +3,7 @@ package java_cup.runtime;
 import edu.mit.csail.sdg.alloy4.Pos;
 
 /**
- * Default Implementation for SymbolFactory, creates
+ * Default implementation for SymbolFactory, creates
  * plain old Symbols
  *
  * @version last updated 27-03-2006

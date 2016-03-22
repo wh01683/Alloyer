@@ -1,4 +1,4 @@
-package Implementation;
+package implementation;
 
 import edu.mit.csail.sdg.alloy4.Err;
 import edu.mit.csail.sdg.alloy4compiler.ast.Attr;

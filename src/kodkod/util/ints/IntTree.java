@@ -116,7 +116,7 @@ final class IntTree<N extends IntTree.Node<N>> implements Cloneable {
 	}
 
 	/**
-	 * Implementation of the tree-predecessor algorithm from CLR.
+	 * implementation of the tree-predecessor algorithm from CLR.
 	 * Returns the given node's predecessor, if it exists.  
 	 * Otherwise returns null.  
 	 * @return the given node's predecessor
@@ -137,7 +137,7 @@ final class IntTree<N extends IntTree.Node<N>> implements Cloneable {
 	}	
 
 	/**
-	 * Implementation of the tree-successor algorithm from CLR.
+	 * implementation of the tree-successor algorithm from CLR.
 	 * Returns the given node's successor, if it exists.  
 	 * Otherwise returns null.
 	 * @return the given node's successor
@@ -236,7 +236,7 @@ final class IntTree<N extends IntTree.Node<N>> implements Cloneable {
 	private final void setColor(N n, boolean color)	{ if (n!=null) n.color = color; }
 
 	/**
-	 * Implementation of the CLR insertion algorithm.
+	 * implementation of the CLR insertion algorithm.
 	 * @requires no z.key & this.nodes.key
 	 * @ensures this.nodes' = this.nodes + z
 	 */

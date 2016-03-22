@@ -27,7 +27,7 @@ import java.util.Iterator;
  * A sparse sequence implementation based on an {@link IntSet IntSet}.
  * This implementation can be used only when all entries in the sequence map to the same value.  
  * 
- * <p><b>Important Implementation Note</b>: As this implementation does not actually store any 
+ * <p><b>Important implementation Note</b>: As this implementation does not actually store any
  * {@link IndexedEntry indexed entries},
  * the methods {@link #first()}, {@link #last()}, {@link #ceil(int)}, and {@link #floor(int)}
  * <b>may re-use the same IndexedEntry object</b>.  For example, suppose that an entry <tt>e</tt> with <tt>e.index = 1</tt> 

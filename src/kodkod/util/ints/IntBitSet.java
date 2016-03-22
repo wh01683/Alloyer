@@ -420,7 +420,7 @@ public final class IntBitSet extends AbstractIntSet implements Cloneable {
 	}
 	
 	/**
-	 * Implementation of an ascending iterator over (a subset of) this set.
+	 * implementation of an ascending iterator over (a subset of) this set.
 	 */
 	private final class AscendingIterator extends AbstractIterator {
 		private final long maxMask;
@@ -473,7 +473,7 @@ public final class IntBitSet extends AbstractIntSet implements Cloneable {
 	}
 	
 	/**
-	 * Implementation of a descending iterator over (a subset of) this set.
+	 * implementation of a descending iterator over (a subset of) this set.
 	 */
 	private final class DescendingIterator extends AbstractIterator {
 		private final long minMask;

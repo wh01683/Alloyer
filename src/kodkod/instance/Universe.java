@@ -39,7 +39,7 @@ import kodkod.util.collections.Containers;
  * to facilitate creation of {@link Tuple tuples} and
  * {@link TupleSet sets of tuples} based on the atoms in the universe.</p>
  * 
- * <p><b>Implementation Note:</b> although the atoms in a universe are not interpreted in any
+ * <p><b>implementation Note:</b> although the atoms in a universe are not interpreted in any
  * way by the Kodkod engine, it is <b>strongly recommended</b> that the atoms
  * of the same 'type' be grouped together.  For instance, suppose that a client model is specified in
  * terms of disjoint types Person = {Person0, Person1, Person2} and Dog = {Dog0, Dog1}.  Then, 

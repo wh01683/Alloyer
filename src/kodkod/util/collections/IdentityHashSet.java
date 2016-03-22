@@ -77,7 +77,7 @@ import java.util.NoSuchElementException;
  * arbitrary, non-deterministic behavior at an undetermined time in the
  * future.
  *
- * <p>Implementation note: This is a simple <i>linear-probe</i> hash table,
+ * <p>implementation note: This is a simple <i>linear-probe</i> hash table,
  * as described for example in texts by Sedgewick and Knuth.  For many JRE 
  * implementations and operation mixes, this class will yield better performance than
  * {@link HashSet} (which uses <i>chaining</i> rather than linear-probing).
