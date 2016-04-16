@@ -86,8 +86,8 @@ public class AlloyerForm extends JFrame
         pnlNext.setBackground(Color.gray);
         pnlNext.setVisible(false);
 
-        GridMetamodel.setUp();
-        sigsFromMeta = GridMetamodel.getSigs();
+        implementation.GridMetamodel.setUp();
+        sigsFromMeta = implementation.GridMetamodel.getSigs();
         sigsDict = new Hashtable<>();
         availableSigs = new ArrayList<>();
         loadAvailableSigs(sigsFromMeta);
