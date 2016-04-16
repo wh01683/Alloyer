@@ -30,15 +30,18 @@ import java.util.*;
  * */
 public class GridMetamodel {
 
-    private static File file = new File(System.getProperty("user.dir") + "/timesData.csv");
+    private static final String SEP = System.getProperty("file.separator");
+    private static final String USERNAME = System.getProperty("user.name");
+    //private static final String USERNAME = "howerton";
+
+    private static File file = new File(System.getProperty("user.dir").concat(SEP).concat("timesDate.csv"));
     private static Expr expression;
     private static Command command;
     private static A4Options options = new A4Options();
 
-    private static String dirPath = "C:/Users/Lindsey/AppData/Local/Temp/alloy4tmp40-Lindsey/";
-    private static String alsDirPath = dirPath + "models/circuitry.als";
-    //private static String dirPath = "/tmp/alloy4tmp40-robert/";
-    //private static String alsDirPath = dirPath + "models/circuitry.als";
+    private static String dirPath = System.getProperty("java.io.tmpdir").concat(SEP).concat("alloy4tmp40-").concat(USERNAME).concat(SEP);
+    private static String alsDirPath = dirPath + "models".concat(SEP).concat("circuitry.als");
+
     private static Hashtable<String, Sig> namesToSig = new Hashtable<>(20); //will store a mapping of String type names to Signature objects
     public static Hashtable<Long, String> TEST_HASH_TABLE = new Hashtable<>(5000);
     private static Module world;
